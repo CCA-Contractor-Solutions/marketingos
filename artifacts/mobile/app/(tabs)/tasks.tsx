@@ -34,7 +34,9 @@ import {
   useBottomInset,
   useTopInset,
 } from "@/components/ui";
+import { RescheduleSheet } from "@/components/RescheduleSheet";
 import { useColors } from "@/hooks/useColors";
+import { isOverdue, isSameDay, parseDueDate, relativeLabel } from "@/lib/dates";
 
 const STATUS_ORDER: Task["status"][] = [
   "backlog",
@@ -75,6 +77,7 @@ export default function TasksScreen() {
 
   const [addOpen, setAddOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
+  const [rescheduleTask, setRescheduleTask] = useState<Task | null>(null);
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() });
@@ -105,7 +108,7 @@ export default function TasksScreen() {
       >
         <ScreenTitle
           title="Tasks"
-          subtitle={`${data.length} across the board`}
+          subtitle={`${data.length} across the board · long-press to reschedule`}
           right={
             <TouchableOpacity
               activeOpacity={0.85}
@@ -152,6 +155,11 @@ export default function TasksScreen() {
                       key={t.id}
                       activeOpacity={0.85}
                       onPress={() => setEditTask(t)}
+                      onLongPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        setRescheduleTask(t);
+                      }}
+                      delayLongPress={250}
                     >
                       <Card style={{ padding: 14 }}>
                         <View style={styles.taskTop}>
@@ -179,6 +187,7 @@ export default function TasksScreen() {
                             label={t.priority}
                             accent={PRIORITY_ACCENT[t.priority]}
                           />
+                          <DueChip dueDate={t.dueDate} />
                           {t.aiGenerated ? (
                             <View
                               style={[
@@ -228,6 +237,28 @@ export default function TasksScreen() {
         onClose={() => setEditTask(null)}
         onUpdated={invalidate}
       />
+      <RescheduleSheet
+        task={rescheduleTask}
+        onClose={() => setRescheduleTask(null)}
+        onRescheduled={invalidate}
+      />
+    </View>
+  );
+}
+
+function DueChip({ dueDate }: { dueDate?: string | null }) {
+  const colors = useColors();
+  const date = parseDueDate(dueDate);
+  if (!date) return null;
+  const overdue = isOverdue(date);
+  const isToday = isSameDay(date, new Date());
+  const tone = overdue ? colors.rose : isToday ? colors.primary : colors.mutedForeground;
+  return (
+    <View style={styles.dueChip}>
+      <Feather name="calendar" size={11} color={tone} />
+      <Text style={[styles.dueChipText, { color: tone }]}>
+        {relativeLabel(date)}
+      </Text>
     </View>
   );
 }
@@ -520,6 +551,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   aiText: { fontFamily: "Inter_600SemiBold", fontSize: 11 },
+  dueChip: { flexDirection: "row", alignItems: "center", gap: 4 },
+  dueChipText: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
   avatarStack: { flexDirection: "row", alignItems: "center" },
   modalBackdrop: {
     flex: 1,

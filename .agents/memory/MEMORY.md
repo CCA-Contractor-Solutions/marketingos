@@ -9,3 +9,4 @@
 - [api-client-react stale dist](api-client-stale-dist.md) — artifacts type-check against the lib's built dist via project refs; rebuild with `pnpm run typecheck:libs` when a src field looks "missing".
 - [Radix portal CSS tokens](radix-portal-css-tokens.md) — portaled menus render outside the app root; scope design tokens to :root or they're undefined (transparent menus).
 - [Composite project typecheck](composite-project-typecheck.md) — `tsc -p --noEmit` uses stale lib dist; rebuild with `tsc --build <lib> --force` when a workspace export looks "missing".
+- [Gesture handlers inside a Modal](mobile-gesture-in-modal.md) — RN Modal is a detached view tree; GestureDetector needs its own nested GestureHandlerRootView or pans never fire.
