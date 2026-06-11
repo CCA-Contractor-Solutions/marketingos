@@ -354,6 +354,19 @@ function inHours(hours: number): string {
   return new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
 }
 
+// dueDate is a real, machine-readable due date stored as an ISO date string
+// ("YYYY-MM-DD"). It is computed relative to seed time so the Calendar,
+// Timeline, sorting, and overdue detection stay accurate as time passes
+// (instead of relative labels like "Today" that never change).
+function inDays(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const tasks: TaskSeed[] = [
   {
     id: "TSK-101",
@@ -361,7 +374,7 @@ const tasks: TaskSeed[] = [
     status: "backlog",
     priority: "high",
     assignees: [{ init: "AR", color: "#fb6f5a" }],
-    dueDate: "Tomorrow",
+    dueDate: inDays(1),
     dueAt: inHours(28),
     campaign: "Q3 Growth",
     subtasks: { completed: 1, total: 4 },
@@ -385,7 +398,7 @@ const tasks: TaskSeed[] = [
       { init: "SJ", color: "#7c3aed" },
       { init: "AR", color: "#fb6f5a" },
     ],
-    dueDate: "Today",
+    dueDate: inDays(0),
     dueAt: inHours(6),
     campaign: "Winter Launch",
     comments: 3,
@@ -399,7 +412,7 @@ const tasks: TaskSeed[] = [
     status: "in_progress",
     priority: "medium",
     assignees: [{ init: "MK", color: "#18b386" }],
-    dueDate: "Oct 12",
+    dueDate: inDays(2),
     dueAt: inHours(52),
     campaign: "Conversion Opt",
     subtasks: { completed: 2, total: 3 },
@@ -412,7 +425,7 @@ const tasks: TaskSeed[] = [
     status: "in_review",
     priority: "high",
     assignees: [{ init: "AR", color: "#fb6f5a" }],
-    dueDate: "Yesterday",
+    dueDate: inDays(-1),
     campaign: "Q3 Growth",
     comments: 8,
     aiGenerated: true,
@@ -433,7 +446,7 @@ const tasks: TaskSeed[] = [
     status: "done",
     priority: "high",
     assignees: [{ init: "MK", color: "#18b386" }],
-    dueDate: "Oct 8",
+    dueDate: inDays(-3),
     campaign: "Tech Debt",
     subtasks: { completed: 5, total: 5 },
     comments: 2,

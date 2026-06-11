@@ -1,18 +1,3 @@
-const MONTH_ABBR = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
-];
-
 const MONTH_LABELS = [
   "Jan",
   "Feb",
@@ -33,41 +18,23 @@ export function startOfDay(d: Date): Date {
 }
 
 /**
- * Parses the free-form `dueDate` strings used in the seed data
- * ("Today", "Tomorrow", "Yesterday", "Oct 12", ISO dates) into a Date.
- * Returns null when the value is empty or cannot be understood.
+ * Parses a stored ISO due date into a local Date at the start of that day.
+ * Accepts a date-only value ("YYYY-MM-DD") or a full ISO timestamp.
+ * Returns null when the value is empty or not a valid date.
  */
-export function parseDueDate(
-  due: string | null | undefined,
-  ref: Date = new Date(),
-): Date | null {
+export function parseDueDate(due: string | null | undefined): Date | null {
   if (!due) return null;
-  const s = due.trim().toLowerCase();
+  const s = due.trim();
   if (!s) return null;
 
-  const base = startOfDay(ref);
-  if (s === "today") return base;
-  if (s === "tomorrow") {
-    const d = new Date(base);
-    d.setDate(d.getDate() + 1);
-    return d;
-  }
-  if (s === "yesterday") {
-    const d = new Date(base);
-    d.setDate(d.getDate() - 1);
-    return d;
-  }
-
-  const m = s.match(/^([a-z]{3,})\.?\s+(\d{1,2})$/);
+  // Date-only ISO (YYYY-MM-DD): build in local time so the calendar day is
+  // not shifted by the viewer's timezone (new Date("YYYY-MM-DD") is UTC).
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (m) {
-    const monthIdx = MONTH_ABBR.indexOf(m[1].slice(0, 3));
-    const day = parseInt(m[2], 10);
-    if (monthIdx >= 0 && day >= 1 && day <= 31) {
-      return new Date(ref.getFullYear(), monthIdx, day);
-    }
+    return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
   }
 
-  const parsed = Date.parse(due);
+  const parsed = Date.parse(s);
   if (!Number.isNaN(parsed)) return startOfDay(new Date(parsed));
 
   return null;

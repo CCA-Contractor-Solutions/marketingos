@@ -27,6 +27,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
+  parseDueDate,
+  relativeLabel,
+  isOverdue,
+  isSameDay,
+} from "./task-views/dates";
+import {
   LayoutGrid,
   Calendar,
   Clock,
@@ -130,12 +136,18 @@ function TaskCard({
 
       <div className="mt-1 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {task.dueDate && (
-            <div className="flex items-center gap-1.5 text-[11.5px] font-medium" style={{ color: task.dueDate === "Yesterday" || task.dueDate === "Today" ? "var(--c-rose)" : "var(--c-muted)" }}>
-              <Calendar size={13} />
-              {task.dueDate}
-            </div>
-          )}
+          {(() => {
+            const due = parseDueDate(task.dueDate);
+            if (!due) return null;
+            const isToday = isSameDay(due, new Date());
+            const overdue = isOverdue(due) && task.status !== "done";
+            return (
+              <div className="flex items-center gap-1.5 text-[11.5px] font-medium" style={{ color: overdue || isToday ? "var(--c-rose)" : "var(--c-muted)" }}>
+                <Calendar size={13} />
+                {relativeLabel(due)}
+              </div>
+            );
+          })()}
           {task.subtasks && (
             <div className="flex items-center gap-1.5 text-[11.5px] font-medium" style={{ color: "var(--c-muted)" }}>
               <CheckCircle2 size={13} />
