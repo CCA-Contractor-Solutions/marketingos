@@ -1,0 +1,44 @@
+Do not treat the previous completion report as accepted. Rose reviewed the live app and found three unresolved P0 blockers:
+
+1. Branding is still not following CCA / Contractor Compliance Authority direction closely enough.
+2. The menu/navigation is visually broken: it appears transparent or empty.
+3. Data cannot be clicked through, so the dashboard, lists, campaign data, task data, collaboration items, and analytics are not behaving like a usable command center.
+
+Fix the live canonical app only: artifacts/web.
+
+Required fixes:
+- Inspect AppLayout, mobile Sheet/sidebar navigation, menu backgrounds, z-index, opacity, text color, active states, and hover states.
+- Make all navigation menus opaque, visible, high-contrast, and usable on desktop and mobile.
+- Remove all remaining Cadence branding from visible UI, database-seeded content, browser title/meta, favicon, empty states, sample data, and route labels.
+- Re-check against the approved CCA / Contractor Compliance Authority mockup and palette. Do not use Cadence language or generic SaaS branding.
+- Make visible data clickable where a user would expect drill-through:
+  - Dashboard campaign/task/alert cards should open the relevant detail view or filtered list.
+  - Campaign rows/cards should open campaign detail.
+  - Task cards/rows should open task detail or edit drawer/dialog.
+  - Collaboration threads/items should open the selected thread.
+  - Analytics cards/tables should open the relevant drilldown or clearly hide controls that are not implemented.
+- Do not leave fake clickable controls visible.
+- If something cannot be implemented now, hide it or label it clearly as unavailable. Do not present dead UI as complete.
+
+Verification required before reporting completion:
+- Run typecheck.
+- Run production build.
+- Start the app fresh.
+- Use browser-level testing, not just visual inspection.
+- Capture screenshots for:
+  - Desktop dashboard with sidebar visible.
+  - Mobile dashboard with closed nav.
+  - Mobile dashboard with nav open.
+  - Campaign list and campaign detail.
+  - Tasks page.
+  - Collaboration page.
+  - Analytics page.
+- Prove click-through behavior by testing at least:
+  - Dashboard card to target page.
+  - Campaign row/card to campaign detail.
+  - Task item to task detail/edit.
+  - Collaboration item to selected thread.
+  - Analytics item to drilldown or confirmed intentionally non-clickable state.
+- Report exactly what data is clickable, what is intentionally not clickable, and what changed.
+
+Do not say “everything is verified end-to-end” unless the above browser tests pass.
