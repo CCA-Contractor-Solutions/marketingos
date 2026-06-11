@@ -281,6 +281,7 @@ export function TaskBoard() {
         </div>
 
         {/* Board Content */}
+        {activeView === "board" ? (
         <div className="cadence-scroll flex-1 overflow-x-auto overflow-y-hidden bg-[#f6f7fb] p-6">
           <div className="flex h-full gap-5">
             {columns.map((col) => {
@@ -333,6 +334,31 @@ export function TaskBoard() {
             })}
           </div>
         </div>
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center bg-[#f6f7fb] p-6 text-center">
+            {(() => {
+              const view = views.find((v) => v.id === activeView);
+              const Icon = view?.icon ?? LayoutGrid;
+              const label = view?.label ?? "This";
+              return (
+                <>
+                  <div
+                    className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl"
+                    style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", color: "var(--c-brand)" }}
+                  >
+                    <Icon size={26} />
+                  </div>
+                  <h3 className="font-display text-[16px] font-bold" style={{ color: "var(--c-ink)" }}>
+                    {label} view
+                  </h3>
+                  <p className="mt-1 max-w-xs text-[13px]" style={{ color: "var(--c-muted)" }}>
+                    The {label.toLowerCase()} view is coming in the full app. Switch back to Board to manage tasks.
+                  </p>
+                </>
+              );
+            })()}
+          </div>
+        )}
       </div>
     </AppLayout>
   );
