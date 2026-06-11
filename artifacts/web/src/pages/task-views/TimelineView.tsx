@@ -14,6 +14,26 @@ import {
 const DAY_WIDTH = 44;
 const LABEL_WIDTH = 260;
 
+const SNAP_WEEK_KEY = "cadence:timeline:snapWeek";
+
+function readSnapWeek(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(SNAP_WEEK_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function writeSnapWeek(value: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(SNAP_WEEK_KEY, String(value));
+  } catch {
+    // Ignore storage failures (e.g. private mode); persistence is best-effort.
+  }
+}
+
 type DatedTask = { task: Task; date: Date };
 
 export default function TimelineView({
@@ -28,7 +48,7 @@ export default function TimelineView({
   const today = useMemo(() => startOfDay(new Date()), []);
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOverOffset, setDragOverOffset] = useState<number | null>(null);
-  const [snapWeek, setSnapWeek] = useState(false);
+  const [snapWeek, setSnapWeek] = useState(readSnapWeek);
   const [snapActive, setSnapActive] = useState(false);
   const grabOffsetRef = useRef(0);
 
@@ -140,7 +160,10 @@ export default function TimelineView({
                 <button
                   key={opt.label}
                   type="button"
-                  onClick={() => setSnapWeek(opt.value)}
+                  onClick={() => {
+                    setSnapWeek(opt.value);
+                    writeSnapWeek(opt.value);
+                  }}
                   className={`rounded-md px-2.5 py-1 text-[12px] font-semibold transition-all ${
                     isActive ? "shadow-sm" : "hover:bg-black/5"
                   }`}
