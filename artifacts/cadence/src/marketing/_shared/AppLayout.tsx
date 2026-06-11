@@ -1,6 +1,7 @@
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import "../_group.css";
+import { useAppState } from "../state/AppState";
 import {
   LayoutDashboard,
   Megaphone,
@@ -13,6 +14,7 @@ import {
   Bell,
   Plus,
   ChevronsUpDown,
+  X,
 } from "lucide-react";
 
 type NavKey =
@@ -48,7 +50,9 @@ export function AppLayout({
   actions?: ReactNode;
   children: ReactNode;
 }) {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
+  const { addCampaign } = useAppState();
+  const [showNewCampaign, setShowNewCampaign] = useState(false);
   const isActive = (path: string) =>
     path === "/"
       ? location === "/"
@@ -219,7 +223,8 @@ export function AppLayout({
               />
             </button>
             <button
-              className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-[13px] font-semibold text-white"
+              onClick={() => setShowNewCampaign(true)}
+              className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
               style={{
                 background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))",
                 boxShadow: "0 8px 18px -8px rgba(79,70,229,0.8)",
@@ -241,6 +246,176 @@ export function AppLayout({
           {children}
         </main>
       </div>
+
+      {showNewCampaign && (
+        <NewCampaignModal
+          onClose={() => setShowNewCampaign(false)}
+          onCreate={(input) => {
+            addCampaign(input);
+            setShowNewCampaign(false);
+            navigate("/");
+          }}
+        />
+      )}
     </div>
+  );
+}
+
+const CHANNEL_OPTIONS = ["Email", "LinkedIn", "Twitter", "Display", "Webinar", "PR"];
+
+function NewCampaignModal({
+  onClose,
+  onCreate,
+}: {
+  onClose: () => void;
+  onCreate: (input: {
+    name: string;
+    owner: string;
+    budget: string;
+    channels: string[];
+  }) => void;
+}) {
+  const [name, setName] = useState("");
+  const [owner, setOwner] = useState("");
+  const [budget, setBudget] = useState("");
+  const [channels, setChannels] = useState<string[]>([]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const toggleChannel = (c: string) =>
+    setChannels((prev) =>
+      prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c],
+    );
+
+  const submit = () => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    onCreate({
+      name: trimmed,
+      owner: owner.trim() || "You",
+      budget: budget.trim() ? (budget.trim().startsWith("$") ? budget.trim() : `$${budget.trim()}`) : "$0",
+      channels,
+    });
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(17,19,42,0.45)", backdropFilter: "blur(2px)" }}
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-campaign-title"
+        className="cadence-rise w-full max-w-md overflow-hidden rounded-2xl"
+        style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", boxShadow: "0 24px 48px -12px rgba(17,19,42,0.4)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid var(--c-border)" }}>
+          <h2 id="new-campaign-title" className="font-display text-[16px] font-bold">New campaign</h2>
+          <button
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+            style={{ color: "var(--c-muted)" }}
+            aria-label="Close"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="space-y-4 px-5 py-5">
+          <Field label="Campaign name">
+            <input
+              autoFocus
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+              placeholder="e.g. Q4 Holiday Push"
+              className="w-full rounded-xl px-3 py-2 text-[13.5px] outline-none focus:border-[var(--c-brand)]"
+              style={{ background: "var(--c-surface-2)", border: "1px solid var(--c-border)", color: "var(--c-ink)" }}
+            />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Owner">
+              <input
+                value={owner}
+                onChange={(e) => setOwner(e.target.value)}
+                placeholder="Your name"
+                className="w-full rounded-xl px-3 py-2 text-[13.5px] outline-none focus:border-[var(--c-brand)]"
+                style={{ background: "var(--c-surface-2)", border: "1px solid var(--c-border)", color: "var(--c-ink)" }}
+              />
+            </Field>
+            <Field label="Budget">
+              <input
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                placeholder="$50K"
+                className="w-full rounded-xl px-3 py-2 text-[13.5px] outline-none focus:border-[var(--c-brand)]"
+                style={{ background: "var(--c-surface-2)", border: "1px solid var(--c-border)", color: "var(--c-ink)" }}
+              />
+            </Field>
+          </div>
+
+          <Field label="Channels">
+            <div className="flex flex-wrap gap-2">
+              {CHANNEL_OPTIONS.map((c) => {
+                const on = channels.includes(c);
+                return (
+                  <button
+                    key={c}
+                    onClick={() => toggleChannel(c)}
+                    className="rounded-lg px-2.5 py-1.5 text-[12px] font-medium transition-all"
+                    style={{
+                      background: on ? "var(--c-brand-50)" : "var(--c-surface-2)",
+                      border: `1px solid ${on ? "var(--c-brand)" : "var(--c-border)"}`,
+                      color: on ? "var(--c-brand-600)" : "var(--c-ink-soft)",
+                    }}
+                  >
+                    {c}
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+        </div>
+
+        <div className="flex items-center justify-end gap-2 px-5 py-4" style={{ borderTop: "1px solid var(--c-border)" }}>
+          <button
+            onClick={onClose}
+            className="rounded-xl px-3.5 py-2 text-[13px] font-semibold transition-colors hover:bg-black/5"
+            style={{ color: "var(--c-ink-soft)", border: "1px solid var(--c-border)" }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={submit}
+            disabled={!name.trim()}
+            className="rounded-xl px-4 py-2 text-[13px] font-semibold text-white transition-opacity disabled:opacity-40"
+            style={{ background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))" }}
+          >
+            Create campaign
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--c-muted)" }}>
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }

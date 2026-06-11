@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { AppLayout } from "./_shared/AppLayout";
 import { useAppState } from "./state/AppState";
 import {
@@ -106,18 +107,19 @@ export function Dashboard() {
 
               <div className="space-y-4">
                 {campaigns.map((c) => (
-                  <CampaignRow
-                    key={c.id}
-                    name={c.name}
-                    owner={c.owner}
-                    ownerColor={c.ownerColor}
-                    status={c.status}
-                    statusColor={c.statusColor}
-                    progress={c.progress}
-                    budget={c.budget}
-                    spent={c.spent}
-                    channels={c.channels}
-                  />
+                  <Link key={c.id} href="/campaigns" className="block">
+                    <CampaignRow
+                      name={c.name}
+                      owner={c.owner}
+                      ownerColor={c.ownerColor}
+                      status={c.status}
+                      statusColor={c.statusColor}
+                      progress={c.progress}
+                      budget={c.budget}
+                      spent={c.spent}
+                      channels={c.channels}
+                    />
+                  </Link>
                 ))}
               </div>
             </div>

@@ -45,6 +45,14 @@ export interface Thread {
   avatars: string[];
 }
 
+export function nextTaskId(tasks: Task[]): string {
+  const nums = tasks
+    .map((t) => parseInt(t.id.replace(/\D/g, ""), 10))
+    .filter((n) => !Number.isNaN(n));
+  const max = nums.length ? Math.max(...nums) : 100;
+  return `TSK-${max + 1}`;
+}
+
 export const seedTasks: Task[] = [
   {
     id: "TSK-101",
