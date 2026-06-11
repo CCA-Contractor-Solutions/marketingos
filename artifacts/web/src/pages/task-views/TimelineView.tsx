@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { Task } from "@workspace/api-client-react";
 import { Sparkles } from "lucide-react";
 import { PriorityIcon, STATUS_META, AssigneeStack, EmptyState } from "./shared";
@@ -18,11 +18,16 @@ type DatedTask = { task: Task; date: Date };
 export default function TimelineView({
   tasks,
   onTaskClick,
+  onReschedule,
 }: {
   tasks: Task[];
   onTaskClick?: (task: Task) => void;
+  onReschedule?: (taskId: string, date: Date) => void;
 }) {
   const today = useMemo(() => startOfDay(new Date()), []);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverOffset, setDragOverOffset] = useState<number | null>(null);
+  const grabOffsetRef = useRef(0);
 
   const dated = useMemo<DatedTask[]>(
     () =>
@@ -203,14 +208,91 @@ export default function TimelineView({
                   <div
                     className="relative shrink-0"
                     style={{ width: range.total * DAY_WIDTH }}
+                    onDragOver={
+                      onReschedule
+                        ? (e) => {
+                            e.preventDefault();
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const x =
+                              e.clientX - rect.left - grabOffsetRef.current - 4;
+                            const next = Math.max(
+                              0,
+                              Math.min(range.total - 1, Math.round(x / DAY_WIDTH)),
+                            );
+                            setDragOverOffset(next);
+                          }
+                        : undefined
+                    }
+                    onDragLeave={
+                      onReschedule
+                        ? () => setDragOverOffset(null)
+                        : undefined
+                    }
+                    onDrop={
+                      onReschedule
+                        ? (e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const x =
+                              e.clientX - rect.left - grabOffsetRef.current - 4;
+                            const next = Math.max(
+                              0,
+                              Math.min(
+                                range.total - 1,
+                                Math.round(x / DAY_WIDTH),
+                              ),
+                            );
+                            setDragOverOffset(null);
+                            const id = dragId;
+                            setDragId(null);
+                            if (!id) return;
+                            const dropDate = new Date(range.min);
+                            dropDate.setDate(range.min.getDate() + next);
+                            onReschedule(id, dropDate);
+                          }
+                        : undefined
+                    }
                   >
+                    {onReschedule && dragId === task.id && dragOverOffset !== null && (
+                      <div
+                        className="absolute top-0 bottom-0 z-0"
+                        style={{
+                          left: dragOverOffset * DAY_WIDTH,
+                          width: DAY_WIDTH,
+                          background: "var(--c-brand-50)",
+                          borderLeft: "2px dashed var(--c-brand)",
+                          borderRight: "2px dashed var(--c-brand)",
+                        }}
+                      />
+                    )}
                     <div
-                      className="absolute top-1/2 flex -translate-y-1/2 items-center gap-1.5 rounded-full py-1 pl-1.5 pr-2.5 shadow-sm"
+                      draggable={!!onReschedule}
+                      onDragStart={
+                        onReschedule
+                          ? (e) => {
+                              const rect =
+                                e.currentTarget.getBoundingClientRect();
+                              grabOffsetRef.current = e.clientX - rect.left;
+                              setDragId(task.id);
+                            }
+                          : undefined
+                      }
+                      onDragEnd={
+                        onReschedule
+                          ? () => {
+                              setDragId(null);
+                              setDragOverOffset(null);
+                            }
+                          : undefined
+                      }
+                      className={`absolute top-1/2 z-10 flex -translate-y-1/2 items-center gap-1.5 rounded-full py-1 pl-1.5 pr-2.5 shadow-sm ${
+                        onReschedule ? "cursor-grab active:cursor-grabbing" : ""
+                      }`}
                       style={{
                         left: offset * DAY_WIDTH + 4,
                         background: meta.bg,
                         border: `1px solid ${meta.color}`,
                         maxWidth: DAY_WIDTH * 5,
+                        opacity: dragId === task.id ? 0.4 : 1,
                       }}
                       title={`${task.title} · ${meta.label} · ${formatShort(date)}`}
                     >

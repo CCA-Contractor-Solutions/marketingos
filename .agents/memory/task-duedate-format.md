@@ -12,3 +12,5 @@ Task `dueDate` (Task type in `@workspace/api-client-react`, seeded in the API se
 - Do NOT use `new Date("YYYY-MM-DD")` directly — that is UTC midnight and shifts the calendar day in negative-offset timezones. Use `parseDueDate`.
 - For display, format with `relativeLabel(date)` (Today/Tomorrow/Yesterday/"Mon DD") and `formatShort`; color overdue/today via `isOverdue`/`isSameDay`.
 - `dueDate` (date-only) is separate from `dueAt` (precise ISO timestamp used only by mobile reminders). Both are seeded consistently per task but serve different layers; mobile schedules off `dueAt`, web reads `dueDate`.
+
+**Write format decision:** when *writing* a due date back (e.g. drag-to-reschedule on the calendar/timeline), use `formatISODate(date)` → `"YYYY-MM-DD"` (in `task-views/dates.ts`), built from *local* date parts (not `toISOString`, which would shift the day in negative-offset timezones). This round-trips cleanly through `parseDueDate`. Do NOT write `formatShort` ("Mon DD") or relative labels ("Today"/"Tomorrow") — the store is ISO now and those would no longer parse / would drift.

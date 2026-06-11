@@ -57,6 +57,18 @@ export function formatShort(d: Date): string {
   return `${MONTH_LABELS[d.getMonth()]} ${d.getDate()}`;
 }
 
+/**
+ * Formats a local Date as a date-only ISO string ("YYYY-MM-DD") for storage.
+ * Uses local date parts (not toISOString) so the stored calendar day matches
+ * what the user sees, regardless of timezone. Round-trips through parseDueDate.
+ */
+export function formatISODate(d: Date): string {
+  const y = d.getFullYear();
+  const m = `${d.getMonth() + 1}`.padStart(2, "0");
+  const day = `${d.getDate()}`.padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export function formatMonthYear(d: Date): string {
   return `${
     [

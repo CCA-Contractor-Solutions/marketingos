@@ -20,11 +20,26 @@ type DatedTask = { task: Task; date: Date };
 export default function CalendarView({
   tasks,
   onTaskClick,
+  onReschedule,
 }: {
   tasks: Task[];
   onTaskClick?: (task: Task) => void;
+  onReschedule?: (taskId: string, date: Date) => void;
 }) {
   const today = useMemo(() => startOfDay(new Date()), []);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverKey, setDragOverKey] = useState<string | null>(null);
+
+  const dayKey = (d: Date) =>
+    `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+
+  const handleDrop = (day: Date) => {
+    setDragOverKey(null);
+    const id = dragId;
+    setDragId(null);
+    if (!id || !onReschedule) return;
+    onReschedule(id, day);
+  };
 
   const dated = useMemo<DatedTask[]>(() => {
     return tasks
@@ -155,14 +170,38 @@ export default function CalendarView({
           const inMonth = day.getMonth() === month.getMonth();
           const isToday = isSameDay(day, today);
           const dayTasks = tasksForDay(day);
+          const key = dayKey(day);
+          const isDragOver = dragOverKey === key;
           return (
             <div
               key={i}
-              className="flex min-h-[112px] flex-col gap-1 p-1.5"
+              onDragOver={
+                onReschedule
+                  ? (e) => {
+                      e.preventDefault();
+                      setDragOverKey(key);
+                    }
+                  : undefined
+              }
+              onDragLeave={
+                onReschedule
+                  ? () => setDragOverKey((p) => (p === key ? null : p))
+                  : undefined
+              }
+              onDrop={onReschedule ? () => handleDrop(day) : undefined}
+              className="flex min-h-[112px] flex-col gap-1 p-1.5 transition-colors"
               style={{
                 borderBottom: i < 35 ? "1px solid var(--c-border)" : "none",
                 borderRight: (i + 1) % 7 !== 0 ? "1px solid var(--c-border)" : "none",
-                background: inMonth ? "transparent" : "var(--c-surface-2)",
+                background: isDragOver
+                  ? "var(--c-brand-50)"
+                  : inMonth
+                    ? "transparent"
+                    : "var(--c-surface-2)",
+                outline: isDragOver
+                  ? "2px dashed var(--c-brand)"
+                  : "none",
+                outlineOffset: "-2px",
               }}
             >
               <div className="flex items-center justify-between px-1">
@@ -194,12 +233,28 @@ export default function CalendarView({
                   return (
                     <div
                       key={task.id}
-                      onClick={() => onTaskClick?.(task)}
+                      draggable={!!onReschedule}
+                      onDragStart={
+                        onReschedule ? () => setDragId(task.id) : undefined
+                      }
+                      onDragEnd={
+                        onReschedule ? () => setDragId(null) : undefined
+                      }
+                      onClick={
+                        onTaskClick ? () => onTaskClick(task) : undefined
+                      }
                       title={`${task.title} · ${meta.label}`}
-                      className="flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[10.5px] font-medium leading-tight transition-opacity hover:opacity-80"
+                      className={`flex items-center gap-1 rounded-md px-1.5 py-1 text-[10.5px] font-medium leading-tight transition-opacity hover:opacity-80 ${
+                        onReschedule
+                          ? "cursor-grab active:cursor-grabbing"
+                          : onTaskClick
+                            ? "cursor-pointer"
+                            : ""
+                      }`}
                       style={{
                         background: meta.bg,
                         color: meta.color,
+                        opacity: dragId === task.id ? 0.4 : 1,
                       }}
                     >
                       <PriorityIcon priority={task.priority} />
@@ -240,11 +295,23 @@ export default function CalendarView({
             {unscheduled.map((task) => (
               <div
                 key={task.id}
-                onClick={() => onTaskClick?.(task)}
-                className="flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-[var(--c-surface)]"
+                draggable={!!onReschedule}
+                onDragStart={
+                  onReschedule ? () => setDragId(task.id) : undefined
+                }
+                onDragEnd={onReschedule ? () => setDragId(null) : undefined}
+                onClick={onTaskClick ? () => onTaskClick(task) : undefined}
+                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-[var(--c-surface)] ${
+                  onReschedule
+                    ? "cursor-grab active:cursor-grabbing"
+                    : onTaskClick
+                      ? "cursor-pointer"
+                      : ""
+                }`}
                 style={{
                   background: "var(--c-surface-2)",
                   border: "1px solid var(--c-border)",
+                  opacity: dragId === task.id ? 0.4 : 1,
                 }}
               >
                 <PriorityIcon priority={task.priority} />

@@ -54,6 +54,7 @@ import CalendarView from "./task-views/CalendarView";
 import WorkloadView from "./task-views/WorkloadView";
 import TimelineView from "./task-views/TimelineView";
 import TaskDetailSheet from "@/components/TaskDetailSheet";
+import { formatISODate } from "./task-views/dates";
 
 function PriorityIcon({ priority }: { priority: TaskPriority }) {
   if (priority === "high") return <ArrowUp size={14} style={{ color: "var(--c-rose)" }} />;
@@ -290,6 +291,14 @@ export default function TaskBoard() {
     updateTask.mutate({ id: task.id, data: { status } });
   };
 
+  const handleReschedule = (taskId: string, date: Date) => {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    const dueDate = formatISODate(date);
+    if (task.dueDate === dueDate) return;
+    updateTask.mutate({ id: taskId, data: { dueDate } });
+  };
+
   const openAdd = (status: TaskStatus) => {
     setForm({ title: "", status, priority: "medium" });
     setAddOpen(true);
@@ -406,11 +415,19 @@ export default function TaskBoard() {
           ) : activeView === "list" ? (
             <ListView tasks={filteredTasks} onTaskClick={openDetail} />
           ) : activeView === "calendar" ? (
-            <CalendarView tasks={filteredTasks} onTaskClick={openDetail} />
+            <CalendarView
+              tasks={filteredTasks}
+              onTaskClick={openDetail}
+              onReschedule={handleReschedule}
+            />
           ) : activeView === "workload" ? (
             <WorkloadView tasks={filteredTasks} onTaskClick={openDetail} />
           ) : activeView === "timeline" ? (
-            <TimelineView tasks={filteredTasks} onTaskClick={openDetail} />
+            <TimelineView
+              tasks={filteredTasks}
+              onTaskClick={openDetail}
+              onReschedule={handleReschedule}
+            />
           ) : (
             <div className="flex h-full gap-5">
               {COLUMNS.map((col) => {
