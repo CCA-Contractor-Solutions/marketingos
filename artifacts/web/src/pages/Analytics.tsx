@@ -14,16 +14,7 @@ import {
 } from "recharts";
 import { useGetAnalytics } from "@workspace/api-client-react";
 import { AppLayout, PageLoading, PageError } from "@/components/AppLayout";
-import {
-  ArrowDown,
-  ArrowUp,
-  Calendar,
-  ChevronDown,
-  Download,
-  Filter,
-  MoreHorizontal,
-  Sparkles,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, Sparkles } from "lucide-react";
 
 export default function Analytics() {
   const { data, isLoading, isError } = useGetAnalytics();
@@ -33,22 +24,6 @@ export default function Analytics() {
       active="analytics"
       title="Analytics Overview"
       subtitle="Last 30 Days"
-      actions={
-        <>
-          <button
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-[13px] font-semibold transition-colors"
-            style={{ background: "var(--c-surface-2)", border: "1px solid var(--c-border)", color: "var(--c-ink-soft)" }}
-          >
-            <Calendar size={15} /> Last 30 Days <ChevronDown size={14} />
-          </button>
-          <button
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[var(--c-surface-2)]"
-            style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", color: "var(--c-ink)" }}
-          >
-            <Filter size={15} /> Add Filter
-          </button>
-        </>
-      }
     >
       {isLoading ? (
         <PageLoading />
@@ -74,11 +49,11 @@ export default function Analytics() {
 
           {/* AI Insight & Reports */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 cadence-rise" style={{ animationDelay: "100ms" }}>
-            <div className="lg:col-span-2 relative overflow-hidden rounded-2xl p-6 text-white" style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))", boxShadow: "0 12px 24px -12px rgba(79,70,229,0.5)" }}>
+            <div className="lg:col-span-2 relative overflow-hidden rounded-2xl p-6 text-white" style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))", boxShadow: "0 12px 24px -12px rgba(37,99,235,0.5)" }}>
               <div className="cadence-ai-glow pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full" style={{ background: "rgba(255,255,255,0.15)", filter: "blur(24px)" }} />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 text-[14px] font-bold uppercase tracking-wider text-white/90">
-                  <Sparkles size={16} /> Cadence AI Insight
+                  <Sparkles size={16} /> CCA AI Insight
                 </div>
                 <h2 className="font-display mt-3 text-2xl font-bold leading-tight">{data.insight.headline}</h2>
                 <div className="mt-4 flex flex-col gap-3 md:flex-row">
@@ -100,9 +75,6 @@ export default function Analytics() {
             <div className="rounded-2xl p-6 flex flex-col" style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", boxShadow: "var(--c-shadow-sm)" }}>
               <div className="flex items-center justify-between">
                 <div className="text-[14px] font-bold" style={{ color: "var(--c-ink)" }}>Automated Reports</div>
-                <button style={{ color: "var(--c-muted)" }}>
-                  <MoreHorizontal size={18} />
-                </button>
               </div>
               <div className="mt-4 flex flex-col gap-3 flex-1">
                 {data.reports.map((report) => (
@@ -111,15 +83,9 @@ export default function Analytics() {
                       <div className="truncate text-[13px] font-semibold" style={{ color: "var(--c-ink)" }}>{report.name}</div>
                       <div className="mt-0.5 truncate text-[11px]" style={{ color: "var(--c-muted)" }}>{report.schedule}</div>
                     </div>
-                    <button className="flex h-7 w-7 items-center justify-center rounded-lg bg-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100" style={{ border: "1px solid var(--c-border)", color: "var(--c-ink-soft)" }}>
-                      <Download size={14} />
-                    </button>
                   </div>
                 ))}
               </div>
-              <button className="mt-4 w-full rounded-xl py-2 text-[13px] font-semibold transition-colors hover:bg-[var(--c-bg)]" style={{ background: "var(--c-surface-2)", border: "1px dashed var(--c-border-strong)", color: "var(--c-brand)" }}>
-                + Create New Report
-              </button>
             </div>
           </div>
 

@@ -15,10 +15,6 @@ import { AppLayout, PageLoading, PageError } from "@/components/AppLayout";
 import {
   Sparkles,
   Send,
-  ThumbsUp,
-  ThumbsDown,
-  Copy,
-  RefreshCcw,
   PenTool,
   MessageSquare,
   Mail,
@@ -32,8 +28,6 @@ import {
   Hash,
   Activity,
   Layers,
-  Settings2,
-  Link2,
 } from "lucide-react";
 
 const QUICK_ACTIONS: { icon: ReactNode; label: string }[] = [
@@ -72,11 +66,6 @@ function VariantCard({ v }: { v: AssistantVariant }) {
           <span className="text-[12px] font-semibold text-[var(--c-ink)]">{v.platform}</span>
           <span className="text-[10px] text-[var(--c-muted)]">•</span>
           <span className="text-[12px] font-medium text-[var(--c-muted)]">{v.tone}</span>
-        </div>
-        <div className="opacity-0 transition-opacity group-hover:opacity-100">
-          <button className="flex items-center gap-1 text-[11px] font-medium text-[var(--c-brand)] hover:text-[var(--c-brand-600)]">
-            <Copy size={12} /> Copy
-          </button>
         </div>
       </div>
       <p className="text-[13.5px] leading-relaxed text-[var(--c-ink)] mb-2">{v.content}</p>
@@ -118,22 +107,6 @@ function MessageBubble({ msg }: { msg: AssistantMessage }) {
             ))}
           </div>
         )}
-        <div className="flex items-center gap-2 mt-1">
-          <button className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium transition-colors hover:bg-[var(--c-surface-2)]" style={{ color: "var(--c-muted)" }}>
-            <Copy size={14} /> Copy all
-          </button>
-          <button className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] font-medium transition-colors hover:bg-[var(--c-surface-2)]" style={{ color: "var(--c-muted)" }}>
-            <RefreshCcw size={14} /> Regenerate
-          </button>
-          <div className="ml-auto flex items-center gap-1">
-            <button className="flex items-center justify-center h-7 w-7 rounded-lg transition-colors hover:bg-[var(--c-surface-2)]" style={{ color: "var(--c-muted)" }}>
-              <ThumbsUp size={14} />
-            </button>
-            <button className="flex items-center justify-center h-7 w-7 rounded-lg transition-colors hover:bg-[var(--c-surface-2)]" style={{ color: "var(--c-muted)" }}>
-              <ThumbsDown size={14} />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -203,18 +176,9 @@ export default function AIAssistant() {
 
   return (
     <AppLayout
-      active="dashboard"
-      title="Cadence AI"
+      active="assistant"
+      title="CCA AI Assistant"
       subtitle="Your marketing copilot"
-      actions={
-        <button
-          className="flex items-center gap-2 rounded-xl px-3.5 py-2 text-[13px] font-medium transition-colors"
-          style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", color: "var(--c-ink-soft)" }}
-        >
-          <Settings2 size={16} />
-          Assistant Settings
-        </button>
-      }
     >
       <div className="flex h-full w-full">
         {/* Chat */}
@@ -273,7 +237,7 @@ export default function AIAssistant() {
                   }
                 }}
                 className="w-full resize-none bg-transparent px-4 py-3.5 pr-14 text-[14px] outline-none placeholder:text-[var(--c-muted)]"
-                placeholder="Ask Cadence AI to write, analyze, or plan..."
+                placeholder="Ask CCA AI to write, analyze, or plan..."
                 rows={2}
               />
               <button
@@ -286,7 +250,7 @@ export default function AIAssistant() {
               </button>
             </div>
             <div className="mt-2 text-center text-[11px]" style={{ color: "var(--c-muted)" }}>
-              Cadence AI can make mistakes. Verify important information.
+              CCA AI can make mistakes. Verify important information.
             </div>
           </div>
         </div>
@@ -306,9 +270,6 @@ export default function AIAssistant() {
                   <ContextCard key={ctx.id} ctx={ctx} />
                 ))}
               </div>
-              <button className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed py-2 text-[12px] font-medium transition-colors hover:bg-[var(--c-surface)]" style={{ borderColor: "var(--c-border)", color: "var(--c-muted)" }}>
-                <Link2 size={14} /> Add context source
-              </button>
             </div>
 
             <div>

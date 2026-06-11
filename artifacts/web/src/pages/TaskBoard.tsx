@@ -9,18 +9,34 @@ import {
 import type { Task, TaskStatus, TaskPriority } from "@workspace/api-client-react";
 import { AppLayout, PageLoading, PageError } from "@/components/AppLayout";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
   LayoutGrid,
   Calendar,
   Clock,
   List,
   Users,
   Plus,
-  MoreHorizontal,
   Sparkles,
   MessageSquare,
   CheckCircle2,
   ChevronRight,
-  Filter,
   ArrowUp,
   ArrowRight,
   ArrowDown,
@@ -70,9 +86,6 @@ function TaskCard({
             </div>
           )}
         </div>
-        <button className="opacity-0 transition-opacity group-hover:opacity-100" style={{ color: "var(--c-muted)" }}>
-          <MoreHorizontal size={14} />
-        </button>
       </div>
 
       <div className="text-[13.5px] font-medium leading-snug" style={{ color: "var(--c-ink)" }}>
@@ -141,6 +154,19 @@ const COLUMNS: { id: TaskStatus; label: string }[] = [
   { id: "done", label: "Done" },
 ];
 
+const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
+  { value: "backlog", label: "Backlog" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "in_review", label: "In Review" },
+  { value: "done", label: "Done" },
+];
+
+const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
+  { value: "high", label: "High" },
+  { value: "medium", label: "Medium" },
+  { value: "low", label: "Low" },
+];
+
 const VIEWS = [
   { id: "board", label: "Board", icon: LayoutGrid },
   { id: "calendar", label: "Calendar", icon: Calendar },
@@ -153,6 +179,12 @@ export default function TaskBoard() {
   const [activeView, setActiveView] = useState("board");
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<TaskStatus | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [form, setForm] = useState<{
+    title: string;
+    status: TaskStatus;
+    priority: TaskPriority;
+  }>({ title: "", status: "backlog", priority: "medium" });
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useListTasks();
@@ -173,12 +205,18 @@ export default function TaskBoard() {
     updateTask.mutate({ id: task.id, data: { status } });
   };
 
-  const handleAdd = (status: TaskStatus) => {
-    const title = window.prompt("New task title");
-    if (!title?.trim()) return;
-    createTask.mutate({
-      data: { title: title.trim(), status, priority: "medium" },
-    });
+  const openAdd = (status: TaskStatus) => {
+    setForm({ title: "", status, priority: "medium" });
+    setAddOpen(true);
+  };
+
+  const submitAdd = () => {
+    const title = form.title.trim();
+    if (!title) return;
+    createTask.mutate(
+      { data: { title, status: form.status, priority: form.priority } },
+      { onSuccess: () => setAddOpen(false) },
+    );
   };
 
   const blockedCount = tasks.filter((t) => t.blocked).length;
@@ -188,18 +226,6 @@ export default function TaskBoard() {
       active="tasks"
       title="Tasks"
       subtitle="Manage and track marketing initiatives"
-      actions={
-        <div className="flex items-center gap-2">
-          <button className="flex h-9 items-center gap-2 rounded-xl px-3 text-[13px] font-semibold transition-colors hover:bg-black/5" style={{ color: "var(--c-ink-soft)", border: "1px solid var(--c-border)", background: "var(--c-surface)" }}>
-            <Filter size={15} />
-            Filter
-          </button>
-          <button className="flex h-9 items-center gap-2 rounded-xl px-3 text-[13px] font-semibold transition-colors hover:bg-black/5" style={{ color: "var(--c-ink-soft)", border: "1px solid var(--c-border)", background: "var(--c-surface)" }}>
-            <Share2 size={15} />
-            Share
-          </button>
-        </div>
-      }
     >
       <div className="flex h-full flex-col">
         {/* View switcher */}
@@ -228,7 +254,7 @@ export default function TaskBoard() {
           </div>
 
           <div
-            className="flex items-center gap-3 rounded-full py-1.5 pl-2.5 pr-4 text-[12px] font-semibold text-white shadow-sm transition-transform hover:scale-[1.02] cursor-pointer"
+            className="flex items-center gap-3 rounded-full py-1.5 pl-2.5 pr-4 text-[12px] font-semibold text-white shadow-sm"
             style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))" }}
           >
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
@@ -262,8 +288,8 @@ export default function TaskBoard() {
                     key={col.id}
                     className="flex h-full w-[320px] shrink-0 flex-col rounded-xl transition-colors"
                     style={{
-                      background: isOver ? "rgba(79,70,229,0.06)" : "transparent",
-                      outline: isOver ? "2px dashed rgba(79,70,229,0.3)" : "none",
+                      background: isOver ? "rgba(37,99,235,0.06)" : "transparent",
+                      outline: isOver ? "2px dashed rgba(37,99,235,0.3)" : "none",
                     }}
                     onDragOver={(e) => {
                       e.preventDefault();
@@ -282,9 +308,10 @@ export default function TaskBoard() {
                         </span>
                       </div>
                       <button
-                        onClick={() => handleAdd(col.id)}
+                        onClick={() => openAdd(col.id)}
                         className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-black/5"
                         style={{ color: "var(--c-muted)" }}
+                        aria-label={`Add task to ${col.label}`}
                       >
                         <Plus size={16} />
                       </button>
@@ -296,7 +323,7 @@ export default function TaskBoard() {
                           <TaskCard key={task.id} task={task} onDragStart={setDragId} />
                         ))}
                         <button
-                          onClick={() => handleAdd(col.id)}
+                          onClick={() => openAdd(col.id)}
                           className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed py-3 text-[13px] font-medium transition-colors hover:bg-[var(--c-surface-2)]"
                           style={{ borderColor: "var(--c-border-strong)", color: "var(--c-muted)" }}
                         >
@@ -312,6 +339,87 @@ export default function TaskBoard() {
           )}
         </div>
       </div>
+
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent className="sm:max-w-[440px]">
+          <DialogHeader>
+            <DialogTitle>New task</DialogTitle>
+            <DialogDescription>
+              Add a task to the board. It will be created via the API.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-1">
+            <div className="space-y-1.5">
+              <Label htmlFor="task-title">Title</Label>
+              <Input
+                id="task-title"
+                autoFocus
+                value={form.title}
+                placeholder="e.g. Draft Q3 launch brief"
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, title: e.target.value }))
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") submitAdd();
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>Status</Label>
+                <Select
+                  value={form.status}
+                  onValueChange={(v) =>
+                    setForm((f) => ({ ...f, status: v as TaskStatus }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Priority</Label>
+                <Select
+                  value={form.priority}
+                  onValueChange={(v) =>
+                    setForm((f) => ({ ...f, priority: v as TaskPriority }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRIORITY_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={submitAdd}
+              disabled={!form.title.trim() || createTask.isPending}
+            >
+              {createTask.isPending ? "Creating…" : "Create task"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }

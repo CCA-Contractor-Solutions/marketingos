@@ -9,6 +9,7 @@ import type {
   TaskRollup,
 } from "@workspace/api-client-react";
 import { AppLayout, PageError } from "@/components/AppLayout";
+import { CcaLogo } from "@/components/CcaLogo";
 import { fmtMoney } from "@/lib/format";
 import {
   Sparkles,
@@ -49,7 +50,7 @@ const INSIGHT_STYLE: Record<
   },
   info: {
     bg: "var(--c-brand-50)",
-    border: "rgba(79,70,229,0.18)",
+    border: "rgba(37,99,235,0.18)",
     icon: Sparkles,
     color: "var(--c-brand)",
   },
@@ -128,7 +129,7 @@ function CampaignRow({ c }: { c: CampaignSummary }) {
     >
       <div
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[12px] font-bold text-white"
-        style={{ background: c.ownerColor ?? "linear-gradient(135deg,#4f46e5,#7c3aed)" }}
+        style={{ background: c.ownerColor ?? "linear-gradient(135deg,#2563eb,#1e40af)" }}
       >
         {c.owner
           .split(" ")
@@ -222,14 +223,6 @@ function InsightCard({ insight }: { insight: Insight }) {
           <div className="mt-1 text-[12px] leading-snug" style={{ color: "var(--c-ink-soft)" }}>
             {insight.body}
           </div>
-          {insight.action && (
-            <button
-              className="mt-2 inline-flex items-center gap-1 text-[12px] font-semibold"
-              style={{ color: s.color }}
-            >
-              {insight.action} <ArrowRight size={13} />
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -267,12 +260,43 @@ export default function Dashboard() {
     <AppLayout
       active="dashboard"
       title="Command Center"
-      subtitle="Good morning, Alex — here's your marketing pulse"
+      subtitle="Good morning, Jessica — here's your marketing pulse"
     >
       {isError ? (
         <PageError />
       ) : (
         <div className="p-6 max-w-7xl mx-auto space-y-6 pb-20">
+          {/* CCA hero */}
+          <div
+            className="cadence-rise relative overflow-hidden rounded-2xl px-6 py-7 text-white"
+            style={{
+              background:
+                "linear-gradient(120deg, var(--c-navy), var(--c-navy-2) 68%, var(--c-brand))",
+              boxShadow: "0 18px 40px -20px rgba(11,18,36,0.7)",
+            }}
+          >
+            <div
+              className="cadence-ai-glow pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full"
+              style={{ background: "rgba(59,130,246,0.35)", filter: "blur(18px)" }}
+            />
+            <div className="relative flex items-center gap-4">
+              <div className="hidden shrink-0 sm:block">
+                <CcaLogo size={48} />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-white/70">
+                  <Sparkles size={13} /> Contractor Compliance Authority
+                </div>
+                <h2 className="font-display mt-1 text-[22px] font-bold leading-tight sm:text-[26px]">
+                  CCA Marketing Command Center
+                </h2>
+                <p className="mt-1 text-[13px] text-white/80">
+                  Plan, launch, approve, and optimize every campaign in one place.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* KPIs */}
           <div
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 cadence-rise"
@@ -380,7 +404,7 @@ export default function Dashboard() {
               >
                 <div className="mb-3 flex items-center gap-2">
                   <Sparkles size={16} style={{ color: "var(--c-brand)" }} />
-                  <h2 className="font-display text-[15px] font-bold">Cadence AI Insights</h2>
+                  <h2 className="font-display text-[15px] font-bold">CCA AI Insights</h2>
                 </div>
                 <div className="space-y-2.5">
                   {(data?.insights ?? []).map((ins) => (

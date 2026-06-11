@@ -7,7 +7,6 @@ import {
 } from "@workspace/api-client-react";
 import { AppLayout, PageLoading, PageError } from "@/components/AppLayout";
 import {
-  MoreHorizontal,
   CheckCircle2,
   Clock,
   Target,
@@ -20,8 +19,6 @@ import {
   CheckSquare,
   AlertCircle,
   Sparkles,
-  ArrowRight,
-  Plus,
   PlayCircle,
   MessageSquare,
   Globe,
@@ -91,19 +88,12 @@ export default function CampaignDetail() {
           className="flex items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60"
           style={{
             background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))",
-            boxShadow: "0 8px 18px -8px rgba(79,70,229,0.8)",
+            boxShadow: "0 8px 18px -8px rgba(37,99,235,0.8)",
           }}
         >
           <CheckCircle2 size={16} /> {approve.isPending ? "Approving…" : "Approve"}
         </button>
       )}
-
-      <button
-        className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors hover:bg-black/5"
-        style={{ color: "var(--c-ink-soft)" }}
-      >
-        <MoreHorizontal size={18} />
-      </button>
     </div>
   ) : undefined;
 
@@ -235,9 +225,6 @@ export default function CampaignDetail() {
             <div className="cadence-rise" style={{ animationDelay: "200ms" }}>
               <div className="flex items-center justify-between mb-4 px-1">
                 <div className="font-display text-[16px] font-bold">Creative Assets</div>
-                <button className="flex items-center gap-1.5 text-[13px] font-medium transition-colors hover:opacity-70" style={{ color: "var(--c-brand-600)" }}>
-                  <Plus size={14} /> Add Asset
-                </button>
               </div>
               <div className="rounded-2xl overflow-hidden" style={{ background: "var(--c-surface)", border: "1px solid var(--c-border)", boxShadow: "var(--c-shadow-sm)" }}>
                 {c.assets.map((asset, i) => (
@@ -249,9 +236,6 @@ export default function CampaignDetail() {
                       <div className="text-[13.5px] font-semibold truncate">{asset.name}</div>
                       <div className="text-[12px] mt-0.5" style={{ color: "var(--c-muted)" }}>{asset.size} • Uploaded {asset.date}</div>
                     </div>
-                    <button className="h-8 px-3 rounded-lg text-[12px] font-semibold transition-colors hover:bg-[var(--c-bg)]" style={{ color: "var(--c-ink)" }}>
-                      View
-                    </button>
                   </div>
                 ))}
               </div>
@@ -288,12 +272,12 @@ export default function CampaignDetail() {
 
           {/* Right column */}
           <div className="space-y-6 lg:space-y-8">
-            {/* Cadence AI */}
-            <div className="cadence-rise relative overflow-hidden rounded-2xl p-5 text-white" style={{ background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))", boxShadow: "0 12px 24px -8px rgba(79,70,229,0.35)", animationDelay: "50ms" }}>
+            {/* CCA AI */}
+            <div className="cadence-rise relative overflow-hidden rounded-2xl p-5 text-white" style={{ background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))", boxShadow: "0 12px 24px -8px rgba(37,99,235,0.35)", animationDelay: "50ms" }}>
               <div className="cadence-ai-glow pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full" style={{ background: "rgba(255,255,255,0.2)", filter: "blur(20px)" }} />
               <div className="relative">
                 <div className="flex items-center gap-2 text-[14px] font-bold mb-4">
-                  <Sparkles size={16} /> Cadence AI
+                  <Sparkles size={16} /> CCA AI
                 </div>
                 <div className="space-y-3 mb-5">
                   {c.insights.map((insight) => (
@@ -312,9 +296,6 @@ export default function CampaignDetail() {
                     </div>
                   ))}
                 </div>
-                <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-white text-[var(--c-brand)] py-2 text-[13px] font-bold transition-all hover:bg-white/90">
-                  Generate assets <ArrowRight size={14} />
-                </button>
               </div>
             </div>
 

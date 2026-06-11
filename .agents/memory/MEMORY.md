@@ -1,0 +1,2 @@
+- [Artifact workflow port detection](artifact-port-assignment.md) — DIDNT_OPEN_A_PORT despite local 200; use a standard port.
+- [Marketing app rebrand & reseed](marketing-app-rebrand.md) — single canonical web app (artifacts/web); brand text also lives in API seed/routes; seed skips when DB non-empty.

@@ -15,12 +15,7 @@ import {
   CheckCircle2,
   Sparkles,
   Send,
-  Paperclip,
-  MoreHorizontal,
   Hash,
-  Users,
-  Settings,
-  ListTodo,
 } from "lucide-react";
 
 function ThreadButton({
@@ -124,11 +119,6 @@ function MessageRow({ msg }: { msg: Message }) {
           </div>
         )}
       </div>
-      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-start pt-1">
-        <button className="p-1.5 rounded text-[var(--c-muted)] hover:bg-[var(--c-bg)]">
-          <MoreHorizontal size={16} />
-        </button>
-      </div>
     </div>
   );
 }
@@ -179,14 +169,6 @@ export default function Collaboration() {
       active="collaboration"
       title="Collaboration"
       subtitle={currentThread?.campaign ?? "Team threads"}
-      actions={
-        <div className="flex gap-2">
-          <button className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors hover:bg-[var(--c-surface)]" style={{ color: "var(--c-ink-soft)", border: "1px solid var(--c-border)" }}>
-            <Users size={14} />
-            Manage Access
-          </button>
-        </div>
-      }
     >
       {threadsLoading ? (
         <PageLoading />
@@ -237,14 +219,6 @@ export default function Collaboration() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <button className="p-1.5 rounded-lg hover:bg-[var(--c-bg)] transition-colors text-[var(--c-muted)] hover:text-[var(--c-ink)]">
-                  <Search size={16} />
-                </button>
-                <button className="p-1.5 rounded-lg hover:bg-[var(--c-bg)] transition-colors text-[var(--c-muted)] hover:text-[var(--c-ink)]">
-                  <Settings size={16} />
-                </button>
-              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6 cadence-scroll">
@@ -281,19 +255,7 @@ export default function Collaboration() {
                   placeholder="Reply to thread..."
                   className="w-full bg-transparent p-4 text-[14px] outline-none resize-none min-h-[80px]"
                 />
-                <div className="flex items-center justify-between p-2 pt-0">
-                  <div className="flex items-center gap-1">
-                    <button className="p-2 rounded-lg text-[var(--c-muted)] hover:text-[var(--c-ink)] hover:bg-[var(--c-surface)] transition-colors">
-                      <Paperclip size={18} />
-                    </button>
-                    <button
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-bold transition-all hover:opacity-90"
-                      style={{ background: "linear-gradient(135deg, var(--c-brand-50), #f3e8ff)", color: "var(--c-violet)" }}
-                    >
-                      <Sparkles size={14} />
-                      AI Assist
-                    </button>
-                  </div>
+                <div className="flex items-center justify-end p-2 pt-0">
                   <button
                     onClick={submit}
                     disabled={!messageText.trim() || createMessage.isPending}
@@ -323,11 +285,8 @@ export default function Collaboration() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 font-display font-bold text-[15px]">
                     <Sparkles size={18} className="text-indigo-200" />
-                    Cadence AI Summary
+                    CCA AI Summary
                   </div>
-                  <button className="p-1 hover:bg-white/10 rounded-md transition-colors">
-                    <MoreHorizontal size={16} />
-                  </button>
                 </div>
 
                 <div className="space-y-4">
@@ -377,11 +336,6 @@ export default function Collaboration() {
                         </div>
                       ))}
                     </div>
-
-                    <button className="w-full py-2.5 bg-white text-[var(--c-violet)] rounded-xl text-[13px] font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                      <ListTodo size={16} />
-                      Convert to Tasks
-                    </button>
                   </div>
                 </div>
               </div>

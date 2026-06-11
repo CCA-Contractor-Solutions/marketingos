@@ -420,54 +420,54 @@
 }
 
 /* ============================================================
-   Cadence — Marketing OS design language (graduated from mockups)
+   CCA — Marketing OS design language (graduated from mockups)
    ============================================================ */
 
-/* shadcn token overrides mapped to the Cadence palette (HSL) */
+/* shadcn token overrides mapped to the CCA palette (HSL) */
 :root {
   --background: 228 33% 97%;
-  --foreground: 233 42% 12%;
-  --border: 233 33% 93%;
-  --input: 233 33% 93%;
-  --ring: 245 75% 59%;
+  --foreground: 222 47% 13%;
+  --border: 222 28% 91%;
+  --input: 222 28% 91%;
+  --ring: 221 83% 53%;
 
   --card: 0 0% 100%;
-  --card-foreground: 233 42% 12%;
-  --card-border: 233 33% 93%;
+  --card-foreground: 222 47% 13%;
+  --card-border: 222 28% 91%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 233 42% 12%;
-  --popover-border: 233 33% 93%;
+  --popover-foreground: 222 47% 13%;
+  --popover-border: 222 28% 91%;
 
-  --primary: 245 75% 59%;
+  --primary: 221 83% 53%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 240 60% 97%;
-  --secondary-foreground: 245 55% 40%;
+  --secondary: 214 100% 96%;
+  --secondary-foreground: 221 72% 42%;
 
   --muted: 228 33% 97%;
-  --muted-foreground: 233 14% 60%;
+  --muted-foreground: 222 14% 50%;
 
-  --accent: 240 60% 97%;
-  --accent-foreground: 245 55% 40%;
+  --accent: 214 100% 96%;
+  --accent-foreground: 221 72% 42%;
 
   --destructive: 350 89% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --chart-1: 245 75% 59%;
-  --chart-2: 270 81% 58%;
-  --chart-3: 207 88% 56%;
+  --chart-1: 221 83% 53%;
+  --chart-2: 217 91% 60%;
+  --chart-3: 199 89% 48%;
   --chart-4: 38 91% 55%;
   --chart-5: 162 78% 39%;
 
   --sidebar: 0 0% 100%;
-  --sidebar-foreground: 233 42% 12%;
-  --sidebar-border: 233 33% 93%;
-  --sidebar-primary: 245 75% 59%;
+  --sidebar-foreground: 222 47% 13%;
+  --sidebar-border: 222 28% 91%;
+  --sidebar-primary: 221 83% 53%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 60% 97%;
-  --sidebar-accent-foreground: 245 55% 40%;
-  --sidebar-ring: 245 75% 59%;
+  --sidebar-accent: 214 100% 96%;
+  --sidebar-accent-foreground: 221 72% 42%;
+  --sidebar-ring: 221 83% 53%;
 }
 
 body {
@@ -475,7 +475,7 @@ body {
   background: #f6f7fb;
 }
 
-/* Cadence scope tokens (ported verbatim from the mockup _group.css) */
+/* CCA scope tokens (ported verbatim from the mockup _group.css) */
 .cadence {
   --c-bg: #f6f7fb;
   --c-surface: #ffffff;
@@ -486,15 +486,17 @@ body {
   --c-border: #e9eaf3;
   --c-border-strong: #dcdef0;
 
-  --c-brand: #4f46e5;
-  --c-brand-600: #4338ca;
-  --c-brand-50: #eef0fe;
-  --c-violet: #7c3aed;
+  --c-brand: #2563eb;
+  --c-brand-600: #1d4ed8;
+  --c-brand-50: #eef4ff;
+  --c-violet: #1e40af;
+  --c-navy: #0b1224;
+  --c-navy-2: #1e3a8a;
   --c-coral: #fb6f5a;
   --c-amber: #f5a524;
   --c-emerald: #18b386;
   --c-rose: #f43f6b;
-  --c-sky: #2f9bf2;
+  --c-sky: #3b82f6;
 
   --c-shadow-sm: 0 1px 2px rgba(17, 19, 42, 0.05);
   --c-shadow-md: 0 6px 24px -8px rgba(17, 19, 42, 0.12);
@@ -510,7 +512,7 @@ body {
 }
 
 .cadence ::selection {
-  background: rgba(79, 70, 229, 0.18);
+  background: rgba(37, 99, 235, 0.18);
 }
 
 @keyframes cadence-rise {

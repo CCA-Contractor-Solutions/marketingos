@@ -58,17 +58,17 @@ router.post("/assistant/messages", async (req, res) => {
     id: `am-${Date.now()}-a`,
     role: "assistant" as const,
     content:
-      "Here's a draft based on your request. I've kept it aligned with the Cadence brand guardrails — review and let me know what to refine:",
+      "Here's a draft based on your request. I've kept it aligned with the CCA brand guardrails — review and let me know what to refine:",
     intro:
-      "Here's a draft based on your request. I've kept it aligned with the Cadence brand guardrails — review and let me know what to refine:",
+      "Here's a draft based on your request. I've kept it aligned with the CCA brand guardrails — review and let me know what to refine:",
     variants: [
       {
         number: "1",
         platform: "LinkedIn",
         tone: "Professional",
         content:
-          "Marketing teams move faster when planning, execution, and insight live in one place. See how Cadence turns scattered campaigns into a single, measurable rhythm.",
-        tags: "#MarketingOps #Cadence",
+          "Marketing teams move faster when planning, execution, and insight live in one place. See how CCA turns scattered campaigns into a single, measurable rhythm.",
+        tags: "#MarketingOps #CCA",
       },
     ],
   };

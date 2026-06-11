@@ -1,0 +1,61 @@
+Approved to proceed with P0/P1 stabilization.
+
+Decision 1:
+Keep `artifacts/web` as the canonical Cadence app. It is the live API-backed version and should be the only app moving forward.
+
+Decision 2:
+Delete/remove the orphaned `artifacts/cadence` app and its failed workflow. Do not copy anything from it unless you first identify a specific working improvement that should be migrated into `artifacts/web`.
+
+Decision 3:
+For dead buttons, use this rule:
+- Wire core workflow buttons if they are needed for the current app to function.
+- Temporarily hide nonessential buttons that cannot be wired cleanly in this pass.
+- Do not leave visible buttons that appear functional but do nothing.
+
+Prioritized fix order:
+
+P0:
+1. Consolidate to `artifacts/web`.
+2. Remove `artifacts/cadence` and its workflow/port conflict.
+3. Add mobile navigation using a hamburger menu that opens the existing sidebar in a drawer/sheet.
+
+P1:
+4. Fix typecheck.
+5. Regenerate the API client if needed.
+6. Add missing explicit types for implicit-any callbacks.
+7. Replace raw `window.prompt` task creation with a proper task dialog.
+8. Wire or hide every dead control listed in the audit.
+9. Make sidebar attention counts and the blocked-task banner derive from real data instead of hardcoded text.
+
+P2:
+10. Add empty states.
+11. Add success toasts/confirmations after create, approve, move, and save actions.
+12. Add beginner-friendly tooltips for marketing acronyms and status terms like CPA, ROAS, MQL, On Track, At Risk, and Pacing.
+13. Either build out Brand Memory or clearly label it as upcoming.
+
+Scope clarification:
+Do not build the larger training/mockup/ad-generator/engagement/sentiment/bonus system in this stabilization pass. Those are future product requirements and should not be mixed into this cleanup until the current app is stable.
+
+Before coding:
+- Confirm you are editing only `artifacts/web`.
+- Confirm `artifacts/cadence` has been removed or disabled.
+- Confirm the app starts cleanly.
+- Then proceed through P0 and P1 in order.
+
+After coding:
+Run and report:
+- typecheck
+- build
+- any available tests
+- manual desktop navigation check
+- manual mobile navigation check
+- task create/edit/status move check
+- campaign approve check
+- dead-button audit showing what was wired vs hidden
+
+Return a concise completion report with:
+1. Files changed
+2. What was fixed
+3. What was hidden
+4. What still remains
+5. Any errors or blockers
