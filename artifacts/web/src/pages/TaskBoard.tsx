@@ -41,7 +41,12 @@ import {
   ArrowRight,
   ArrowDown,
   Share2,
+  Filter,
 } from "lucide-react";
+import ListView from "./task-views/ListView";
+import CalendarView from "./task-views/CalendarView";
+import WorkloadView from "./task-views/WorkloadView";
+import TimelineView from "./task-views/TimelineView";
 
 function PriorityIcon({ priority }: { priority: TaskPriority }) {
   if (priority === "high") return <ArrowUp size={14} style={{ color: "var(--c-rose)" }} />;
@@ -175,8 +180,27 @@ const VIEWS = [
   { id: "workload", label: "Workload", icon: Users },
 ];
 
+const STATUS_FILTERS: { value: TaskStatus | "all"; label: string }[] = [
+  { value: "all", label: "All statuses" },
+  { value: "backlog", label: "Backlog" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "in_review", label: "In Review" },
+  { value: "done", label: "Done" },
+];
+
+const PRIORITY_FILTERS: { value: TaskPriority | "all"; label: string }[] = [
+  { value: "all", label: "All priorities" },
+  { value: "high", label: "High" },
+  { value: "medium", label: "Medium" },
+  { value: "low", label: "Low" },
+];
+
 export default function TaskBoard() {
   const [activeView, setActiveView] = useState("board");
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | "all">("all");
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "all">(
+    "all",
+  );
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<TaskStatus | null>(null);
   const [addOpen, setAddOpen] = useState(false);
@@ -195,6 +219,12 @@ export default function TaskBoard() {
   const createTask = useCreateTask({ mutation: { onSuccess: invalidate } });
 
   const tasks = data ?? [];
+
+  const filteredTasks = tasks.filter(
+    (t) =>
+      (statusFilter === "all" || t.status === statusFilter) &&
+      (priorityFilter === "all" || t.priority === priorityFilter),
+  );
 
   const handleDrop = (status: TaskStatus) => {
     setDragOver(null);
@@ -253,35 +283,83 @@ export default function TaskBoard() {
             })}
           </div>
 
-          <div
-            className="flex items-center gap-3 rounded-full py-1.5 pl-2.5 pr-4 text-[12px] font-semibold text-white shadow-sm"
-            style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))" }}
-          >
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
-              <Sparkles size={12} className="text-white" />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Filter size={14} style={{ color: "var(--c-muted)" }} />
+              <Select
+                value={statusFilter}
+                onValueChange={(v) => setStatusFilter(v as TaskStatus | "all")}
+              >
+                <SelectTrigger className="h-8 w-[140px] text-[12.5px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUS_FILTERS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={priorityFilter}
+                onValueChange={(v) =>
+                  setPriorityFilter(v as TaskPriority | "all")
+                }
+              >
+                <SelectTrigger className="h-8 w-[140px] text-[12.5px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {PRIORITY_FILTERS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <span>
-              AI: {blockedCount} blocked task{blockedCount === 1 ? "" : "s"} need
-              {blockedCount === 1 ? "s" : ""} your review
-            </span>
-            <ChevronRight size={14} className="ml-1 opacity-70" />
+
+            <div
+              className="flex items-center gap-3 rounded-full py-1.5 pl-2.5 pr-4 text-[12px] font-semibold text-white shadow-sm"
+              style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))" }}
+            >
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
+                <Sparkles size={12} className="text-white" />
+              </div>
+              <span>
+                AI: {blockedCount} blocked task{blockedCount === 1 ? "" : "s"} need
+                {blockedCount === 1 ? "s" : ""} your review
+              </span>
+              <ChevronRight size={14} className="ml-1 opacity-70" />
+            </div>
           </div>
         </div>
 
-        {/* Board */}
-        <div className="cadence-scroll flex-1 overflow-x-auto overflow-y-hidden bg-[#f6f7fb] p-6">
+        {/* View content */}
+        <div
+          className={`cadence-scroll flex-1 bg-[#f6f7fb] p-6 ${
+            activeView === "board" || activeView === "workload"
+              ? "overflow-x-auto overflow-y-hidden"
+              : "overflow-y-auto"
+          }`}
+        >
           {isLoading ? (
             <PageLoading />
           ) : isError ? (
             <PageError />
-          ) : activeView !== "board" ? (
-            <div className="flex h-full items-center justify-center text-[13px]" style={{ color: "var(--c-muted)" }}>
-              The {activeView} view is coming soon. Switch back to Board.
-            </div>
+          ) : activeView === "list" ? (
+            <ListView tasks={filteredTasks} />
+          ) : activeView === "calendar" ? (
+            <CalendarView tasks={filteredTasks} />
+          ) : activeView === "workload" ? (
+            <WorkloadView tasks={filteredTasks} />
+          ) : activeView === "timeline" ? (
+            <TimelineView tasks={filteredTasks} />
           ) : (
             <div className="flex h-full gap-5">
               {COLUMNS.map((col) => {
-                const columnTasks = tasks.filter((t) => t.status === col.id);
+                const columnTasks = filteredTasks.filter((t) => t.status === col.id);
                 const isOver = dragOver === col.id;
                 return (
                   <div
