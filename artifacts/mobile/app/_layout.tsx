@@ -15,6 +15,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { NotificationsProvider } from "@/hooks/useNotifications";
 
 // Expo bundles run outside the web proxy and need an absolute URL to reach the
 // API server. The domain is injected at build time and varies per environment.
@@ -56,7 +57,9 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <GestureHandlerRootView>
             <KeyboardProvider>
-              <RootLayoutNav />
+              <NotificationsProvider>
+                <RootLayoutNav />
+              </NotificationsProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
         </QueryClientProvider>

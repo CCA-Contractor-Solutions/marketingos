@@ -13,6 +13,7 @@ function toTask(row: TaskRow) {
     priority: row.priority,
     assignees: row.assignees,
     dueDate: row.dueDate,
+    dueAt: row.dueAt,
     campaign: row.campaign,
     subtasks: row.subtasks ?? null,
     comments: row.comments,
@@ -57,6 +58,7 @@ router.post("/tasks", async (req, res) => {
       priority: body.priority,
       campaign: body.campaign ?? null,
       dueDate: body.dueDate ?? null,
+      dueAt: body.dueAt ?? null,
       sortOrder: nextOrder,
     })
     .returning();
@@ -78,6 +80,7 @@ router.patch("/tasks/:id", async (req, res) => {
   if (body.priority !== undefined) update.priority = body.priority;
   if (body.campaign !== undefined) update.campaign = body.campaign;
   if (body.dueDate !== undefined) update.dueDate = body.dueDate;
+  if (body.dueAt !== undefined) update.dueAt = body.dueAt;
   if (body.blocked !== undefined) update.blocked = body.blocked;
 
   const updated = await db

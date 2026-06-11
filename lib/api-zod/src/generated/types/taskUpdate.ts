@@ -15,5 +15,6 @@ export interface TaskUpdate {
   priority?: TaskUpdatePriority;
   campaign?: string;
   dueDate?: string;
+  dueAt?: string;
   blocked?: boolean;
 }

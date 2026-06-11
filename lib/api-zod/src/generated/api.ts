@@ -249,6 +249,7 @@ export const ListTasksResponseItem = zod.object({
   "color": zod.string()
 })),
   "dueDate": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
   "campaign": zod.string().nullish(),
   "subtasks": zod.union([zod.object({
   "completed": zod.number(),
@@ -273,7 +274,8 @@ export const CreateTaskBody = zod.object({
   "status": zod.enum(['backlog', 'in_progress', 'in_review', 'done']),
   "priority": zod.enum(['high', 'medium', 'low']),
   "campaign": zod.string().optional(),
-  "dueDate": zod.string().optional()
+  "dueDate": zod.string().optional(),
+  "dueAt": zod.string().optional()
 })
 
 
@@ -293,6 +295,7 @@ export const UpdateTaskBody = zod.object({
   "priority": zod.enum(['high', 'medium', 'low']).optional(),
   "campaign": zod.string().optional(),
   "dueDate": zod.string().optional(),
+  "dueAt": zod.string().optional(),
   "blocked": zod.boolean().optional()
 })
 
@@ -306,6 +309,7 @@ export const UpdateTaskResponse = zod.object({
   "color": zod.string()
 })),
   "dueDate": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
   "campaign": zod.string().nullish(),
   "subtasks": zod.union([zod.object({
   "completed": zod.number(),

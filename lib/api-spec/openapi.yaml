@@ -581,6 +581,7 @@ components:
           type: array
           items: { $ref: "#/components/schemas/Assignee" }
         dueDate: { type: ["string", "null"] }
+        dueAt: { type: ["string", "null"] }
         campaign: { type: ["string", "null"] }
         subtasks:
           oneOf:
@@ -604,6 +605,7 @@ components:
           enum: [high, medium, low]
         campaign: { type: string }
         dueDate: { type: string }
+        dueAt: { type: string }
 
     TaskUpdate:
       type: object
@@ -617,6 +619,7 @@ components:
           enum: [high, medium, low]
         campaign: { type: string }
         dueDate: { type: string }
+        dueAt: { type: string }
         blocked: { type: boolean }
 
     Thread:

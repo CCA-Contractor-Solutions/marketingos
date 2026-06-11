@@ -7,6 +7,7 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -26,6 +27,7 @@ import {
   useTopInset,
 } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
+import { useNotifications } from "@/hooks/useNotifications";
 import { formatCurrency } from "@/lib/format";
 
 const SEVERITY_ACCENT = {
@@ -45,6 +47,7 @@ export default function DashboardScreen() {
   const colors = useColors();
   const topInset = useTopInset();
   const bottomInset = useBottomInset();
+  const { optedIn, busy, permissionDenied, setOptedIn } = useNotifications();
   const { data, isLoading, isError, refetch, isRefetching } =
     useGetDashboardSummary();
 
@@ -98,6 +101,37 @@ export default function DashboardScreen() {
           <Feather name="activity" size={22} color="#fff" />
         </LinearGradient>
       </View>
+
+      {/* Reminders opt-in */}
+      <Card style={{ marginBottom: 22 }}>
+        <View style={styles.reminderRow}>
+          <View
+            style={[styles.reminderIcon, { backgroundColor: colors.brand50 }]}
+          >
+            <Feather name="bell" size={16} color={colors.primary} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.reminderTitle, { color: colors.foreground }]}>
+              Reminders
+            </Text>
+            <Text
+              style={[styles.reminderBody, { color: colors.mutedForeground }]}
+            >
+              {permissionDenied
+                ? "Enable notifications in Settings to get reminders."
+                : "Get notified about due tasks and approvals."}
+            </Text>
+          </View>
+          <Switch
+            value={optedIn}
+            disabled={busy}
+            onValueChange={(next) => {
+              void setOptedIn(next);
+            }}
+            trackColor={{ true: colors.primary }}
+          />
+        </View>
+      </Card>
 
       {/* KPIs */}
       <View style={styles.kpiGrid}>
@@ -402,6 +436,21 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
+  },
+  reminderRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  reminderIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  reminderTitle: { fontFamily: "Inter_600SemiBold", fontSize: 15 },
+  reminderBody: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 12,
+    marginTop: 2,
+    lineHeight: 17,
   },
   kpiGrid: {
     flexDirection: "row",

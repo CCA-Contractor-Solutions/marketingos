@@ -15,4 +15,5 @@ export interface TaskInput {
   priority: TaskInputPriority;
   campaign?: string;
   dueDate?: string;
+  dueAt?: string;
 }

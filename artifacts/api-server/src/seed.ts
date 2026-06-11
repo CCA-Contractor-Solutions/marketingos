@@ -347,6 +347,13 @@ const campaigns: CampaignSeed[] = [
   },
 ];
 
+// dueAt is a machine-readable ISO timestamp used by the mobile app to schedule
+// "approaching due date" reminders. It is computed relative to seed time so the
+// reminders are always meaningful regardless of when the database is seeded.
+function inHours(hours: number): string {
+  return new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
+}
+
 const tasks: TaskSeed[] = [
   {
     id: "TSK-101",
@@ -355,6 +362,7 @@ const tasks: TaskSeed[] = [
     priority: "high",
     assignees: [{ init: "AR", color: "#fb6f5a" }],
     dueDate: "Tomorrow",
+    dueAt: inHours(28),
     campaign: "Q3 Growth",
     subtasks: { completed: 1, total: 4 },
     sortOrder: 0,
@@ -378,6 +386,7 @@ const tasks: TaskSeed[] = [
       { init: "AR", color: "#fb6f5a" },
     ],
     dueDate: "Today",
+    dueAt: inHours(6),
     campaign: "Winter Launch",
     comments: 3,
     blocked: true,
@@ -391,6 +400,7 @@ const tasks: TaskSeed[] = [
     priority: "medium",
     assignees: [{ init: "MK", color: "#18b386" }],
     dueDate: "Oct 12",
+    dueAt: inHours(52),
     campaign: "Conversion Opt",
     subtasks: { completed: 2, total: 3 },
     dependsOn: "TSK-101",

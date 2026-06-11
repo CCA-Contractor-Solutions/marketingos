@@ -231,6 +231,8 @@ export interface Task {
   /** @nullable */
   dueDate?: string | null;
   /** @nullable */
+  dueAt?: string | null;
+  /** @nullable */
   campaign?: string | null;
   subtasks?: Subtasks | null;
   /** @nullable */
@@ -267,6 +269,7 @@ export interface TaskInput {
   priority: TaskInputPriority;
   campaign?: string;
   dueDate?: string;
+  dueAt?: string;
 }
 
 export type TaskUpdateStatus = typeof TaskUpdateStatus[keyof typeof TaskUpdateStatus];
@@ -295,6 +298,7 @@ export interface TaskUpdate {
   priority?: TaskUpdatePriority;
   campaign?: string;
   dueDate?: string;
+  dueAt?: string;
   blocked?: boolean;
 }
 

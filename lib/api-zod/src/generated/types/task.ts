@@ -19,6 +19,8 @@ export interface Task {
   /** @nullable */
   dueDate?: string | null;
   /** @nullable */
+  dueAt?: string | null;
+  /** @nullable */
   campaign?: string | null;
   subtasks?: Subtasks | null;
   /** @nullable */

@@ -76,6 +76,7 @@ export const tasksTable = pgTable("tasks", {
   priority: text("priority").notNull().default("medium"),
   assignees: jsonb("assignees").$type<Assignee[]>().notNull().default([]),
   dueDate: text("due_date"),
+  dueAt: text("due_at"),
   campaign: text("campaign"),
   subtasks: jsonb("subtasks").$type<Subtasks | null>(),
   comments: integer("comments"),
