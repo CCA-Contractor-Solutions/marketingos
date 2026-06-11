@@ -86,7 +86,6 @@ export function Collaboration() {
 
   return (
     <AppLayout
-      active="collaboration"
       title="Collaboration"
       subtitle="Q3 Enterprise Growth"
       actions={

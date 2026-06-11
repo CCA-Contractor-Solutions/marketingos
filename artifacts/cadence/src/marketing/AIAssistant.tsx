@@ -28,7 +28,6 @@ import {
 export function AIAssistant() {
   return (
     <AppLayout
-      active="dashboard"
       title="Cadence AI"
       subtitle="Your marketing copilot"
       actions={

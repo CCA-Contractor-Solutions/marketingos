@@ -110,9 +110,7 @@ export function CampaignDetail() {
   );
 
   return (
-    <AppLayout 
-      active="campaigns" 
-      title={CAMPAIGN.name} 
+    <AppLayout title={CAMPAIGN.name} 
       subtitle={CAMPAIGN.subtitle} 
       actions={actions}
     >

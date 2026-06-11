@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import "../_group.css";
 import {
   LayoutDashboard,
@@ -38,18 +38,21 @@ const NAV: {
 ];
 
 export function AppLayout({
-  active,
   title,
   subtitle,
   actions,
   children,
 }: {
-  active: NavKey;
   title: string;
   subtitle?: string;
   actions?: ReactNode;
   children: ReactNode;
 }) {
+  const [location] = useLocation();
+  const isActive = (path: string) =>
+    path === "/"
+      ? location === "/"
+      : location === path || location.startsWith(path + "/");
   return (
     <div
       className="cadence flex h-screen w-full overflow-hidden"
@@ -119,7 +122,7 @@ export function AppLayout({
           </div>
           <div className="flex flex-col gap-0.5">
             {NAV.map((item) => {
-              const on = item.key === active;
+              const on = isActive(item.path);
               const Icon = item.icon;
               return (
                 <Link

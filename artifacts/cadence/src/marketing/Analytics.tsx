@@ -68,7 +68,6 @@ const FUNNEL_DATA = [
 export function Analytics() {
   return (
     <AppLayout
-      active="analytics"
       title="Analytics Overview"
       subtitle="Last 30 Days: Oct 1 - Oct 31, 2024"
       actions={

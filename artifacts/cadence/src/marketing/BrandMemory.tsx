@@ -4,7 +4,6 @@ import { BookMarked } from "lucide-react";
 export function BrandMemory() {
   return (
     <AppLayout
-      active="brand"
       title="Brand Memory"
       subtitle="Your single source of brand truth"
     >

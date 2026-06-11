@@ -29,7 +29,6 @@ export function Dashboard() {
   };
   return (
     <AppLayout
-      active="dashboard"
       title="Command Center"
       subtitle="Overview for Q3 (Jul 1 – Sep 30, 2024)"
       actions={

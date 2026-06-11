@@ -128,9 +128,7 @@ export function TaskBoard() {
   ];
 
   return (
-    <AppLayout 
-      active="tasks" 
-      title="Tasks" 
+    <AppLayout title="Tasks" 
       subtitle="Manage and track marketing initiatives"
       actions={
         <div className="flex items-center gap-2">
