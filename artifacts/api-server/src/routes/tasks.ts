@@ -78,6 +78,7 @@ router.patch("/tasks/:id", async (req, res) => {
   if (body.title !== undefined) update.title = body.title;
   if (body.status !== undefined) update.status = body.status;
   if (body.priority !== undefined) update.priority = body.priority;
+  if (body.assignees !== undefined) update.assignees = body.assignees;
   if (body.campaign !== undefined) update.campaign = body.campaign;
   if (body.dueDate !== undefined) update.dueDate = body.dueDate;
   if (body.dueAt !== undefined) update.dueAt = body.dueAt;

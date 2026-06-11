@@ -296,6 +296,7 @@ export interface TaskUpdate {
   title?: string;
   status?: TaskUpdateStatus;
   priority?: TaskUpdatePriority;
+  assignees?: Assignee[];
   campaign?: string;
   dueDate?: string;
   dueAt?: string;

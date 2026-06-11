@@ -83,7 +83,13 @@ function SortHeader({
   );
 }
 
-export default function ListView({ tasks }: { tasks: Task[] }) {
+export default function ListView({
+  tasks,
+  onTaskClick,
+}: {
+  tasks: Task[];
+  onTaskClick?: (task: Task) => void;
+}) {
   const [sortKey, setSortKey] = useState<SortKey>("status");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
@@ -166,7 +172,8 @@ export default function ListView({ tasks }: { tasks: Task[] }) {
             return (
               <tr
                 key={task.id}
-                className="transition-colors hover:bg-[var(--c-surface-2)]"
+                onClick={() => onTaskClick?.(task)}
+                className="cursor-pointer transition-colors hover:bg-[var(--c-surface-2)]"
                 style={{ borderBottom: "1px solid var(--c-border)" }}
               >
                 <td className="px-4 py-3 align-middle">

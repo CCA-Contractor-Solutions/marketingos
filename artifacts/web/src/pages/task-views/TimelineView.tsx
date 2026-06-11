@@ -15,7 +15,13 @@ const LABEL_WIDTH = 260;
 
 type DatedTask = { task: Task; date: Date };
 
-export default function TimelineView({ tasks }: { tasks: Task[] }) {
+export default function TimelineView({
+  tasks,
+  onTaskClick,
+}: {
+  tasks: Task[];
+  onTaskClick?: (task: Task) => void;
+}) {
   const today = useMemo(() => startOfDay(new Date()), []);
 
   const dated = useMemo<DatedTask[]>(
@@ -170,7 +176,8 @@ export default function TimelineView({ tasks }: { tasks: Task[] }) {
               return (
                 <div
                   key={task.id}
-                  className="group flex transition-colors hover:bg-[var(--c-surface-2)]"
+                  onClick={() => onTaskClick?.(task)}
+                  className="group flex cursor-pointer transition-colors hover:bg-[var(--c-surface-2)]"
                   style={{ borderBottom: "1px solid var(--c-border)" }}
                 >
                   <div
@@ -243,7 +250,8 @@ export default function TimelineView({ tasks }: { tasks: Task[] }) {
             {unscheduled.map((task) => (
               <div
                 key={task.id}
-                className="flex items-center gap-2 rounded-lg px-2.5 py-1.5"
+                onClick={() => onTaskClick?.(task)}
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-[var(--c-surface)]"
                 style={{
                   background: "var(--c-surface-2)",
                   border: "1px solid var(--c-border)",

@@ -47,6 +47,7 @@ import ListView from "./task-views/ListView";
 import CalendarView from "./task-views/CalendarView";
 import WorkloadView from "./task-views/WorkloadView";
 import TimelineView from "./task-views/TimelineView";
+import TaskDetailSheet from "@/components/TaskDetailSheet";
 
 function PriorityIcon({ priority }: { priority: TaskPriority }) {
   if (priority === "high") return <ArrowUp size={14} style={{ color: "var(--c-rose)" }} />;
@@ -227,13 +228,9 @@ export default function TaskBoard() {
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<TaskStatus | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState<{
-    title: string;
-    status: TaskStatus;
-    priority: TaskPriority;
-  }>({ title: "", status: "backlog", priority: "medium" });
-  const [detailTask, setDetailTask] = useState<Task | null>(null);
-  const [editForm, setEditForm] = useState<{
     title: string;
     status: TaskStatus;
     priority: TaskPriority;
@@ -248,6 +245,23 @@ export default function TaskBoard() {
   const createTask = useCreateTask({ mutation: { onSuccess: invalidate } });
 
   const tasks = Array.isArray(data) ? data : [];
+
+  const selectedTask = tasks.find((t) => t.id === selectedId) ?? null;
+
+  const roster = (() => {
+    const seen = new Map<string, { init: string; color: string }>();
+    for (const t of tasks) {
+      for (const a of t.assignees ?? []) {
+        if (!seen.has(a.init)) seen.set(a.init, a);
+      }
+    }
+    return [...seen.values()];
+  })();
+
+  const openDetail = (task: Task) => {
+    setSelectedId(task.id);
+    setDetailOpen(true);
+  };
 
   const filteredTasks = tasks.filter(
     (t) =>
@@ -275,32 +289,6 @@ export default function TaskBoard() {
     createTask.mutate(
       { data: { title, status: form.status, priority: form.priority } },
       { onSuccess: () => setAddOpen(false) },
-    );
-  };
-
-  const openDetail = (task: Task) => {
-    setEditForm({
-      title: task.title,
-      status: task.status,
-      priority: task.priority,
-    });
-    setDetailTask(task);
-  };
-
-  const submitEdit = () => {
-    if (!detailTask) return;
-    const title = editForm.title.trim();
-    if (!title) return;
-    updateTask.mutate(
-      {
-        id: detailTask.id,
-        data: {
-          title,
-          status: editForm.status,
-          priority: editForm.priority,
-        },
-      },
-      { onSuccess: () => setDetailTask(null) },
     );
   };
 
@@ -404,13 +392,13 @@ export default function TaskBoard() {
           ) : isError ? (
             <PageError />
           ) : activeView === "list" ? (
-            <ListView tasks={filteredTasks} />
+            <ListView tasks={filteredTasks} onTaskClick={openDetail} />
           ) : activeView === "calendar" ? (
-            <CalendarView tasks={filteredTasks} />
+            <CalendarView tasks={filteredTasks} onTaskClick={openDetail} />
           ) : activeView === "workload" ? (
-            <WorkloadView tasks={filteredTasks} />
+            <WorkloadView tasks={filteredTasks} onTaskClick={openDetail} />
           ) : activeView === "timeline" ? (
-            <TimelineView tasks={filteredTasks} />
+            <TimelineView tasks={filteredTasks} onTaskClick={openDetail} />
           ) : (
             <div className="flex h-full gap-5">
               {COLUMNS.map((col) => {
@@ -559,118 +547,12 @@ export default function TaskBoard() {
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        open={!!detailTask}
-        onOpenChange={(o) => !o && setDetailTask(null)}
-      >
-        <DialogContent className="sm:max-w-[480px]">
-          <DialogHeader>
-            <DialogTitle>Task details</DialogTitle>
-            <DialogDescription>
-              {detailTask?.id}
-              {detailTask?.campaign ? ` · ${detailTask.campaign}` : ""}
-            </DialogDescription>
-          </DialogHeader>
-          {detailTask && (
-            <div className="space-y-4 py-1">
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-task-title">Title</Label>
-                <Input
-                  id="edit-task-title"
-                  value={editForm.title}
-                  onChange={(e) =>
-                    setEditForm((f) => ({ ...f, title: e.target.value }))
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") submitEdit();
-                  }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label>Status</Label>
-                  <Select
-                    value={editForm.status}
-                    onValueChange={(v) =>
-                      setEditForm((f) => ({ ...f, status: v as TaskStatus }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STATUS_OPTIONS.map((o) => (
-                        <SelectItem key={o.value} value={o.value}>
-                          {o.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Priority</Label>
-                  <Select
-                    value={editForm.priority}
-                    onValueChange={(v) =>
-                      setEditForm((f) => ({ ...f, priority: v as TaskPriority }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {PRIORITY_OPTIONS.map((o) => (
-                        <SelectItem key={o.value} value={o.value}>
-                          {o.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              {(detailTask.dueDate || detailTask.assignees.length > 0) && (
-                <div
-                  className="flex flex-wrap items-center gap-4 text-[12.5px]"
-                  style={{ color: "var(--c-muted)" }}
-                >
-                  {detailTask.dueDate && (
-                    <div className="flex items-center gap-1.5">
-                      <Calendar size={14} /> {detailTask.dueDate}
-                    </div>
-                  )}
-                  {detailTask.assignees.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <span>Assignees</span>
-                      <div className="flex -space-x-1.5">
-                        {detailTask.assignees.map((u, i) => (
-                          <div
-                            key={i}
-                            className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold text-white ring-2 ring-white"
-                            style={{ background: u.color }}
-                          >
-                            {u.init}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDetailTask(null)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={submitEdit}
-              disabled={!editForm.title.trim() || updateTask.isPending}
-            >
-              {updateTask.isPending ? "Saving…" : "Save changes"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <TaskDetailSheet
+        task={selectedTask}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        roster={roster}
+      />
     </AppLayout>
   );
 }

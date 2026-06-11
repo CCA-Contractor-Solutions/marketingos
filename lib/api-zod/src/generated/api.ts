@@ -293,6 +293,10 @@ export const UpdateTaskBody = zod.object({
   "title": zod.string().min(1).optional(),
   "status": zod.enum(['backlog', 'in_progress', 'in_review', 'done']).optional(),
   "priority": zod.enum(['high', 'medium', 'low']).optional(),
+  "assignees": zod.array(zod.object({
+  "init": zod.string(),
+  "color": zod.string()
+})).optional(),
   "campaign": zod.string().optional(),
   "dueDate": zod.string().optional(),
   "dueAt": zod.string().optional(),

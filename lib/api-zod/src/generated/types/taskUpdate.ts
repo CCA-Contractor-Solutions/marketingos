@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { Assignee } from './assignee';
 import type { TaskUpdatePriority } from './taskUpdatePriority';
 import type { TaskUpdateStatus } from './taskUpdateStatus';
 
@@ -13,6 +14,7 @@ export interface TaskUpdate {
   title?: string;
   status?: TaskUpdateStatus;
   priority?: TaskUpdatePriority;
+  assignees?: Assignee[];
   campaign?: string;
   dueDate?: string;
   dueAt?: string;

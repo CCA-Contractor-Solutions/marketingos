@@ -617,6 +617,9 @@ components:
         priority:
           type: string
           enum: [high, medium, low]
+        assignees:
+          type: array
+          items: { $ref: "#/components/schemas/Assignee" }
         campaign: { type: string }
         dueDate: { type: string }
         dueAt: { type: string }

@@ -17,7 +17,13 @@ import {
 
 type DatedTask = { task: Task; date: Date };
 
-export default function CalendarView({ tasks }: { tasks: Task[] }) {
+export default function CalendarView({
+  tasks,
+  onTaskClick,
+}: {
+  tasks: Task[];
+  onTaskClick?: (task: Task) => void;
+}) {
   const today = useMemo(() => startOfDay(new Date()), []);
 
   const dated = useMemo<DatedTask[]>(() => {
@@ -188,8 +194,9 @@ export default function CalendarView({ tasks }: { tasks: Task[] }) {
                   return (
                     <div
                       key={task.id}
+                      onClick={() => onTaskClick?.(task)}
                       title={`${task.title} · ${meta.label}`}
-                      className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[10.5px] font-medium leading-tight"
+                      className="flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[10.5px] font-medium leading-tight transition-opacity hover:opacity-80"
                       style={{
                         background: meta.bg,
                         color: meta.color,
@@ -233,7 +240,8 @@ export default function CalendarView({ tasks }: { tasks: Task[] }) {
             {unscheduled.map((task) => (
               <div
                 key={task.id}
-                className="flex items-center gap-2 rounded-lg px-2.5 py-1.5"
+                onClick={() => onTaskClick?.(task)}
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-[var(--c-surface)]"
                 style={{
                   background: "var(--c-surface-2)",
                   border: "1px solid var(--c-border)",

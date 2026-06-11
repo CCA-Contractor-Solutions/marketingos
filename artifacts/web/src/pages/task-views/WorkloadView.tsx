@@ -23,7 +23,13 @@ const STATUS_ORDER: TaskStatus[] = [
   "done",
 ];
 
-export default function WorkloadView({ tasks }: { tasks: Task[] }) {
+export default function WorkloadView({
+  tasks,
+  onTaskClick,
+}: {
+  tasks: Task[];
+  onTaskClick?: (task: Task) => void;
+}) {
   const groups = useMemo<Group[]>(() => {
     const map = new Map<string, Group>();
     const unassigned: Group = {
@@ -121,7 +127,8 @@ export default function WorkloadView({ tasks }: { tasks: Task[] }) {
                   return (
                     <div
                       key={`${group.key}-${task.id}`}
-                      className="flex flex-col gap-2 rounded-xl p-3"
+                      onClick={() => onTaskClick?.(task)}
+                      className="flex cursor-pointer flex-col gap-2 rounded-xl p-3 transition-all hover:-translate-y-0.5"
                       style={{
                         background: "var(--c-surface)",
                         border: "1px solid var(--c-border)",
