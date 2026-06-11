@@ -25,6 +25,7 @@ export * from './attentionItemSeverity';
 export * from './campaignAsset';
 export * from './campaignAssetType';
 export * from './campaignDetail';
+export * from './campaignInput';
 export * from './campaignKpi';
 export * from './campaignSummary';
 export * from './campaignTask';

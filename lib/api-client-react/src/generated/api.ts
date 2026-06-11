@@ -25,6 +25,7 @@ import type {
   AssistantMessage,
   AssistantQuery,
   CampaignDetail,
+  CampaignInput,
   CampaignSummary,
   DashboardSummary,
   Error,
@@ -281,6 +282,77 @@ export function useListCampaigns<TData = Awaited<ReturnType<typeof listCampaigns
 
 
 
+
+export const getCreateCampaignUrl = () => {
+
+
+
+
+  return `/api/campaigns`
+}
+
+/**
+ * @summary Create a campaign
+ */
+export const createCampaign = async (campaignInput: CampaignInput, options?: RequestInit): Promise<CampaignSummary> => {
+
+  return customFetch<CampaignSummary>(getCreateCampaignUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      campaignInput,)
+  }
+);}
+
+
+
+
+export const getCreateCampaignMutationOptions = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCampaign>>, TError,{data: BodyType<CampaignInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCampaign>>, TError,{data: BodyType<CampaignInput>}, TContext> => {
+
+const mutationKey = ['createCampaign'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCampaign>>, {data: BodyType<CampaignInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCampaign(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCampaignMutationResult = NonNullable<Awaited<ReturnType<typeof createCampaign>>>
+    export type CreateCampaignMutationBody = BodyType<CampaignInput>
+    export type CreateCampaignMutationError = ErrorType<Error>
+
+    /**
+ * @summary Create a campaign
+ */
+export const useCreateCampaign = <TError = ErrorType<Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCampaign>>, TError,{data: BodyType<CampaignInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createCampaign>>,
+        TError,
+        {data: BodyType<CampaignInput>},
+        TContext
+      > => {
+      return useMutation(getCreateCampaignMutationOptions(options));
+    }
 
 export const getGetCampaignUrl = (id: string,) => {
 

@@ -64,6 +64,29 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/CampaignSummary"
+    post:
+      operationId: createCampaign
+      tags: [campaigns]
+      summary: Create a campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignInput"
+      responses:
+        "201":
+          description: Created campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignSummary"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /campaigns/{id}:
     get:
       operationId: getCampaign
@@ -384,6 +407,18 @@ components:
         title: { type: string }
         body: { type: string }
         action: { type: ["string", "null"] }
+
+    CampaignInput:
+      type: object
+      required: [name, owner]
+      properties:
+        name: { type: string, minLength: 1 }
+        subtitle: { type: string }
+        owner: { type: string, minLength: 1 }
+        budgetTotal: { type: integer, minimum: 0 }
+        channels:
+          type: array
+          items: { type: string }
 
     CampaignSummary:
       type: object

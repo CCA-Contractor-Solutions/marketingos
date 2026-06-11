@@ -102,6 +102,17 @@ export interface DashboardSummary {
   attention: AttentionItem[];
 }
 
+export interface CampaignInput {
+  /** @minLength 1 */
+  name: string;
+  subtitle?: string;
+  /** @minLength 1 */
+  owner: string;
+  /** @minimum 0 */
+  budgetTotal?: number;
+  channels?: string[];
+}
+
 export interface Persona {
   name: string;
   description: string;

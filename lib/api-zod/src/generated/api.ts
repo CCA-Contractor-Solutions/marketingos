@@ -89,6 +89,24 @@ export const ListCampaignsResponse = zod.array(ListCampaignsResponseItem)
 
 
 /**
+ * @summary Create a campaign
+ */
+
+
+export const createCampaignBodyBudgetTotalMin = 0;
+
+
+
+export const CreateCampaignBody = zod.object({
+  "name": zod.string().min(1),
+  "subtitle": zod.string().optional(),
+  "owner": zod.string().min(1),
+  "budgetTotal": zod.number().min(createCampaignBodyBudgetTotalMin).optional(),
+  "channels": zod.array(zod.string()).optional()
+})
+
+
+/**
  * @summary Get campaign detail
  */
 export const GetCampaignParams = zod.object({
