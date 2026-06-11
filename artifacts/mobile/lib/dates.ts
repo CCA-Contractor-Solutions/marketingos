@@ -62,6 +62,29 @@ export function formatShort(d: Date): string {
   return `${MONTH_LABELS[d.getMonth()]} ${d.getDate()}`;
 }
 
+const MONTH_LABELS_LONG = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+/**
+ * Formats a date as a full month + year label, e.g. "October 2025". Mirrors the
+ * web helper so the mobile calendar header matches the web Calendar view.
+ */
+export function formatMonthYear(d: Date): string {
+  return `${MONTH_LABELS_LONG[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 /**
  * Formats a local Date as a date-only ISO string ("YYYY-MM-DD") for storage.
  * Uses local date parts (not toISOString) so the stored calendar day matches

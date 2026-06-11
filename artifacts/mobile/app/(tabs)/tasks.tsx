@@ -4,7 +4,6 @@ import {
   getListTasksQueryKey,
   useCreateTask,
   useListTasks,
-  useUpdateTask,
   type Task,
   type TaskInput,
 } from "@workspace/api-client-react";
@@ -35,32 +34,14 @@ import {
   useTopInset,
 } from "@/components/ui";
 import { RescheduleSheet } from "@/components/RescheduleSheet";
+import {
+  EditTaskSheet,
+  STATUS_ACCENT,
+  STATUS_LABEL,
+  STATUS_ORDER,
+} from "@/components/EditTaskSheet";
 import { useColors } from "@/hooks/useColors";
 import { isOverdue, isSameDay, parseDueDate, relativeLabel } from "@/lib/dates";
-
-const STATUS_ORDER: Task["status"][] = [
-  "backlog",
-  "in_progress",
-  "in_review",
-  "done",
-];
-
-const STATUS_LABEL: Record<Task["status"], string> = {
-  backlog: "Backlog",
-  in_progress: "In Progress",
-  in_review: "In Review",
-  done: "Done",
-};
-
-const STATUS_ACCENT: Record<
-  Task["status"],
-  "mutedForeground" | "sky" | "amber" | "emerald"
-> = {
-  backlog: "mutedForeground",
-  in_progress: "sky",
-  in_review: "amber",
-  done: "emerald",
-};
 
 const PRIORITY_ACCENT: Record<Task["priority"], "rose" | "amber" | "sky"> = {
   high: "rose",
@@ -232,7 +213,7 @@ export default function TasksScreen() {
         onClose={() => setAddOpen(false)}
         onCreated={invalidate}
       />
-      <EditTaskModal
+      <EditTaskSheet
         task={editTask}
         onClose={() => setEditTask(null)}
         onUpdated={invalidate}
@@ -413,114 +394,6 @@ function AddTaskModal({
   );
 }
 
-function EditTaskModal({
-  task,
-  onClose,
-  onUpdated,
-}: {
-  task: Task | null;
-  onClose: () => void;
-  onUpdated: () => void;
-}) {
-  const colors = useColors();
-  const bottomInset = useBottomInset();
-  const updateTask = useUpdateTask();
-
-  const move = (status: Task["status"]) => {
-    if (!task) return;
-    updateTask.mutate(
-      { id: task.id, data: { status } },
-      {
-        onSuccess: () => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          onClose();
-          onUpdated();
-        },
-      },
-    );
-  };
-
-  return (
-    <Modal
-      visible={!!task}
-      animationType="slide"
-      transparent
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalBackdrop}>
-        <View
-          style={[
-            styles.sheet,
-            { backgroundColor: colors.card, paddingBottom: bottomInset / 2 + 16 },
-          ]}
-        >
-          <View style={styles.sheetHandle} />
-          {task ? (
-            <>
-              <Text
-                style={[styles.sheetTitle, { color: colors.foreground }]}
-                numberOfLines={2}
-              >
-                {task.title}
-              </Text>
-              <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>
-                Move to
-              </Text>
-              <View style={{ gap: 10 }}>
-                {STATUS_ORDER.map((status) => {
-                  const active = task.status === status;
-                  return (
-                    <TouchableOpacity
-                      key={status}
-                      activeOpacity={0.85}
-                      disabled={active || updateTask.isPending}
-                      onPress={() => move(status)}
-                      style={[
-                        styles.statusRow,
-                        {
-                          borderColor: active ? colors.primary : colors.border,
-                          backgroundColor: active ? colors.brand50 : colors.card,
-                        },
-                      ]}
-                    >
-                      <View
-                        style={[
-                          styles.colDot,
-                          { backgroundColor: colors[STATUS_ACCENT[status]] },
-                        ]}
-                      />
-                      <Text
-                        style={[
-                          styles.statusRowText,
-                          { color: colors.foreground },
-                        ]}
-                      >
-                        {STATUS_LABEL[status]}
-                      </Text>
-                      {active ? (
-                        <Feather name="check" size={18} color={colors.primary} />
-                      ) : null}
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={onClose}
-                style={[styles.ghostBtn, { borderColor: colors.border, marginTop: 16 }]}
-              >
-                <Text style={[styles.ghostText, { color: colors.inkSoft }]}>
-                  Close
-                </Text>
-              </TouchableOpacity>
-            </>
-          ) : null}
-        </View>
-      </View>
-    </Modal>
-  );
-}
-
 const styles = StyleSheet.create({
   addBtn: {
     width: 42,
@@ -618,14 +491,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primaryText: { color: "#fff", fontFamily: "Inter_600SemiBold", fontSize: 15 },
-  statusRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-  },
-  statusRowText: { fontFamily: "Inter_600SemiBold", fontSize: 15, flex: 1 },
 });
