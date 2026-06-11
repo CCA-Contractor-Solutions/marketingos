@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import type { DragEvent } from "react";
 import type { Task } from "@workspace/api-client-react";
 import { Sparkles } from "lucide-react";
 import { PriorityIcon, STATUS_META, AssigneeStack, EmptyState } from "./shared";
@@ -48,9 +49,11 @@ export default function TimelineView({
   const today = useMemo(() => startOfDay(new Date()), []);
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOverOffset, setDragOverOffset] = useState<number | null>(null);
+  const [dragOverRowId, setDragOverRowId] = useState<string | null>(null);
   const [snapWeek, setSnapWeek] = useState(readSnapWeek);
   const [snapActive, setSnapActive] = useState(false);
   const grabOffsetRef = useRef(0);
+  const chipDragRef = useRef(false);
 
   const dated = useMemo<DatedTask[]>(
     () =>
@@ -100,6 +103,40 @@ export default function TimelineView({
       next = dayDiff(snapToNearestWeek(d), range.min);
     }
     return Math.max(0, Math.min(range.total - 1, next));
+  };
+
+  // Shared drag handlers for the grid drop zones. They work for both
+  // rescheduling an already-dated task and scheduling an unscheduled one —
+  // in both cases `dragId` holds the task being dropped.
+  const handleGridDragOver = (e: DragEvent<HTMLDivElement>, rowId: string) => {
+    if (!onReschedule) return;
+    e.preventDefault();
+    const weekMode = snapWeek || e.shiftKey;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setSnapActive(weekMode);
+    setDragOverRowId(rowId);
+    setDragOverOffset(resolveOffset(e.clientX, rect, weekMode));
+  };
+
+  const handleGridDrop = (e: DragEvent<HTMLDivElement>) => {
+    if (!onReschedule || !range) return;
+    const weekMode = snapWeek || e.shiftKey;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const next = resolveOffset(e.clientX, rect, weekMode);
+    setDragOverOffset(null);
+    setDragOverRowId(null);
+    setSnapActive(false);
+    const id = dragId;
+    setDragId(null);
+    if (!id) return;
+    const dropDate = new Date(range.min);
+    dropDate.setDate(range.min.getDate() + next);
+    onReschedule(id, dropDate);
+  };
+
+  const clearDragOver = () => {
+    setDragOverOffset(null);
+    setDragOverRowId(null);
   };
 
   if (!tasks.length) {
@@ -308,45 +345,15 @@ export default function TimelineView({
                     style={{ width: range.total * DAY_WIDTH }}
                     onDragOver={
                       onReschedule
-                        ? (e) => {
-                            e.preventDefault();
-                            const weekMode = snapWeek || e.shiftKey;
-                            const rect = e.currentTarget.getBoundingClientRect();
-                            setSnapActive(weekMode);
-                            setDragOverOffset(
-                              resolveOffset(e.clientX, rect, weekMode),
-                            );
-                          }
+                        ? (e) => handleGridDragOver(e, task.id)
                         : undefined
                     }
-                    onDragLeave={
-                      onReschedule
-                        ? () => setDragOverOffset(null)
-                        : undefined
-                    }
-                    onDrop={
-                      onReschedule
-                        ? (e) => {
-                            const weekMode = snapWeek || e.shiftKey;
-                            const rect = e.currentTarget.getBoundingClientRect();
-                            const next = resolveOffset(
-                              e.clientX,
-                              rect,
-                              weekMode,
-                            );
-                            setDragOverOffset(null);
-                            setSnapActive(false);
-                            const id = dragId;
-                            setDragId(null);
-                            if (!id) return;
-                            const dropDate = new Date(range.min);
-                            dropDate.setDate(range.min.getDate() + next);
-                            onReschedule(id, dropDate);
-                          }
-                        : undefined
-                    }
+                    onDragLeave={onReschedule ? clearDragOver : undefined}
+                    onDrop={onReschedule ? handleGridDrop : undefined}
                   >
-                    {onReschedule && dragId === task.id && dragOverOffset !== null && (
+                    {onReschedule &&
+                      dragOverRowId === task.id &&
+                      dragOverOffset !== null && (
                       <div
                         className="absolute top-0 bottom-0 z-0"
                         style={{
@@ -424,27 +431,67 @@ export default function TimelineView({
             style={{ color: "var(--c-muted)" }}
           >
             No due date · {unscheduled.length}
+            {onReschedule && range && (
+              <span
+                className="ml-2 font-medium normal-case tracking-normal"
+                style={{ color: "var(--c-muted)" }}
+              >
+                — drag onto the timeline to schedule
+              </span>
+            )}
           </h4>
           <div className="flex flex-wrap gap-2">
-            {unscheduled.map((task) => (
-              <div
-                key={task.id}
-                onClick={() => onTaskClick?.(task)}
-                className="flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-[var(--c-surface)]"
-                style={{
-                  background: "var(--c-surface-2)",
-                  border: "1px solid var(--c-border)",
-                }}
-              >
-                <PriorityIcon priority={task.priority} />
-                <span
-                  className="text-[12px] font-medium"
-                  style={{ color: "var(--c-ink)" }}
+            {unscheduled.map((task) => {
+              const canDrag = !!onReschedule && !!range;
+              return (
+                <div
+                  key={task.id}
+                  draggable={canDrag}
+                  onDragStart={
+                    canDrag
+                      ? () => {
+                          chipDragRef.current = true;
+                          grabOffsetRef.current = 0;
+                          setDragId(task.id);
+                        }
+                      : undefined
+                  }
+                  onDragEnd={
+                    canDrag
+                      ? () => {
+                          setDragId(null);
+                          clearDragOver();
+                          setSnapActive(false);
+                          window.setTimeout(() => {
+                            chipDragRef.current = false;
+                          }, 0);
+                        }
+                      : undefined
+                  }
+                  onClick={() => {
+                    if (chipDragRef.current) return;
+                    onTaskClick?.(task);
+                  }}
+                  className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-[var(--c-surface)] ${
+                    canDrag
+                      ? "cursor-grab active:cursor-grabbing"
+                      : "cursor-pointer"
+                  }`}
+                  style={{
+                    background: "var(--c-surface-2)",
+                    border: "1px solid var(--c-border)",
+                  }}
                 >
-                  {task.title}
-                </span>
-              </div>
-            ))}
+                  <PriorityIcon priority={task.priority} />
+                  <span
+                    className="text-[12px] font-medium"
+                    style={{ color: "var(--c-ink)" }}
+                  >
+                    {task.title}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
