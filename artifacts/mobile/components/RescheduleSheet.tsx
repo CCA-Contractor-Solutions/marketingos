@@ -66,19 +66,39 @@ export function RescheduleSheet({
 
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
+  // How many two-week pages away from the current week we are showing.
+  // 0 = the fortnight containing today; negative = past, positive = future.
+  const [pageOffset, setPageOffset] = useState(0);
 
   const today = useMemo(() => startOfDay(new Date()), []);
 
-  // Two weeks starting from the Sunday of the current week.
+  // Two weeks starting from the Sunday of the current week, shifted by
+  // pageOffset fortnights so the user can navigate beyond the next two weeks.
   const days = useMemo(() => {
     const start = new Date(today);
-    start.setDate(start.getDate() - start.getDay());
+    start.setDate(start.getDate() - start.getDay() + pageOffset * DAYS);
     return Array.from({ length: DAYS }, (_, i) => {
       const d = new Date(start);
       d.setDate(start.getDate() + i);
       return d;
     });
-  }, [today]);
+  }, [today, pageOffset]);
+
+  // Label for the visible date range, shown in the navigation header.
+  const rangeLabel = useMemo(() => {
+    const first = days[0];
+    const last = days[days.length - 1];
+    const sameMonth = first.getMonth() === last.getMonth();
+    const firstStr = first.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    });
+    const lastStr = last.toLocaleDateString(
+      undefined,
+      sameMonth ? { day: "numeric" } : { month: "short", day: "numeric" },
+    );
+    return `${firstStr} – ${lastStr}`;
+  }, [days]);
 
   const currentDue = useMemo(
     () => (task ? parseDueDate(task.dueDate) : null),
@@ -94,6 +114,7 @@ export function RescheduleSheet({
     if (!task) {
       setHoverIndex(null);
       setSaving(false);
+      setPageOffset(0);
       return;
     }
     const t = setTimeout(measureCells, 220);
@@ -242,6 +263,62 @@ export function RescheduleSheet({
                   </Animated.View>
                 </GestureDetector>
 
+                {/* Fortnight navigation */}
+                <View style={styles.navRow}>
+                  <TouchableOpacity
+                    accessibilityLabel="Previous two weeks"
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      setHoverIndex(null);
+                      setPageOffset((p) => p - 1);
+                    }}
+                    style={[styles.navBtn, { borderColor: colors.border }]}
+                  >
+                    <Feather
+                      name="chevron-left"
+                      size={18}
+                      color={colors.foreground}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    accessibilityLabel="Jump to current week"
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      setHoverIndex(null);
+                      setPageOffset(0);
+                    }}
+                    style={styles.navLabelBtn}
+                  >
+                    <Text
+                      style={[styles.navLabel, { color: colors.foreground }]}
+                    >
+                      {rangeLabel}
+                    </Text>
+                    {pageOffset !== 0 ? (
+                      <Text
+                        style={[styles.navToday, { color: colors.primary }]}
+                      >
+                        Back to today
+                      </Text>
+                    ) : null}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    accessibilityLabel="Next two weeks"
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      setHoverIndex(null);
+                      setPageOffset((p) => p + 1);
+                    }}
+                    style={[styles.navBtn, { borderColor: colors.border }]}
+                  >
+                    <Feather
+                      name="chevron-right"
+                      size={18}
+                      color={colors.foreground}
+                    />
+                  </TouchableOpacity>
+                </View>
+
                 {/* Weekday header */}
                 <View style={styles.weekRow}>
                   {WEEKDAY_LABELS.map((w) => (
@@ -382,6 +459,23 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   tokenText: { fontFamily: "Inter_600SemiBold", fontSize: 14, flexShrink: 1 },
+  navRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  navBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  navLabelBtn: { flex: 1, alignItems: "center", paddingHorizontal: 8 },
+  navLabel: { fontFamily: "Inter_700Bold", fontSize: 15 },
+  navToday: { fontFamily: "Inter_600SemiBold", fontSize: 11, marginTop: 2 },
   weekRow: { flexDirection: "row", marginBottom: 6 },
   weekLabel: {
     flex: 1,
