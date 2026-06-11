@@ -227,7 +227,7 @@ export function AppLayout({
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
         <SheetContent
           side="left"
-          className="w-[252px] p-0"
+          className="cadence w-[252px] p-0"
           style={{ background: "var(--c-surface)" }}
         >
           <SheetTitle className="sr-only">Navigation</SheetTitle>
@@ -301,7 +301,11 @@ export function AppLayout({
                   )}
                 </button>
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-80 p-0">
+              <PopoverContent
+                align="end"
+                className="cadence w-80 p-0"
+                style={{ background: "var(--c-surface)" }}
+              >
                 <div
                   className="flex items-center gap-2 px-4 py-3"
                   style={{ borderBottom: "1px solid var(--c-border)" }}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useListTasks,
@@ -57,15 +57,38 @@ function PriorityIcon({ priority }: { priority: TaskPriority }) {
 function TaskCard({
   task,
   onDragStart,
+  onOpen,
 }: {
   task: Task;
   onDragStart: (id: string) => void;
+  onOpen: (task: Task) => void;
 }) {
+  const draggingRef = useRef(false);
   return (
     <div
       draggable
-      onDragStart={() => onDragStart(task.id)}
-      className="group relative flex cursor-grab flex-col gap-3 rounded-xl p-3.5 transition-all hover:-translate-y-0.5 active:cursor-grabbing"
+      onDragStart={() => {
+        draggingRef.current = true;
+        onDragStart(task.id);
+      }}
+      onDragEnd={() => {
+        window.setTimeout(() => {
+          draggingRef.current = false;
+        }, 0);
+      }}
+      onClick={() => {
+        if (draggingRef.current) return;
+        onOpen(task);
+      }}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(task);
+        }
+      }}
+      className="group relative flex cursor-pointer flex-col gap-3 rounded-xl p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--c-brand)] active:cursor-grabbing"
       style={{
         background: "var(--c-surface)",
         border: "1px solid var(--c-border)",
@@ -209,6 +232,12 @@ export default function TaskBoard() {
     status: TaskStatus;
     priority: TaskPriority;
   }>({ title: "", status: "backlog", priority: "medium" });
+  const [detailTask, setDetailTask] = useState<Task | null>(null);
+  const [editForm, setEditForm] = useState<{
+    title: string;
+    status: TaskStatus;
+    priority: TaskPriority;
+  }>({ title: "", status: "backlog", priority: "medium" });
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useListTasks();
@@ -218,7 +247,7 @@ export default function TaskBoard() {
   const updateTask = useUpdateTask({ mutation: { onSuccess: invalidate } });
   const createTask = useCreateTask({ mutation: { onSuccess: invalidate } });
 
-  const tasks = data ?? [];
+  const tasks = Array.isArray(data) ? data : [];
 
   const filteredTasks = tasks.filter(
     (t) =>
@@ -246,6 +275,32 @@ export default function TaskBoard() {
     createTask.mutate(
       { data: { title, status: form.status, priority: form.priority } },
       { onSuccess: () => setAddOpen(false) },
+    );
+  };
+
+  const openDetail = (task: Task) => {
+    setEditForm({
+      title: task.title,
+      status: task.status,
+      priority: task.priority,
+    });
+    setDetailTask(task);
+  };
+
+  const submitEdit = () => {
+    if (!detailTask) return;
+    const title = editForm.title.trim();
+    if (!title) return;
+    updateTask.mutate(
+      {
+        id: detailTask.id,
+        data: {
+          title,
+          status: editForm.status,
+          priority: editForm.priority,
+        },
+      },
+      { onSuccess: () => setDetailTask(null) },
     );
   };
 
@@ -398,7 +453,12 @@ export default function TaskBoard() {
                     <div className="cadence-scroll flex-1 overflow-y-auto px-1 pb-4">
                       <div className="flex flex-col gap-3">
                         {columnTasks.map((task) => (
-                          <TaskCard key={task.id} task={task} onDragStart={setDragId} />
+                          <TaskCard
+                            key={task.id}
+                            task={task}
+                            onDragStart={setDragId}
+                            onOpen={openDetail}
+                          />
                         ))}
                         <button
                           onClick={() => openAdd(col.id)}
@@ -494,6 +554,119 @@ export default function TaskBoard() {
               disabled={!form.title.trim() || createTask.isPending}
             >
               {createTask.isPending ? "Creating…" : "Create task"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!detailTask}
+        onOpenChange={(o) => !o && setDetailTask(null)}
+      >
+        <DialogContent className="sm:max-w-[480px]">
+          <DialogHeader>
+            <DialogTitle>Task details</DialogTitle>
+            <DialogDescription>
+              {detailTask?.id}
+              {detailTask?.campaign ? ` · ${detailTask.campaign}` : ""}
+            </DialogDescription>
+          </DialogHeader>
+          {detailTask && (
+            <div className="space-y-4 py-1">
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-task-title">Title</Label>
+                <Input
+                  id="edit-task-title"
+                  value={editForm.title}
+                  onChange={(e) =>
+                    setEditForm((f) => ({ ...f, title: e.target.value }))
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") submitEdit();
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Status</Label>
+                  <Select
+                    value={editForm.status}
+                    onValueChange={(v) =>
+                      setEditForm((f) => ({ ...f, status: v as TaskStatus }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STATUS_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={o.value}>
+                          {o.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Priority</Label>
+                  <Select
+                    value={editForm.priority}
+                    onValueChange={(v) =>
+                      setEditForm((f) => ({ ...f, priority: v as TaskPriority }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PRIORITY_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={o.value}>
+                          {o.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {(detailTask.dueDate || detailTask.assignees.length > 0) && (
+                <div
+                  className="flex flex-wrap items-center gap-4 text-[12.5px]"
+                  style={{ color: "var(--c-muted)" }}
+                >
+                  {detailTask.dueDate && (
+                    <div className="flex items-center gap-1.5">
+                      <Calendar size={14} /> {detailTask.dueDate}
+                    </div>
+                  )}
+                  {detailTask.assignees.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span>Assignees</span>
+                      <div className="flex -space-x-1.5">
+                        {detailTask.assignees.map((u, i) => (
+                          <div
+                            key={i}
+                            className="flex h-6 w-6 items-center justify-center rounded-full text-[9px] font-bold text-white ring-2 ring-white"
+                            style={{ background: u.color }}
+                          >
+                            {u.init}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDetailTask(null)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={submitEdit}
+              disabled={!editForm.title.trim() || updateTask.isPending}
+            >
+              {updateTask.isPending ? "Saving…" : "Save changes"}
             </Button>
           </DialogFooter>
         </DialogContent>

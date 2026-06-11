@@ -66,9 +66,6 @@ export default function Analytics() {
                     <div className="mt-1 text-[13.5px] font-medium leading-snug">{data.insight.recommendation}</div>
                   </div>
                 </div>
-                <button className="mt-5 flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-[13px] font-bold text-[var(--c-brand)] transition-opacity hover:opacity-90 shadow-sm">
-                  Apply Recommended Changes
-                </button>
               </div>
             </div>
 
@@ -78,7 +75,7 @@ export default function Analytics() {
               </div>
               <div className="mt-4 flex flex-col gap-3 flex-1">
                 {data.reports.map((report) => (
-                  <div key={report.id} className="group flex cursor-pointer items-center justify-between rounded-xl p-3 transition-colors hover:bg-[var(--c-surface-2)]" style={{ background: "var(--c-bg)", border: "1px solid var(--c-border)" }}>
+                  <div key={report.id} className="flex items-center justify-between rounded-xl p-3" style={{ background: "var(--c-bg)", border: "1px solid var(--c-border)" }}>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-[13px] font-semibold" style={{ color: "var(--c-ink)" }}>{report.name}</div>
                       <div className="mt-0.5 truncate text-[11px]" style={{ color: "var(--c-muted)" }}>{report.schedule}</div>

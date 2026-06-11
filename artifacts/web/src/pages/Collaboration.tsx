@@ -126,6 +126,7 @@ function MessageRow({ msg }: { msg: Message }) {
 export default function Collaboration() {
   const [activeThread, setActiveThread] = useState<string | null>(null);
   const [messageText, setMessageText] = useState("");
+  const [search, setSearch] = useState("");
   const queryClient = useQueryClient();
 
   const { data: threads, isLoading: threadsLoading, isError: threadsError } =
@@ -189,6 +190,8 @@ export default function Collaboration() {
                 <Search size={16} style={{ color: "var(--c-muted)" }} />
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search threads..."
                   className="w-full bg-transparent text-[13px] outline-none placeholder:text-[var(--c-muted)]"
                 />
@@ -196,14 +199,24 @@ export default function Collaboration() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-1 cadence-scroll">
-              {(threads ?? []).map((thread) => (
-                <ThreadButton
-                  key={thread.id}
-                  thread={thread}
-                  isActive={activeThread === thread.id}
-                  onClick={() => setActiveThread(thread.id)}
-                />
-              ))}
+              {(threads ?? [])
+                .filter((thread) => {
+                  const q = search.trim().toLowerCase();
+                  if (!q) return true;
+                  return (
+                    thread.title.toLowerCase().includes(q) ||
+                    thread.campaign.toLowerCase().includes(q) ||
+                    thread.lastMessage.toLowerCase().includes(q)
+                  );
+                })
+                .map((thread) => (
+                  <ThreadButton
+                    key={thread.id}
+                    thread={thread}
+                    isActive={activeThread === thread.id}
+                    onClick={() => setActiveThread(thread.id)}
+                  />
+                ))}
             </div>
           </div>
 

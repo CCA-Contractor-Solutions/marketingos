@@ -245,7 +245,7 @@ export default function Campaigns() {
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 cadence-rise"
             style={{ animationDelay: "40ms" }}
           >
-            {(data ?? []).map((c) => (
+            {(Array.isArray(data) ? data : []).map((c) => (
               <Link
                 key={c.id}
                 href={`/campaigns/${c.id}`}

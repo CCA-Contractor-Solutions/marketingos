@@ -475,7 +475,9 @@ body {
   background: #f6f7fb;
 }
 
-/* CCA scope tokens (ported verbatim from the mockup _group.css) */
+/* CCA scope tokens — defined on :root so portaled UI (Sheet, Popover,
+   Dialog) that renders outside the .cadence wrapper still resolves them. */
+:root,
 .cadence {
   --c-bg: #f6f7fb;
   --c-surface: #ffffff;
