@@ -40,6 +40,19 @@ export function parseDueDate(due: string | null | undefined): Date | null {
   return null;
 }
 
+/**
+ * Snaps a date to the nearest week boundary (Sunday at start of day). Used by
+ * the timeline's snap-to-week dragging so coarse rescheduling aligns to weeks.
+ */
+export function snapToNearestWeek(d: Date): Date {
+  const base = startOfDay(d);
+  const dow = base.getDay(); // 0 = Sunday
+  const result = new Date(base);
+  if (dow <= 3) result.setDate(base.getDate() - dow);
+  else result.setDate(base.getDate() + (7 - dow));
+  return result;
+}
+
 export function isSameDay(a: Date, b: Date): boolean {
   return (
     a.getFullYear() === b.getFullYear() &&

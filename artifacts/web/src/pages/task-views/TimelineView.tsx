@@ -8,6 +8,7 @@ import {
   dayDiff,
   isSameDay,
   formatShort,
+  snapToNearestWeek,
 } from "./dates";
 
 const DAY_WIDTH = 44;
@@ -27,6 +28,8 @@ export default function TimelineView({
   const today = useMemo(() => startOfDay(new Date()), []);
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOverOffset, setDragOverOffset] = useState<number | null>(null);
+  const [snapWeek, setSnapWeek] = useState(false);
+  const [snapActive, setSnapActive] = useState(false);
   const grabOffsetRef = useRef(0);
 
   const dated = useMemo<DatedTask[]>(
@@ -65,6 +68,20 @@ export default function TimelineView({
     return { min, days, total };
   }, [dated, today]);
 
+  // Resolves the day column under the pointer, optionally snapping the result
+  // to the nearest week boundary (Sunday) for coarse, week-level rescheduling.
+  const resolveOffset = (clientX: number, rect: DOMRect, weekMode: boolean) => {
+    if (!range) return 0;
+    const x = clientX - rect.left - grabOffsetRef.current - 4;
+    let next = Math.round(x / DAY_WIDTH);
+    if (weekMode) {
+      const d = new Date(range.min);
+      d.setDate(range.min.getDate() + next);
+      next = dayDiff(snapToNearestWeek(d), range.min);
+    }
+    return Math.max(0, Math.min(range.total - 1, next));
+  };
+
   if (!tasks.length) {
     return <EmptyState message="No tasks match the current filters." />;
   }
@@ -81,6 +98,64 @@ export default function TimelineView({
 
   return (
     <div className="flex h-full flex-col gap-4">
+      {onReschedule && range && (
+        <div className="flex shrink-0 items-center justify-between">
+          <span className="text-[11.5px]" style={{ color: "var(--c-muted)" }}>
+            Drag a task to reschedule
+            <span className="hidden sm:inline">
+              {" "}
+              · hold{" "}
+              <kbd
+                className="rounded px-1 py-0.5 text-[10px] font-semibold"
+                style={{
+                  background: "var(--c-surface-2)",
+                  border: "1px solid var(--c-border)",
+                  color: "var(--c-ink-soft)",
+                }}
+              >
+                Shift
+              </kbd>{" "}
+              to snap to weeks
+            </span>
+          </span>
+          <div
+            className="flex items-center gap-0.5 rounded-lg p-0.5"
+            style={{
+              background: "var(--c-bg)",
+              border: "1px solid var(--c-border)",
+            }}
+          >
+            <span
+              className="px-2 text-[11px] font-semibold uppercase tracking-wider"
+              style={{ color: "var(--c-muted)" }}
+            >
+              Snap
+            </span>
+            {[
+              { label: "Day", value: false },
+              { label: "Week", value: true },
+            ].map((opt) => {
+              const isActive = snapWeek === opt.value;
+              return (
+                <button
+                  key={opt.label}
+                  type="button"
+                  onClick={() => setSnapWeek(opt.value)}
+                  className={`rounded-md px-2.5 py-1 text-[12px] font-semibold transition-all ${
+                    isActive ? "shadow-sm" : "hover:bg-black/5"
+                  }`}
+                  style={{
+                    background: isActive ? "var(--c-surface)" : "transparent",
+                    color: isActive ? "var(--c-ink)" : "var(--c-muted)",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
       {range ? (
         <div
           className="cadence-scroll flex-1 overflow-auto rounded-xl"
@@ -212,14 +287,12 @@ export default function TimelineView({
                       onReschedule
                         ? (e) => {
                             e.preventDefault();
+                            const weekMode = snapWeek || e.shiftKey;
                             const rect = e.currentTarget.getBoundingClientRect();
-                            const x =
-                              e.clientX - rect.left - grabOffsetRef.current - 4;
-                            const next = Math.max(
-                              0,
-                              Math.min(range.total - 1, Math.round(x / DAY_WIDTH)),
+                            setSnapActive(weekMode);
+                            setDragOverOffset(
+                              resolveOffset(e.clientX, rect, weekMode),
                             );
-                            setDragOverOffset(next);
                           }
                         : undefined
                     }
@@ -231,17 +304,15 @@ export default function TimelineView({
                     onDrop={
                       onReschedule
                         ? (e) => {
+                            const weekMode = snapWeek || e.shiftKey;
                             const rect = e.currentTarget.getBoundingClientRect();
-                            const x =
-                              e.clientX - rect.left - grabOffsetRef.current - 4;
-                            const next = Math.max(
-                              0,
-                              Math.min(
-                                range.total - 1,
-                                Math.round(x / DAY_WIDTH),
-                              ),
+                            const next = resolveOffset(
+                              e.clientX,
+                              rect,
+                              weekMode,
                             );
                             setDragOverOffset(null);
+                            setSnapActive(false);
                             const id = dragId;
                             setDragId(null);
                             if (!id) return;
@@ -257,7 +328,10 @@ export default function TimelineView({
                         className="absolute top-0 bottom-0 z-0"
                         style={{
                           left: dragOverOffset * DAY_WIDTH,
-                          width: DAY_WIDTH,
+                          width: snapActive
+                            ? Math.min(7, range.total - dragOverOffset) *
+                              DAY_WIDTH
+                            : DAY_WIDTH,
                           background: "var(--c-brand-50)",
                           borderLeft: "2px dashed var(--c-brand)",
                           borderRight: "2px dashed var(--c-brand)",
