@@ -1,0 +1,75 @@
+You are tasked with designing and building a high-powered AI marketing system for a professional marketing team. Do not deviate from these instructions unless explicitly asked for clarification. Follow all instructions precisely.
+
+System Requirements:
+1. Core Capabilities:
+   - Campaign planning, tracking, and execution.
+   - Task management and project tracking.
+   - Team communication and collaboration.
+   - AI-powered assistance for content generation, strategy recommendations, and performance analytics.
+   - Dashboard with campaign overview, task status, AI suggestions, and KPIs.
+
+2. AI Features:
+   - Generate campaign briefs, social posts, email sequences, ad copy, landing page copy, and blog outlines.
+   - Summarize team discussions and convert them into tasks.
+   - Recommend campaigns, channels, and timelines.
+   - Provide performance summaries and insights.
+   - Detect missing campaign components, incomplete tasks, and overdue work.
+
+3. User Roles:
+   - Admin/Founder: Full access.
+   - Marketing Director/Manager: Create, assign, approve campaigns and tasks, view performance.
+   - Content Creator/Designer: View tasks, submit work, collaborate.
+   - Sales/CRM: Optional limited access to relevant campaign outcomes.
+   - Contractors/Agencies: Optional limited access to assigned work.
+
+4. Workflow Features:
+   - Campaigns include goals, audience, channels, budget, assets, timeline, owner, approvals, and KPIs.
+   - Automatic task creation from campaigns.
+   - Task views: dashboard, kanban, calendar, timeline, list, workload.
+   - Subtasks, dependencies, priorities, and comments.
+   - Approval workflows and history.
+
+5. Communication:
+   - Built-in discussion threads per campaign.
+   - AI can summarize conversations and extract decisions.
+   - AI can convert discussions into tasks and flag risks.
+
+6. Integrations:
+   - Connect to Google Drive, Dropbox, Canva, or other asset storage.
+   - Optional CRM integration (Zoho, HubSpot, etc.).
+   - Optional content scheduling/publishing to social media channels.
+
+7. Analytics:
+   - Track campaign performance: leads, sales, revenue, engagement, ROAS, website traffic, conversions.
+   - AI provides actionable insights and recommendations.
+   - Generate automated weekly or custom reports.
+
+8. Knowledge & Brand Memory:
+   - Store brand voice, approved messaging, past campaigns, audience personas, and creative assets.
+   - Prevent off-brand messaging.
+   - Suggest reuse of successful campaigns or content.
+
+9. Automations:
+   - Auto-update dashboards, task boards, campaign progress.
+   - AI-driven alerts for overdue tasks, missing assets, or blocked work.
+   - Auto-generate meeting agendas from active marketing work.
+
+10. Interface:
+    - Command center/dashboard for leadership.
+    - Campaign detail views for team members.
+    - AI assistant chat panel for suggestions and status updates.
+    - Customizable user dashboards per role.
+
+Deliverables:
+- Fully functional prototype with above capabilities.
+- Modular design to allow future expansion.
+- Clean, modern UI/UX suitable for marketing teams.
+- AI assistant integrated across campaigns, tasks, and communications.
+
+Constraints:
+- Follow the above instructions strictly.
+- Do not deviate unless explicitly requested.
+- Ensure AI features comply with ethical standards.
+- Build for web deployment, responsive across devices.
+
+End of instructions.
