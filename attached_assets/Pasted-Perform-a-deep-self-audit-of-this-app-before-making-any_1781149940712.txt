@@ -1,0 +1,133 @@
+Perform a deep self-audit of this app before making any new feature changes.
+
+Your job is to inspect the full project and identify anything broken, confusing, incomplete, poorly designed, logically inconsistent, or not user-friendly.
+
+Do not rebuild the app yet. First produce a clear audit report. Only make fixes after I review and approve the findings.
+
+Audit the following areas:
+
+1. Broken Links and Navigation
+- Check every sidebar link, top nav link, button, tab, card link, CTA, and route.
+- Identify any links that do nothing, go to the wrong page, scroll incorrectly, or open a blank/broken view.
+- Check mobile navigation separately.
+- Confirm there are no dead buttons or decorative controls pretending to work.
+
+2. Faulty Logic and Data Flow
+- Check whether create, edit, delete, save, reset, status changes, filters, search, and exports work correctly.
+- Check whether data persists after refresh if localStorage is being used.
+- Check whether statuses move in the correct order.
+- Check whether dashboards, counters, charts, badges, and progress bars reflect real app data.
+- Identify any fake numbers, stale data, disconnected cards, or mismatched counts.
+- Check whether sample data and user-created data behave consistently.
+
+3. User Friendliness
+- Evaluate whether a brand-new user can understand what to do without extra explanation.
+- Identify confusing labels, unclear instructions, missing empty states, missing success messages, missing error messages, or unclear next steps.
+- Check whether the app explains marketing terms clearly enough for a beginner.
+- Check whether the main user always knows:
+  - where they are
+  - what they should do next
+  - what is saved
+  - what needs review
+  - what is approved
+  - what is blocked or stuck
+
+4. Design and Visual Quality
+- Review the interface for polish, spacing, hierarchy, readability, color balance, and consistency.
+- Check whether the app feels modern, bold, vibrant, and engaging while staying professional.
+- Identify bland sections, weak mockups, generic cards, poor visual rhythm, overcrowded pages, or inconsistent styling.
+- Confirm text fits inside buttons, cards, tables, badges, and mobile layouts.
+- Check for overlapping elements, clipping, awkward page breaks, and layout shifts.
+- Confirm the color palette avoids gold/yellow-heavy branding.
+
+5. Responsive and Mobile Behavior
+- Test desktop, tablet, and mobile widths.
+- Check navigation, cards, tables, mockups, forms, buttons, and dashboards on small screens.
+- Identify any horizontal scrolling, crushed content, overlapping text, broken grids, or unusable controls.
+
+6. Training and Walkthrough Quality
+- Audit whether training modules are detailed enough for a beginner.
+- Check whether each training section has examples, walkthroughs, practice steps, and completion tracking.
+- Identify places where the app says what to do but does not show how to do it.
+- Confirm that help, feedback, and trainer notes are easy to find.
+
+7. Mockup and Content Workflow
+- Check the full workflow:
+  Training -> Create Mockup -> Push to Drafts -> Review -> Approved -> Ready to Schedule -> Posted/Live -> Engagement Monitoring.
+- Identify any broken handoffs between sections.
+- Confirm mockups can be created, saved, reviewed, revised, and moved forward.
+- Confirm draft statuses, reviewer comments, and revision history work or clearly show as future placeholders.
+
+8. AI Brainstorming and Ad Generator
+- Check whether the brainstorm and ad generator collect enough input to create useful outputs.
+- Confirm field explanations/tooltips are clear.
+- Identify any outputs that are too generic, unsafe, off-brand, or not actionable.
+- Confirm outputs can be saved into Drafts or Mockup Studio.
+
+9. Engagement and Sentiment Tracking
+- Check whether engagement metrics can be entered, viewed, edited, and summarized.
+- Confirm sentiment labels and summaries make sense.
+- Identify whether real integrations are clearly separated from manual/sample data.
+- Flag anything that falsely implies live data exists when it does not.
+
+10. Accessibility and Readability
+- Check color contrast.
+- Check font sizes.
+- Check keyboard navigation where practical.
+- Check button labels and form labels.
+- Check whether important information relies only on color.
+- Check whether hover-only explanations also work on mobile through click/tap.
+
+11. Security and Approval Boundaries
+- Confirm there is no live publishing without approval.
+- Confirm draft-only AI outputs are clearly labeled.
+- Confirm the app does not allow unapproved legal, compliance, pricing, guarantee, or AI-replacement claims.
+- Confirm bonus/compensation areas are marked draft/planning unless official terms are documented.
+
+12. Code Quality and Maintainability
+- Identify repeated code, messy state management, confusing component structure, unused files, console errors, TypeScript errors, and fragile logic.
+- Run available checks such as typecheck, lint, build, and tests if configured.
+- Report any failures with exact file names and likely causes.
+
+Final audit report format:
+
+A. Executive Summary
+- Overall health of the app
+- Biggest risks
+- Highest priority fixes
+
+B. Critical Bugs
+For each issue include:
+- Issue
+- Where it appears
+- Why it matters
+- How to reproduce
+- Recommended fix
+
+C. Broken or Dead Interactions
+List every button/link/control that does not work correctly.
+
+D. User Experience Problems
+Explain what would confuse or frustrate the user.
+
+E. Design and Responsive Issues
+Include desktop and mobile notes.
+
+F. Logic and Data Issues
+Include persistence, status, counters, workflow, and dashboard issues.
+
+G. Missing Features or Incomplete Placeholders
+Separate true bugs from future-scope placeholders.
+
+H. Recommended Fix Plan
+Prioritize fixes as:
+- P0: must fix before sharing
+- P1: should fix before launch/use
+- P2: improves quality
+- Future: integration or larger build
+
+I. Questions for Rose
+List any decisions needed before fixing.
+
+Important:
+Do not make major changes yet. First return the audit report with clear findings and a prioritized fix plan.
