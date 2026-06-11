@@ -10,6 +10,18 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Command Center dashboard
+  - name: campaigns
+    description: Marketing campaigns
+  - name: tasks
+    description: Task board
+  - name: collaboration
+    description: Collaboration threads
+  - name: assistant
+    description: Cadence AI assistant
+  - name: analytics
+    description: Analytics overview
 paths:
   /healthz:
     get:
@@ -24,6 +36,258 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Command Center summary
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /campaigns:
+    get:
+      operationId: listCampaigns
+      tags: [campaigns]
+      summary: List campaigns
+      responses:
+        "200":
+          description: Campaign list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CampaignSummary"
+  /campaigns/{id}:
+    get:
+      operationId: getCampaign
+      tags: [campaigns]
+      summary: Get campaign detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Campaign detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /campaigns/{id}/approve:
+    post:
+      operationId: approveCampaign
+      tags: [campaigns]
+      summary: Approve a campaign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Approved campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /tasks:
+    get:
+      operationId: listTasks
+      tags: [tasks]
+      summary: List tasks
+      responses:
+        "200":
+          description: Task list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      operationId: createTask
+      tags: [tasks]
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+      responses:
+        "201":
+          description: Created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /tasks/{id}:
+    patch:
+      operationId: updateTask
+      tags: [tasks]
+      summary: Update a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdate"
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /threads:
+    get:
+      operationId: listThreads
+      tags: [collaboration]
+      summary: List collaboration threads
+      responses:
+        "200":
+          description: Thread list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Thread"
+  /threads/{id}:
+    get:
+      operationId: getThread
+      tags: [collaboration]
+      summary: Get thread with messages and AI summary
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Thread detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThreadDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /threads/{id}/messages:
+    post:
+      operationId: createThreadMessage
+      tags: [collaboration]
+      summary: Post a message to a thread
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageInput"
+      responses:
+        "201":
+          description: Created message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /assistant/conversation:
+    get:
+      operationId: getAssistantConversation
+      tags: [assistant]
+      summary: Get the AI assistant conversation and context
+      responses:
+        "200":
+          description: Assistant conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssistantConversation"
+  /assistant/messages:
+    post:
+      operationId: sendAssistantMessage
+      tags: [assistant]
+      summary: Send a message to the AI assistant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssistantQuery"
+      responses:
+        "200":
+          description: Assistant reply
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssistantMessage"
+
+  /analytics:
+    get:
+      operationId: getAnalytics
+      tags: [analytics]
+      summary: Analytics overview
+      responses:
+        "200":
+          description: Analytics overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Analytics"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +298,506 @@ components:
       required:
         - status
 
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    KpiTile:
+      type: object
+      required: [title, value, delta, isPositive, sparkline]
+      properties:
+        title: { type: string }
+        value: { type: string }
+        delta: { type: string }
+        isPositive: { type: boolean }
+        sparkline:
+          type: array
+          items: { type: number }
+
+    Milestone:
+      type: object
+      required: [id, date, title, type]
+      properties:
+        id: { type: string }
+        date: { type: string }
+        title: { type: string }
+        type:
+          type: string
+          enum: [review, launch, meeting, deadline]
+
+    AttentionItem:
+      type: object
+      required: [id, title, time, severity]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        time: { type: string }
+        severity:
+          type: string
+          enum: [high, medium]
+
+    TaskRollup:
+      type: object
+      required: [todo, inProgress, inReview, done, overdue, blocked]
+      properties:
+        todo: { type: integer }
+        inProgress: { type: integer }
+        inReview: { type: integer }
+        done: { type: integer }
+        overdue: { type: integer }
+        blocked: { type: integer }
+
+    DashboardSummary:
+      type: object
+      required: [kpis, campaigns, milestones, insights, taskRollup, attention]
+      properties:
+        kpis:
+          type: array
+          items: { $ref: "#/components/schemas/KpiTile" }
+        campaigns:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignSummary" }
+        milestones:
+          type: array
+          items: { $ref: "#/components/schemas/Milestone" }
+        insights:
+          type: array
+          items: { $ref: "#/components/schemas/Insight" }
+        taskRollup:
+          $ref: "#/components/schemas/TaskRollup"
+        attention:
+          type: array
+          items: { $ref: "#/components/schemas/AttentionItem" }
+
+    Insight:
+      type: object
+      required: [id, severity, title, body]
+      properties:
+        id: { type: string }
+        severity:
+          type: string
+          enum: [warning, alert, info]
+        title: { type: string }
+        body: { type: string }
+        action: { type: ["string", "null"] }
+
+    CampaignSummary:
+      type: object
+      required: [id, name, owner, status, statusColor, progress, budgetTotal, budgetSpent, channels]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        owner: { type: string }
+        ownerColor: { type: string }
+        status: { type: string }
+        statusColor: { type: string }
+        progress: { type: integer }
+        budgetTotal: { type: integer }
+        budgetSpent: { type: integer }
+        channels:
+          type: array
+          items: { type: string }
+
+    Persona:
+      type: object
+      required: [name, description]
+      properties:
+        name: { type: string }
+        description: { type: string }
+
+    CampaignKpi:
+      type: object
+      required: [label, target, current, progress, trend]
+      properties:
+        label: { type: string }
+        target: { type: string }
+        current: { type: string }
+        progress: { type: integer }
+        trend: { type: string }
+
+    CampaignAsset:
+      type: object
+      required: [id, name, type, size, date]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type:
+          type: string
+          enum: [video, design, doc, archive]
+        size: { type: string }
+        date: { type: string }
+
+    CampaignTask:
+      type: object
+      required: [id, title, assignee, status]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        assignee: { type: string }
+        status:
+          type: string
+          enum: [completed, in_progress, pending]
+
+    ActivityItem:
+      type: object
+      required: [id, user, action, target, time, avatar, color, isAI]
+      properties:
+        id: { type: string }
+        user: { type: string }
+        action: { type: string }
+        target: { type: string }
+        time: { type: string }
+        avatar: { type: string }
+        color: { type: string }
+        isAI: { type: boolean }
+
+    CampaignDetail:
+      type: object
+      required:
+        [
+          id,
+          name,
+          subtitle,
+          ownerName,
+          ownerInitials,
+          ownerColor,
+          status,
+          budgetTotal,
+          budgetSpent,
+          startDate,
+          endDate,
+          goals,
+          personas,
+          channels,
+          kpis,
+          assets,
+          tasks,
+          activity,
+          insights,
+        ]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        subtitle: { type: string }
+        ownerName: { type: string }
+        ownerInitials: { type: string }
+        ownerColor: { type: string }
+        status: { type: string }
+        budgetTotal: { type: integer }
+        budgetSpent: { type: integer }
+        startDate: { type: string }
+        endDate: { type: string }
+        goals:
+          type: array
+          items: { type: string }
+        personas:
+          type: array
+          items: { $ref: "#/components/schemas/Persona" }
+        channels:
+          type: array
+          items: { type: string }
+        kpis:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignKpi" }
+        assets:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignAsset" }
+        tasks:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignTask" }
+        activity:
+          type: array
+          items: { $ref: "#/components/schemas/ActivityItem" }
+        insights:
+          type: array
+          items: { $ref: "#/components/schemas/Insight" }
+
+    Assignee:
+      type: object
+      required: [init, color]
+      properties:
+        init: { type: string }
+        color: { type: string }
+
+    Subtasks:
+      type: object
+      required: [completed, total]
+      properties:
+        completed: { type: integer }
+        total: { type: integer }
+
+    Task:
+      type: object
+      required: [id, title, status, priority, assignees, aiGenerated, blocked]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        status:
+          type: string
+          enum: [backlog, in_progress, in_review, done]
+        priority:
+          type: string
+          enum: [high, medium, low]
+        assignees:
+          type: array
+          items: { $ref: "#/components/schemas/Assignee" }
+        dueDate: { type: ["string", "null"] }
+        campaign: { type: ["string", "null"] }
+        subtasks:
+          oneOf:
+            - $ref: "#/components/schemas/Subtasks"
+            - type: "null"
+        comments: { type: ["integer", "null"] }
+        aiGenerated: { type: boolean }
+        blocked: { type: boolean }
+        dependsOn: { type: ["string", "null"] }
+
+    TaskInput:
+      type: object
+      required: [title, status, priority]
+      properties:
+        title: { type: string, minLength: 1 }
+        status:
+          type: string
+          enum: [backlog, in_progress, in_review, done]
+        priority:
+          type: string
+          enum: [high, medium, low]
+        campaign: { type: string }
+        dueDate: { type: string }
+
+    TaskUpdate:
+      type: object
+      properties:
+        title: { type: string, minLength: 1 }
+        status:
+          type: string
+          enum: [backlog, in_progress, in_review, done]
+        priority:
+          type: string
+          enum: [high, medium, low]
+        campaign: { type: string }
+        dueDate: { type: string }
+        blocked: { type: boolean }
+
+    Thread:
+      type: object
+      required: [id, title, campaign, lastMessage, time, unread, avatars]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        campaign: { type: string }
+        lastMessage: { type: string }
+        time: { type: string }
+        unread: { type: integer }
+        avatars:
+          type: array
+          items: { type: string }
+
+    Message:
+      type: object
+      required: [id, threadId, sender, initials, role, time, content, isRisk, isDecision, color]
+      properties:
+        id: { type: string }
+        threadId: { type: string }
+        sender: { type: string }
+        initials: { type: string }
+        role: { type: string }
+        time: { type: string }
+        content: { type: string }
+        isRisk: { type: boolean }
+        isDecision: { type: boolean }
+        color: { type: string }
+
+    ProposedTask:
+      type: object
+      required: [id, title, assignee]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        assignee: { type: string }
+
+    ThreadSummary:
+      type: object
+      required: [decisions, risks, proposedTasks]
+      properties:
+        decisions:
+          type: array
+          items: { type: string }
+        risks:
+          type: array
+          items: { type: string }
+        proposedTasks:
+          type: array
+          items: { $ref: "#/components/schemas/ProposedTask" }
+
+    ThreadDetail:
+      type: object
+      required: [thread, messages, summary]
+      properties:
+        thread:
+          $ref: "#/components/schemas/Thread"
+        messages:
+          type: array
+          items: { $ref: "#/components/schemas/Message" }
+        summary:
+          $ref: "#/components/schemas/ThreadSummary"
+
+    MessageInput:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string, minLength: 1 }
+
+    AssistantVariant:
+      type: object
+      required: [number, platform, tone, content, tags]
+      properties:
+        number: { type: string }
+        platform: { type: string }
+        tone: { type: string }
+        content: { type: string }
+        tags: { type: string }
+
+    AssistantMessage:
+      type: object
+      required: [id, role, content]
+      properties:
+        id: { type: string }
+        role:
+          type: string
+          enum: [user, assistant]
+        content: { type: string }
+        intro: { type: ["string", "null"] }
+        variants:
+          type: array
+          items: { $ref: "#/components/schemas/AssistantVariant" }
+
+    AssistantContext:
+      type: object
+      required: [id, icon, title, subtitle, active]
+      properties:
+        id: { type: string }
+        icon:
+          type: string
+          enum: [campaign, audience, data]
+        title: { type: string }
+        subtitle: { type: string }
+        active: { type: boolean }
+
+    Guardrail:
+      type: object
+      required: [type, title, description]
+      properties:
+        type:
+          type: string
+          enum: [ok, warn]
+        title: { type: string }
+        description: { type: string }
+
+    AssistantConversation:
+      type: object
+      required: [messages, context, guardrails]
+      properties:
+        messages:
+          type: array
+          items: { $ref: "#/components/schemas/AssistantMessage" }
+        context:
+          type: array
+          items: { $ref: "#/components/schemas/AssistantContext" }
+        guardrails:
+          type: array
+          items: { $ref: "#/components/schemas/Guardrail" }
+
+    AssistantQuery:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string, minLength: 1 }
+
+    AnalyticsKpi:
+      type: object
+      required: [label, value, change, trend]
+      properties:
+        label: { type: string }
+        value: { type: string }
+        change: { type: string }
+        trend:
+          type: string
+          enum: [up, down]
+
+    RevenuePoint:
+      type: object
+      required: [name, revenue, target]
+      properties:
+        name: { type: string }
+        revenue: { type: integer }
+        target: { type: integer }
+
+    ChannelRoas:
+      type: object
+      required: [name, roas]
+      properties:
+        name: { type: string }
+        roas: { type: number }
+
+    TrafficSource:
+      type: object
+      required: [name, value, color]
+      properties:
+        name: { type: string }
+        value: { type: integer }
+        color: { type: string }
+
+    FunnelStage:
+      type: object
+      required: [stage, count, percent]
+      properties:
+        stage: { type: string }
+        count: { type: string }
+        percent: { type: number }
+
+    AnalyticsInsight:
+      type: object
+      required: [headline, observation, recommendation]
+      properties:
+        headline: { type: string }
+        observation: { type: string }
+        recommendation: { type: string }
+
+    AnalyticsReport:
+      type: object
+      required: [id, name, schedule]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        schedule: { type: string }
+
+    Analytics:
+      type: object
+      required: [kpis, revenue, channelRoas, traffic, funnel, insight, reports]
+      properties:
+        kpis:
+          type: array
+          items: { $ref: "#/components/schemas/AnalyticsKpi" }
+        revenue:
+          type: array
+          items: { $ref: "#/components/schemas/RevenuePoint" }
+        channelRoas:
+          type: array
+          items: { $ref: "#/components/schemas/ChannelRoas" }
+        traffic:
+          type: array
+          items: { $ref: "#/components/schemas/TrafficSource" }
+        funnel:
+          type: array
+          items: { $ref: "#/components/schemas/FunnelStage" }
+        insight:
+          $ref: "#/components/schemas/AnalyticsInsight"
+        reports:
+          type: array
+          items: { $ref: "#/components/schemas/AnalyticsReport" }
