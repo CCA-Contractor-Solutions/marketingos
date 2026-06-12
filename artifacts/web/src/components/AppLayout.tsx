@@ -210,10 +210,11 @@ export function AppLayout({
     >
       {/* Desktop sidebar */}
       <aside
-        className="hidden lg:flex w-[252px] shrink-0 flex-col"
+        className="hidden lg:flex w-[260px] shrink-0 flex-col"
         style={{
-          background: "var(--c-surface)",
+          background: "linear-gradient(180deg, #090e18 0%, #060913 100%)",
           borderRight: "1px solid var(--c-border)",
+          boxShadow: "1px 0 24px rgba(0,0,0,0.4)"
         }}
       >
         <SidebarContent
@@ -227,8 +228,8 @@ export function AppLayout({
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
         <SheetContent
           side="left"
-          className="cadence w-[252px] p-0"
-          style={{ background: "var(--c-surface)" }}
+          className="cadence w-[280px] p-0 border-r-[#20273a]"
+          style={{ background: "#090e18" }}
         >
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <SidebarContent
@@ -244,34 +245,34 @@ export function AppLayout({
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top bar */}
         <header
-          className="flex shrink-0 items-center gap-3 px-4 sm:px-6"
+          className="flex shrink-0 items-center gap-4 px-4 sm:px-8"
           style={{
-            height: 68,
-            background: "rgba(255,255,255,0.8)",
-            backdropFilter: "blur(8px)",
+            height: 76,
+            background: "var(--c-surface)",
             borderBottom: "1px solid var(--c-border)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.2)"
           }}
         >
           <button
             onClick={() => setNavOpen(true)}
             aria-label="Open navigation"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl lg:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl lg:hidden"
             style={{
               background: "var(--c-surface-2)",
               border: "1px solid var(--c-border)",
-              color: "var(--c-ink-soft)",
+              color: "var(--c-ink)",
             }}
           >
-            <Menu size={18} />
+            <Menu size={20} />
           </button>
 
           <div className="min-w-0">
-            <h1 className="font-display truncate text-[19px] font-bold leading-tight">
+            <h1 className="font-display truncate text-[22px] font-bold tracking-tight">
               {title}
             </h1>
             {subtitle && (
               <p
-                className="truncate text-[12.5px]"
+                className="truncate text-[13px] font-medium"
                 style={{ color: "var(--c-muted)" }}
               >
                 {subtitle}
@@ -279,23 +280,23 @@ export function AppLayout({
             )}
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-3">
             {actions}
 
             <Popover>
               <PopoverTrigger asChild>
                 <button
                   aria-label="Notifications"
-                  className="relative flex h-9 w-9 items-center justify-center rounded-xl"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-[var(--c-surface-2)]"
                   style={{
-                    background: "var(--c-surface-2)",
+                    background: "var(--c-surface)",
                     border: "1px solid var(--c-border)",
                   }}
                 >
-                  <Bell size={16} style={{ color: "var(--c-ink-soft)" }} />
+                  <Bell size={18} style={{ color: "var(--c-ink-soft)" }} />
                   {attentionCount > 0 && (
                     <span
-                      className="absolute right-2 top-2 h-2 w-2 rounded-full"
+                      className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full ring-2 ring-[var(--c-surface)]"
                       style={{ background: "var(--c-rose)" }}
                     />
                   )}
@@ -304,11 +305,11 @@ export function AppLayout({
               <PopoverContent
                 align="end"
                 className="cadence w-80 p-0"
-                style={{ background: "var(--c-surface)" }}
+                style={{ background: "var(--c-surface)", borderColor: "var(--c-border)" }}
               >
                 <div
                   className="flex items-center gap-2 px-4 py-3"
-                  style={{ borderBottom: "1px solid var(--c-border)" }}
+                  style={{ borderBottom: "1px solid var(--c-border)", background: "var(--c-surface-2)" }}
                 >
                   <AlertTriangle size={15} style={{ color: "var(--c-amber)" }} />
                   <span className="text-[13.5px] font-semibold">
@@ -318,7 +319,7 @@ export function AppLayout({
                 <div className="max-h-72 overflow-y-auto">
                   {attentionCount === 0 ? (
                     <div
-                      className="px-4 py-6 text-center text-[12.5px]"
+                      className="px-4 py-8 text-center text-[13px] font-medium"
                       style={{ color: "var(--c-muted)" }}
                     >
                       You're all caught up.
@@ -327,7 +328,7 @@ export function AppLayout({
                     attention.map((a) => (
                       <div
                         key={a.id}
-                        className="flex items-start gap-2.5 px-4 py-2.5"
+                        className="flex items-start gap-3 px-4 py-3"
                         style={{ borderBottom: "1px solid var(--c-border)" }}
                       >
                         <span
@@ -340,11 +341,11 @@ export function AppLayout({
                           }}
                         />
                         <div className="min-w-0 flex-1">
-                          <div className="text-[12.5px] font-medium leading-snug">
+                          <div className="text-[13px] font-medium leading-snug">
                             {a.title}
                           </div>
                           <div
-                            className="mt-0.5 text-[11px]"
+                            className="mt-1 text-[11.5px] font-medium"
                             style={{ color: "var(--c-muted)" }}
                           >
                             {a.time}
@@ -359,21 +360,23 @@ export function AppLayout({
 
             <Link
               href="/campaigns"
-              className="hidden items-center gap-2 rounded-xl px-3.5 py-2 text-[13px] font-semibold text-white sm:flex"
+              className="hidden items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-bold text-white sm:flex transition-transform hover:scale-105"
               style={{
                 background:
                   "linear-gradient(135deg, var(--c-brand), var(--c-violet))",
-                boxShadow: "0 8px 18px -8px rgba(37,99,235,0.8)",
+                boxShadow: "0 4px 12px rgba(37,99,235,0.4)",
               }}
             >
-              <Plus size={16} /> New campaign
+              <Plus size={16} strokeWidth={3} /> New campaign
             </Link>
 
+            <div className="h-6 w-px bg-[var(--c-border)] mx-1" />
+
             <div
-              className="ml-1 flex h-9 w-9 items-center justify-center rounded-full text-[12px] font-bold text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-[13px] font-bold text-white shadow-sm ring-1 ring-[var(--c-border)]"
               style={{
                 background:
-                  "linear-gradient(135deg, var(--c-brand), var(--c-navy-2))",
+                  "linear-gradient(135deg, #1e293b, #0f172a)",
               }}
             >
               JM
@@ -382,7 +385,7 @@ export function AppLayout({
         </header>
 
         {/* Page content */}
-        <main className="cadence-scroll min-w-0 flex-1 overflow-y-auto">
+        <main className="cadence-scroll min-w-0 flex-1 overflow-y-auto bg-[var(--c-bg)]">
           {children}
         </main>
       </div>

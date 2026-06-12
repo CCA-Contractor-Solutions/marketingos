@@ -402,7 +402,7 @@ export default function TaskBoard() {
 
         {/* View content */}
         <div
-          className={`cadence-scroll flex-1 bg-[#f6f7fb] p-6 ${
+          className={`cadence-scroll flex-1 bg-[var(--c-bg)] p-6 ${
             activeView === "board" || activeView === "workload"
               ? "overflow-x-auto overflow-y-hidden"
               : "overflow-y-auto"

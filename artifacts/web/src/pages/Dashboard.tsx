@@ -268,29 +268,29 @@ export default function Dashboard() {
         <div className="p-6 max-w-7xl mx-auto space-y-6 pb-20">
           {/* CCA hero */}
           <div
-            className="cadence-rise relative overflow-hidden rounded-2xl px-6 py-7 text-white"
+            className="cadence-rise relative overflow-hidden rounded-3xl px-8 py-10 text-white"
             style={{
-              background:
-                "linear-gradient(120deg, var(--c-navy), var(--c-navy-2) 68%, var(--c-brand))",
-              boxShadow: "0 18px 40px -20px rgba(11,18,36,0.7)",
+              background: "linear-gradient(120deg, #090e18 0%, #1e3a8a 70%, #2563eb 100%)",
+              boxShadow: "0 24px 60px -20px rgba(0,0,0,0.8)",
+              border: "1px solid rgba(255,255,255,0.1)"
             }}
           >
             <div
-              className="cadence-ai-glow pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full"
-              style={{ background: "rgba(59,130,246,0.35)", filter: "blur(18px)" }}
+              className="cadence-ai-glow pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full"
+              style={{ background: "rgba(59,130,246,0.35)", filter: "blur(32px)" }}
             />
-            <div className="relative flex items-center gap-4">
-              <div className="hidden shrink-0 sm:block">
-                <CcaLogo size={48} />
+            <div className="relative flex items-center gap-6">
+              <div className="hidden shrink-0 sm:block rounded-2xl bg-white/5 p-4 backdrop-blur-sm border border-white/10">
+                <CcaLogo size={56} />
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-white/70">
-                  <Sparkles size={13} /> Contractor Compliance Authority
+                <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.2em] text-blue-200">
+                  <Sparkles size={14} /> Contractor Compliance Authority
                 </div>
-                <h2 className="font-display mt-1 text-[22px] font-bold leading-tight sm:text-[26px]">
-                  CCA Marketing Command Center
+                <h2 className="font-display mt-2 text-[28px] font-bold leading-tight sm:text-[36px] tracking-tight">
+                  Marketing Command Center
                 </h2>
-                <p className="mt-1 text-[13px] text-white/80">
+                <p className="mt-2 text-[15px] text-blue-100/90 font-medium">
                   Plan, launch, approve, and optimize every campaign in one place.
                 </p>
               </div>
@@ -320,16 +320,16 @@ export default function Dashboard() {
             {/* Campaigns + Milestones */}
             <div className="space-y-6 lg:col-span-2">
               <div
-                className="rounded-2xl p-5 cadence-rise"
+                className="rounded-2xl p-6 cadence-rise"
                 style={{
                   animationDelay: "80ms",
                   background: "var(--c-surface)",
                   border: "1px solid var(--c-border)",
-                  boxShadow: "var(--c-shadow-sm)",
+                  boxShadow: "var(--c-shadow-md)",
                 }}
               >
-                <div className="mb-3 flex items-center justify-between">
-                  <h2 className="font-display text-[16px] font-bold">Active Campaigns</h2>
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="font-display text-[18px] font-bold">Active Campaigns</h2>
                   <Link
                     href="/campaigns"
                     className="flex items-center gap-1 text-[12.5px] font-semibold"
@@ -347,16 +347,16 @@ export default function Dashboard() {
 
               {/* Task rollup */}
               <div
-                className="rounded-2xl p-5 cadence-rise"
+                className="rounded-2xl p-6 cadence-rise"
                 style={{
                   animationDelay: "120ms",
                   background: "var(--c-surface)",
                   border: "1px solid var(--c-border)",
-                  boxShadow: "var(--c-shadow-sm)",
+                  boxShadow: "var(--c-shadow-md)",
                 }}
               >
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="font-display text-[16px] font-bold">Task Overview</h2>
+                <div className="mb-5 flex items-center justify-between">
+                  <h2 className="font-display text-[18px] font-bold">Task Overview</h2>
                   <Link
                     href="/tasks"
                     className="flex items-center gap-1 text-[12.5px] font-semibold"
@@ -394,17 +394,17 @@ export default function Dashboard() {
             <div className="space-y-6">
               {/* AI insights */}
               <div
-                className="rounded-2xl p-5 cadence-rise"
+                className="rounded-2xl p-6 cadence-rise"
                 style={{
                   animationDelay: "100ms",
                   background: "var(--c-surface)",
                   border: "1px solid var(--c-border)",
-                  boxShadow: "var(--c-shadow-sm)",
+                  boxShadow: "var(--c-shadow-md)",
                 }}
               >
-                <div className="mb-3 flex items-center gap-2">
-                  <Sparkles size={16} style={{ color: "var(--c-brand)" }} />
-                  <h2 className="font-display text-[15px] font-bold">CCA AI Insights</h2>
+                <div className="mb-4 flex items-center gap-2">
+                  <Sparkles size={18} style={{ color: "var(--c-brand)" }} />
+                  <h2 className="font-display text-[16px] font-bold">CCA AI Insights</h2>
                 </div>
                 <div className="space-y-2.5">
                   {(data?.insights ?? []).map((ins) => (
@@ -415,17 +415,17 @@ export default function Dashboard() {
 
               {/* Milestones */}
               <div
-                className="rounded-2xl p-5 cadence-rise"
+                className="rounded-2xl p-6 cadence-rise"
                 style={{
                   animationDelay: "140ms",
                   background: "var(--c-surface)",
                   border: "1px solid var(--c-border)",
-                  boxShadow: "var(--c-shadow-sm)",
+                  boxShadow: "var(--c-shadow-md)",
                 }}
               >
-                <div className="mb-4 flex items-center gap-2">
-                  <CalendarDays size={16} style={{ color: "var(--c-brand)" }} />
-                  <h2 className="font-display text-[15px] font-bold">This Week's Milestones</h2>
+                <div className="mb-5 flex items-center gap-2">
+                  <CalendarDays size={18} style={{ color: "var(--c-brand)" }} />
+                  <h2 className="font-display text-[16px] font-bold">This Week's Milestones</h2>
                 </div>
                 <div>
                   {(data?.milestones ?? []).map((m, i) => (
@@ -440,17 +440,17 @@ export default function Dashboard() {
 
               {/* Needs attention */}
               <div
-                className="rounded-2xl p-5 cadence-rise"
+                className="rounded-2xl p-6 cadence-rise"
                 style={{
                   animationDelay: "160ms",
                   background: "var(--c-surface)",
                   border: "1px solid var(--c-border)",
-                  boxShadow: "var(--c-shadow-sm)",
+                  boxShadow: "var(--c-shadow-md)",
                 }}
               >
-                <div className="mb-2 flex items-center gap-2">
-                  <AlertTriangle size={16} style={{ color: "var(--c-amber)" }} />
-                  <h2 className="font-display text-[15px] font-bold">Needs Attention</h2>
+                <div className="mb-3 flex items-center gap-2">
+                  <AlertTriangle size={18} style={{ color: "var(--c-amber)" }} />
+                  <h2 className="font-display text-[16px] font-bold">Needs Attention</h2>
                 </div>
                 <div className="divide-y" style={{ borderColor: "var(--c-border)" }}>
                   {(data?.attention ?? []).map((a) => (

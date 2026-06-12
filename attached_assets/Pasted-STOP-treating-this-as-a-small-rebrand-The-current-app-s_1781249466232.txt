@@ -1,0 +1,67 @@
+STOP treating this as a small rebrand. The current app still does not visually match the approved CCA mockup.
+
+Your job is to make the live app adopt the attached mockup design direction, not just change text from Cadence to CCA.
+
+Use the mockup as the visual source of truth.
+
+Current problem:
+- The live app still looks like a generic light dashboard.
+- The approved mockup is a dark, premium CCA Command Center interface.
+- The current menu/sidebar does not match the mockup structure or visual weight.
+- The current cards, typography, spacing, colors, and hierarchy are too flat and generic.
+- Branding has not been fully adopted visually.
+
+Required design adoption:
+1. Convert the app to the approved dark CCA Command Center visual system.
+2. Use a navy / deep blue / royal blue / clean white palette.
+3. Remove the generic gray SaaS dashboard look.
+4. Make the sidebar a strong dark branded navigation panel with visible labels, icons, and active states.
+5. Make the top/header area feel like the mockup: bold, branded, operational, and premium.
+6. Add clear CCA / Contractor Compliance Authority identity in the first viewport.
+7. Use higher-contrast panels, sharper visual hierarchy, and stronger section grouping.
+8. Make cards look like intentional command-center modules, not plain placeholder cards.
+9. Match the mockup’s density, spacing, typography scale, and visual rhythm.
+10. Use real clickable dashboard modules, campaign rows, task rows, and data panels.
+
+Do not say this is complete unless the live app visually resembles the mockup at first glance.
+
+Specific pages to restyle:
+- Command Center / Dashboard
+- Campaigns
+- Campaign Detail
+- Tasks
+- AI Assistant
+- Collaboration
+- Analytics
+- Brand Memory
+
+Important:
+- Do not create a separate mockup page.
+- Do not create a new duplicate app.
+- Do not only update CSS variables while leaving the old layout intact.
+- Do not leave transparent menus, invisible navigation, or low-contrast text.
+- Do not leave dead buttons visible.
+- Do not leave data cards that cannot be clicked through where click-through is expected.
+
+Implementation requirements:
+- Update the actual canonical app: artifacts/web.
+- Inspect the approved mockup screenshot and reproduce its design language across the working app.
+- Replace the current light theme with the dark CCA branded interface.
+- Update layout components, sidebar, header, dashboard cards, page shells, buttons, tables, and detail views.
+- Ensure mobile navigation has an opaque background and visible menu items.
+- Ensure all menu text is readable against its background.
+- Ensure active navigation states are obvious.
+- Ensure clickable data has hover states and routes to the correct detail/filter view.
+
+Verification required:
+- Run typecheck.
+- Run build.
+- Open the app fresh.
+- Compare screenshots against the approved mockup.
+- Provide screenshots of desktop dashboard, mobile dashboard, mobile menu open, campaigns, tasks, collaboration, and analytics.
+- Confirm every visible navigation item works.
+- Confirm every clickable data card/row works.
+- List anything intentionally non-clickable.
+
+Acceptance standard:
+The app should immediately look like the approved CCA mockup, not like the old Cadence/generic dashboard with changed words.
