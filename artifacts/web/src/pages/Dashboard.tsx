@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { Link } from "wouter";
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { AppLayout, PageError } from "@/components/AppLayout";
@@ -89,6 +90,25 @@ function AttentionRow({ a }: { a: AttentionItem }) {
   );
 }
 
+function Section({
+  id,
+  span,
+  children,
+}: {
+  id: string;
+  span?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      id={id}
+      className={`scroll-mt-6 flex flex-col [&>*]:flex-1 ${span ? "md:col-span-2" : ""}`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { data, isLoading, isError } = useGetDashboardSummary();
 
@@ -144,46 +164,50 @@ export default function Dashboard() {
 
               {/* Dense Grid of Modules */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 cadence-rise" style={{ animationDelay: "80ms" }}>
-                <ExecutiveHealth />
-                <RoiOnLeads />
-                <SeoAnalytics />
-                
-                <CampaignCommandCenter campaigns={data?.campaigns ?? []} />
-                <Futurecast />
-                
-                <MarketTrends />
-                <CompetitorWatch />
-                <SeoSuggestions />
-                
-                <AdHealth />
-                <BudgetPacing />
-                <FunnelQuality />
-                
-                <PressReleases />
-                <EmailBuilder />
-                <BrainstormCorner />
-                
-                <ContentOpportunities />
-                <ReputationSignals />
-                <AwardCenter />
+                <Section id="executive-health"><ExecutiveHealth /></Section>
+                <Section id="roi-leads"><RoiOnLeads /></Section>
+                <Section id="seo-analytics"><SeoAnalytics /></Section>
+
+                <Section id="campaign-center"><CampaignCommandCenter campaigns={data?.campaigns ?? []} /></Section>
+                <Section id="futurecast"><Futurecast /></Section>
+
+                <Section id="market-trends"><MarketTrends /></Section>
+                <Section id="competitor-watch"><CompetitorWatch /></Section>
+                <Section id="seo-suggestions"><SeoSuggestions /></Section>
+
+                <Section id="ad-health"><AdHealth /></Section>
+                <Section id="budget-pacing"><BudgetPacing /></Section>
+                <Section id="funnel-quality"><FunnelQuality /></Section>
+
+                <Section id="press-releases"><PressReleases /></Section>
+                <Section id="email-builder"><EmailBuilder /></Section>
+                <Section id="brainstorm"><BrainstormCorner /></Section>
+
+                <Section id="content-opportunities"><ContentOpportunities /></Section>
+                <Section id="reputation"><ReputationSignals /></Section>
+                <Section id="award-center"><AwardCenter /></Section>
 
                 {/* AI Suggestions (Real Data) */}
-                <ModuleCard title="AI Suggestions" actionLabel="View all" actionHref="/assistant" className="md:col-span-2">
-                  <div className="space-y-2.5">
-                    {(data?.insights ?? []).slice(0, 3).map((ins) => (
-                      <InsightCard key={ins.id} insight={ins} />
-                    ))}
-                  </div>
-                </ModuleCard>
+                <Section id="ai-suggestions" span>
+                  <ModuleCard title="AI Suggestions" actionLabel="View all" actionHref="/assistant">
+                    <div className="space-y-2.5">
+                      {(data?.insights ?? []).slice(0, 3).map((ins) => (
+                        <InsightCard key={ins.id} insight={ins} />
+                      ))}
+                    </div>
+                  </ModuleCard>
+                </Section>
 
                 {/* Attention (Real Data) */}
-                <ModuleCard title="Needs Attention" actionLabel="Open tasks" actionHref="/tasks">
-                  <div className="divide-y divide-slate-100">
-                    {(data?.attention ?? []).slice(0, 4).map((a) => (
-                      <AttentionRow key={a.id} a={a} />
-                    ))}
-                  </div>
-                </ModuleCard>
+                <Section id="needs-attention">
+                  <ModuleCard title="Needs Attention" actionLabel="Open tasks" actionHref="/tasks">
+                    <div className="divide-y divide-slate-100">
+                      {(data?.attention ?? []).slice(0, 4).map((a) => (
+                        <AttentionRow key={a.id} a={a} />
+                      ))}
+                    </div>
+                  </ModuleCard>
+                </Section>
               </div>
 
             </div>

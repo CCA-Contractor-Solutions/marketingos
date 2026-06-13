@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import {
@@ -19,6 +19,21 @@ import {
   Plus,
   Menu,
   AlertTriangle,
+  Activity,
+  TrendingUp,
+  Search,
+  LineChart,
+  BarChartBig,
+  Eye,
+  Lightbulb,
+  Wallet,
+  Filter,
+  Newspaper,
+  Mail,
+  Brain,
+  FileText,
+  Star,
+  Award,
 } from "lucide-react";
 import { CcaLogo } from "@/components/CcaLogo";
 
@@ -51,6 +66,28 @@ const NAV: {
   { key: "brand", label: "Brand Memory", href: "/brand", icon: BookMarked },
 ];
 
+const MODULES: { id: string; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: "executive-health", label: "Executive Health", icon: Activity },
+  { id: "roi-leads", label: "ROI on Leads", icon: TrendingUp },
+  { id: "seo-analytics", label: "SEO Analytics", icon: Search },
+  { id: "campaign-center", label: "Campaign Center", icon: Megaphone },
+  { id: "futurecast", label: "Futurecast", icon: LineChart },
+  { id: "market-trends", label: "Market Trends", icon: BarChartBig },
+  { id: "competitor-watch", label: "Competitor Watch", icon: Eye },
+  { id: "seo-suggestions", label: "SEO Suggestions", icon: Lightbulb },
+  { id: "ad-health", label: "Ad Health", icon: Activity },
+  { id: "budget-pacing", label: "Budget Pacing", icon: Wallet },
+  { id: "funnel-quality", label: "Funnel Quality", icon: Filter },
+  { id: "press-releases", label: "Press Releases", icon: Newspaper },
+  { id: "email-builder", label: "Email Builder", icon: Mail },
+  { id: "brainstorm", label: "Brainstorm Corner", icon: Brain },
+  { id: "content-opportunities", label: "Content Ideas", icon: FileText },
+  { id: "reputation", label: "Reputation Signals", icon: Star },
+  { id: "award-center", label: "Award Center", icon: Award },
+  { id: "ai-suggestions", label: "AI Suggestions", icon: Sparkles },
+  { id: "needs-attention", label: "Needs Attention", icon: AlertTriangle },
+];
+
 function SidebarContent({
   active,
   attentionCount,
@@ -62,6 +99,24 @@ function SidebarContent({
   overdueCount: number;
   onNavigate?: () => void;
 }) {
+  const [location, setLocation] = useLocation();
+
+  const goToModule = (id: string) => {
+    const scrollWhenReady = (attempts = 0) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (attempts < 30) {
+        window.requestAnimationFrame(() => scrollWhenReady(attempts + 1));
+      }
+    };
+    onNavigate?.();
+    if (location !== "/") {
+      setLocation("/");
+    }
+    scrollWhenReady();
+  };
+
   return (
     <div className="flex h-full flex-col">
       <Link
@@ -106,6 +161,26 @@ function SidebarContent({
                 <Icon size={18} strokeWidth={on ? 2.4 : 2} />
                 <span>{item.label}</span>
               </Link>
+            );
+          })}
+        </div>
+
+        <div className="px-2.5 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50">
+          Modules
+        </div>
+        <div className="flex flex-col gap-0.5">
+          {MODULES.map((m) => {
+            const Icon = m.icon;
+            return (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => goToModule(m.id)}
+                className="flex items-center gap-3 rounded-xl px-2.5 py-1.5 text-left text-[13px] font-medium text-white/55 transition-all hover:bg-white/10 hover:text-white"
+              >
+                <Icon size={16} strokeWidth={2} className="shrink-0" />
+                <span className="truncate">{m.label}</span>
+              </button>
             );
           })}
         </div>
