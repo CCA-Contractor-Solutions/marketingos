@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   getListTasksQueryKey,
   useListTasks,
+  useUpdateTask,
   type Task,
 } from "@workspace/api-client-react";
 import * as Haptics from "expo-haptics";
@@ -36,6 +37,7 @@ import { RescheduleSheet } from "@/components/RescheduleSheet";
 import { useColors } from "@/hooks/useColors";
 import {
   WEEKDAY_LABELS,
+  formatISODate,
   formatMonthYear,
   isSameDay,
   parseDueDate,
@@ -57,13 +59,52 @@ export default function CalendarScreen() {
   const bottomInset = useBottomInset();
   const queryClient = useQueryClient();
   const { data, isLoading, isError, refetch } = useListTasks();
+  const updateTask = useUpdateTask();
 
   const today = useMemo(() => startOfDay(new Date()), []);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [rescheduleTask, setRescheduleTask] = useState<Task | null>(null);
+  // The task the user picked to move; while set, tapping a day reschedules it.
+  const [moveTask, setMoveTask] = useState<Task | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() });
+
+  const moveDue = useMemo(
+    () => (moveTask ? parseDueDate(moveTask.dueDate) : null),
+    [moveTask],
+  );
+
+  // Reschedule the selected move-task to the tapped day using the shared
+  // update-task API in "YYYY-MM-DD" format, so reschedules agree across clients.
+  const moveToDay = (day: Date) => {
+    if (!moveTask || saving) return;
+    const dueDate = formatISODate(day);
+    if (moveTask.dueDate === dueDate) {
+      Haptics.selectionAsync();
+      setMoveTask(null);
+      setSelected(day);
+      return;
+    }
+    setSaving(true);
+    updateTask.mutate(
+      { id: moveTask.id, data: { dueDate } },
+      {
+        onSuccess: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setSaving(false);
+          setMoveTask(null);
+          setSelected(day);
+          invalidate();
+        },
+        onError: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          setSaving(false);
+        },
+      },
+    );
+  };
 
   const dated = useMemo<DatedTask[]>(() => {
     return (data ?? [])
@@ -184,6 +225,46 @@ export default function CalendarScreen() {
           </View>
         </View>
 
+        {/* Move-mode banner: shown while a task is picked for rescheduling. */}
+        {moveTask ? (
+          <View
+            style={[
+              styles.moveBanner,
+              { backgroundColor: colors.brand50, borderColor: colors.primary },
+            ]}
+          >
+            <Feather name="calendar" size={16} color={colors.primary} />
+            <View style={{ flex: 1 }}>
+              <Text
+                style={[styles.moveBannerTitle, { color: colors.primary }]}
+                numberOfLines={1}
+              >
+                Tap a day to reschedule
+              </Text>
+              <Text
+                style={[styles.moveBannerSub, { color: colors.primary }]}
+                numberOfLines={1}
+              >
+                {saving ? "Saving…" : moveTask.title}
+              </Text>
+            </View>
+            <TouchableOpacity
+              accessibilityLabel="Cancel reschedule"
+              activeOpacity={0.7}
+              disabled={saving}
+              onPress={() => {
+                Haptics.selectionAsync();
+                setMoveTask(null);
+              }}
+              style={[styles.moveCancel, { borderColor: colors.primary }]}
+            >
+              <Text style={[styles.moveCancelText, { color: colors.primary }]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
         {/* Calendar grid */}
         <Card style={{ padding: 8 }}>
           <View style={styles.weekRow}>
@@ -201,12 +282,19 @@ export default function CalendarScreen() {
               const inMonth = day.getMonth() === month.getMonth();
               const isToday = isSameDay(day, today);
               const isSelected = isSameDay(day, selected);
+              const isMoveTarget = !!moveTask;
+              const isMoveOrigin = !!moveDue && isSameDay(day, moveDue);
               const count = tasksForDay(day).length;
               return (
                 <TouchableOpacity
                   key={i}
                   activeOpacity={0.7}
+                  disabled={saving}
                   onPress={() => {
+                    if (moveTask) {
+                      moveToDay(day);
+                      return;
+                    }
                     Haptics.selectionAsync();
                     setSelected(day);
                   }}
@@ -216,6 +304,13 @@ export default function CalendarScreen() {
                     style={[
                       styles.dayBubble,
                       isSelected && { backgroundColor: colors.brand50 },
+                      isMoveTarget && {
+                        borderWidth: 1.5,
+                        borderColor: isMoveOrigin
+                          ? colors.primary
+                          : colors.border,
+                        borderStyle: "dashed",
+                      },
                       isToday && { backgroundColor: colors.primary },
                     ]}
                   >
@@ -273,7 +368,7 @@ export default function CalendarScreen() {
           <EmptyView
             icon="calendar"
             title="Nothing due this day"
-            body="Tap a day with a dot to see what's scheduled, or long-press a task to reschedule it."
+            body="Tap a day with a dot to see what's scheduled. Tap a task's calendar icon, then tap a day to reschedule it."
           />
         ) : (
           <View style={{ gap: 10 }}>
@@ -298,6 +393,33 @@ export default function CalendarScreen() {
                     {t.blocked ? (
                       <Feather name="slash" size={15} color={colors.rose} />
                     ) : null}
+                    <TouchableOpacity
+                      accessibilityLabel={`Reschedule ${t.title}`}
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        Haptics.impactAsync(
+                          Haptics.ImpactFeedbackStyle.Light,
+                        );
+                        setMoveTask(t);
+                      }}
+                      hitSlop={8}
+                      style={[
+                        styles.moveBtn,
+                        moveTask?.id === t.id && {
+                          backgroundColor: colors.brand50,
+                        },
+                      ]}
+                    >
+                      <Feather
+                        name="calendar"
+                        size={16}
+                        color={
+                          moveTask?.id === t.id
+                            ? colors.primary
+                            : colors.mutedForeground
+                        }
+                      />
+                    </TouchableOpacity>
                   </View>
 
                   {t.campaign ? (
@@ -435,6 +557,32 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 8,
   },
+  moveBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  moveBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    marginBottom: 14,
+  },
+  moveBannerTitle: { fontFamily: "Inter_700Bold", fontSize: 13 },
+  moveBannerSub: { fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 1 },
+  moveCancel: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  moveCancelText: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
   taskTitle: { fontFamily: "Inter_600SemiBold", fontSize: 15, flex: 1, lineHeight: 21 },
   taskCampaign: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 5 },
   taskMeta: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12 },
