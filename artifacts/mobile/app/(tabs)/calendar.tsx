@@ -67,6 +67,7 @@ export default function CalendarScreen() {
   // The task the user picked to move; while set, tapping a day reschedules it.
   const [moveTask, setMoveTask] = useState<Task | null>(null);
   const [saving, setSaving] = useState(false);
+  const [unscheduledOpen, setUnscheduledOpen] = useState(false);
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() });
@@ -112,10 +113,14 @@ export default function CalendarScreen() {
       .filter((t): t is DatedTask => t.date !== null);
   }, [data]);
 
-  const unscheduledCount = useMemo(
-    () => (data ?? []).filter((t) => !parseDueDate(t.dueDate)).length,
+  const unscheduled = useMemo(
+    () =>
+      (data ?? [])
+        .filter((t) => !parseDueDate(t.dueDate))
+        .sort((a, b) => a.title.localeCompare(b.title)),
     [data],
   );
+  const unscheduledCount = unscheduled.length;
 
   // Default to the month with the most scheduled tasks, else this month.
   const initialMonth = useMemo(() => {
@@ -160,6 +165,97 @@ export default function CalendarScreen() {
     setMonth((m) => new Date(m.getFullYear(), m.getMonth() + delta, 1));
 
   const selectedTasks = tasksForDay(selected);
+
+  const renderTaskCard = (t: Task) => (
+    <TouchableOpacity
+      key={t.id}
+      activeOpacity={0.85}
+      onPress={() => setEditTask(t)}
+      onLongPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        setRescheduleTask(t);
+      }}
+      delayLongPress={250}
+    >
+      <Card style={{ padding: 14 }}>
+        <View style={styles.taskTop}>
+          <Text style={[styles.taskTitle, { color: colors.foreground }]}>
+            {t.title}
+          </Text>
+          {t.blocked ? (
+            <Feather name="slash" size={15} color={colors.rose} />
+          ) : null}
+          <TouchableOpacity
+            accessibilityLabel={`Reschedule ${t.title}`}
+            activeOpacity={0.7}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setMoveTask(t);
+            }}
+            hitSlop={8}
+            style={[
+              styles.moveBtn,
+              moveTask?.id === t.id && {
+                backgroundColor: colors.brand50,
+              },
+            ]}
+          >
+            <Feather
+              name="calendar"
+              size={16}
+              color={
+                moveTask?.id === t.id
+                  ? colors.primary
+                  : colors.mutedForeground
+              }
+            />
+          </TouchableOpacity>
+        </View>
+
+        {t.campaign ? (
+          <Text
+            style={[styles.taskCampaign, { color: colors.mutedForeground }]}
+            numberOfLines={1}
+          >
+            {t.campaign}
+          </Text>
+        ) : null}
+
+        <View style={styles.taskMeta}>
+          <Badge label={t.priority} accent={PRIORITY_ACCENT[t.priority]} />
+          <View style={styles.statusChip}>
+            <View
+              style={[
+                styles.statusDot,
+                { backgroundColor: colors[STATUS_ACCENT[t.status]] },
+              ]}
+            />
+            <Text style={[styles.statusText, { color: colors.mutedForeground }]}>
+              {STATUS_LABEL[t.status]}
+            </Text>
+          </View>
+          {t.aiGenerated ? (
+            <View style={[styles.aiTag, { backgroundColor: colors.brand50 }]}>
+              <Feather name="zap" size={11} color={colors.primary} />
+              <Text style={[styles.aiText, { color: colors.primary }]}>AI</Text>
+            </View>
+          ) : null}
+          <View style={{ flex: 1 }} />
+          <View style={styles.avatarStack}>
+            {t.assignees.slice(0, 3).map((a, i) => (
+              <View key={i} style={{ marginLeft: i === 0 ? 0 : -8 }}>
+                <Avatar
+                  initials={a.init}
+                  accent={resolveAccent(a.color)}
+                  size={24}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+      </Card>
+    </TouchableOpacity>
+  );
 
   if (isLoading) return <LoadingView />;
   if (isError || !data) return <ErrorView onRetry={() => refetch()} />;
@@ -372,111 +468,62 @@ export default function CalendarScreen() {
           />
         ) : (
           <View style={{ gap: 10 }}>
-            {selectedTasks.map((t) => (
-              <TouchableOpacity
-                key={t.id}
-                activeOpacity={0.85}
-                onPress={() => setEditTask(t)}
-                onLongPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                  setRescheduleTask(t);
-                }}
-                delayLongPress={250}
-              >
-                <Card style={{ padding: 14 }}>
-                  <View style={styles.taskTop}>
-                    <Text
-                      style={[styles.taskTitle, { color: colors.foreground }]}
-                    >
-                      {t.title}
-                    </Text>
-                    {t.blocked ? (
-                      <Feather name="slash" size={15} color={colors.rose} />
-                    ) : null}
-                    <TouchableOpacity
-                      accessibilityLabel={`Reschedule ${t.title}`}
-                      activeOpacity={0.7}
-                      onPress={() => {
-                        Haptics.impactAsync(
-                          Haptics.ImpactFeedbackStyle.Light,
-                        );
-                        setMoveTask(t);
-                      }}
-                      hitSlop={8}
-                      style={[
-                        styles.moveBtn,
-                        moveTask?.id === t.id && {
-                          backgroundColor: colors.brand50,
-                        },
-                      ]}
-                    >
-                      <Feather
-                        name="calendar"
-                        size={16}
-                        color={
-                          moveTask?.id === t.id
-                            ? colors.primary
-                            : colors.mutedForeground
-                        }
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  {t.campaign ? (
-                    <Text
-                      style={[styles.taskCampaign, { color: colors.mutedForeground }]}
-                      numberOfLines={1}
-                    >
-                      {t.campaign}
-                    </Text>
-                  ) : null}
-
-                  <View style={styles.taskMeta}>
-                    <Badge
-                      label={t.priority}
-                      accent={PRIORITY_ACCENT[t.priority]}
-                    />
-                    <View style={styles.statusChip}>
-                      <View
-                        style={[
-                          styles.statusDot,
-                          { backgroundColor: colors[STATUS_ACCENT[t.status]] },
-                        ]}
-                      />
-                      <Text
-                        style={[styles.statusText, { color: colors.mutedForeground }]}
-                      >
-                        {STATUS_LABEL[t.status]}
-                      </Text>
-                    </View>
-                    {t.aiGenerated ? (
-                      <View
-                        style={[styles.aiTag, { backgroundColor: colors.brand50 }]}
-                      >
-                        <Feather name="zap" size={11} color={colors.primary} />
-                        <Text style={[styles.aiText, { color: colors.primary }]}>
-                          AI
-                        </Text>
-                      </View>
-                    ) : null}
-                    <View style={{ flex: 1 }} />
-                    <View style={styles.avatarStack}>
-                      {t.assignees.slice(0, 3).map((a, i) => (
-                        <View key={i} style={{ marginLeft: i === 0 ? 0 : -8 }}>
-                          <Avatar
-                            initials={a.init}
-                            accent={resolveAccent(a.color)}
-                            size={24}
-                          />
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                </Card>
-              </TouchableOpacity>
-            ))}
+            {selectedTasks.map((t) => renderTaskCard(t))}
           </View>
         )}
+
+        {/* Unscheduled tasks */}
+        {unscheduledCount > 0 ? (
+          <View style={styles.unschedSection}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                Haptics.selectionAsync();
+                setUnscheduledOpen((o) => !o);
+              }}
+              style={styles.unschedHead}
+            >
+              <View style={styles.unschedHeadLeft}>
+                <Feather name="inbox" size={16} color={colors.mutedForeground} />
+                <Text
+                  style={[styles.unschedTitle, { color: colors.foreground }]}
+                >
+                  Unscheduled
+                </Text>
+                <View
+                  style={[styles.unschedBadge, { backgroundColor: colors.muted }]}
+                >
+                  <Text
+                    style={[
+                      styles.unschedBadgeText,
+                      { color: colors.mutedForeground },
+                    ]}
+                  >
+                    {unscheduledCount}
+                  </Text>
+                </View>
+              </View>
+              <Feather
+                name={unscheduledOpen ? "chevron-up" : "chevron-down"}
+                size={18}
+                color={colors.mutedForeground}
+              />
+            </TouchableOpacity>
+
+            {unscheduledOpen ? (
+              <>
+                <Text
+                  style={[styles.unschedHint, { color: colors.mutedForeground }]}
+                >
+                  Tap to open, or long-press to give a task a due date.
+                </Text>
+                <View style={{ gap: 10 }}>
+                  {unscheduled.map((t) => renderTaskCard(t))}
+                </View>
+              </>
+            ) : null}
+          </View>
+        ) : null}
       </ScrollView>
 
       <EditTaskSheet
@@ -599,4 +646,27 @@ const styles = StyleSheet.create({
   },
   aiText: { fontFamily: "Inter_600SemiBold", fontSize: 11 },
   avatarStack: { flexDirection: "row", alignItems: "center" },
+  unschedSection: { marginTop: 26, gap: 10 },
+  unschedHead: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  unschedHeadLeft: { flexDirection: "row", alignItems: "center", gap: 8 },
+  unschedTitle: { fontFamily: "Inter_700Bold", fontSize: 16 },
+  unschedBadge: {
+    minWidth: 22,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  unschedBadgeText: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
+  unschedHint: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: -2,
+  },
 });
