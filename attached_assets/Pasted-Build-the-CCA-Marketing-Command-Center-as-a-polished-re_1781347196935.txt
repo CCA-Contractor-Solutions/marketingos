@@ -1,0 +1,110 @@
+Build the CCA Marketing Command Center as a polished, responsive marketing intelligence dashboard for Contractor Compliance Authority.
+
+Use the uploaded CCA visual direction as the design target: dark navy CCA-branded sidebar, strong shield/logo presence, electric blue technology styling, clean white dashboard workspace, colorful but professional cards, charts, status chips, and mobile responsiveness. It should feel high-tech, AI-powered, bright, modern, clickable, and operational, not like a plain admin panel or generic SaaS template.
+
+Product name: CCA Marketing Command Center
+AI assistant name: CCA AI Copilot
+
+Core goal:
+Create a real marketing command center that helps leadership instantly see what is working, what is wasting money, what needs approval, what is missing, what should happen next, and what is coming soon.
+
+Required layout:
+- Dark CCA-branded left sidebar with logo/shield and navigation
+- Top search/action bar
+- Main hero/banner area for “CCA Marketing Command Center”
+- Launch readiness or overall marketing health score
+- Active campaign cards
+- CCA AI Copilot action panel
+- Content calendar
+- Approval queue
+- Performance overview
+- Team activity feed
+- Mobile companion layout
+
+Required sections/modules:
+1. Executive Marketing Health
+   Show overall health score, campaign health, lead quality, SEO visibility, ad efficiency, brand compliance, and pipeline impact.
+
+2. ROI on Leads
+   Show cost per lead, cost per qualified lead, lead-to-client conversion, estimated revenue, source ROI, and best-performing lead sources.
+
+3. Campaign Command Center
+   Show active, scheduled, draft, paused, and completed campaigns with channel, owner, launch readiness, approval status, engagement, conversions, and ROI.
+
+4. SEO Analytics
+   Include keyword rankings, organic traffic, local SEO visibility, page performance, technical SEO issues, and content gaps.
+
+5. SEO Suggestions
+   Include keyword opportunities, page update suggestions, meta title improvements, FAQ ideas, internal linking suggestions, local search actions, and new content priorities.
+
+6. Market Trends
+   Show contractor licensing demand, seasonal compliance needs, service-area interest, search trend movement, and common customer questions.
+
+7. Competitor Watch
+   Track competitor content, ads, SEO movement, offer changes, reviews, positioning, and service messaging.
+
+8. Futurecast
+   Forecast lead volume, campaign performance, seasonal spikes, budget needs, content opportunities, and risk alerts.
+
+9. AI Suggestions
+   Show prioritized recommendations with urgency, impact, effort, owner, next action, and status.
+
+10. Press Releases
+   Include draft builder, approval workflow, publishing status, media opportunities, and announcement archive.
+
+11. Email Builder
+   Include template library, audience selection, subject line ideas, AI draft generation, compliance review, send calendar, and performance tracking.
+
+12. Ad Health
+   Show spend pacing, CTR, CPC, CPL, conversion rate, creative fatigue, compliance flags, and optimization ideas.
+
+13. Brainstorm Corner
+   Include campaign ideas, content ideas, ad ideas, PR ideas, partnership ideas, AI expansion, priority tagging, campaign grouping, and approval status.
+
+14. Award Center
+   Track award opportunities, nomination deadlines, submission status, proof assets, wins, badges, and press tie-ins.
+
+15. Budget Pacing
+   Show monthly budget, spent amount, remaining budget, forecasted overspend/underspend, and recommended reallocation.
+
+16. Funnel Quality
+   Show lead quality by source, response time, appointment rate, disqualification reasons, and sales handoff status.
+
+17. Content Opportunities
+   Show high-intent topics, missing service pages, underperforming pages, social prompts, campaign hooks, and educational content ideas.
+
+18. Reputation Signals
+   Show review trends, testimonial opportunities, client stories, case studies, badges, and credibility assets.
+
+CCA AI Copilot actions:
+- Build campaign brief
+- Check brand compliance
+- Draft launch assets
+- Summarize marketing risks
+- Suggest SEO improvements
+- Forecast campaign performance
+- Analyze competitor movement
+- Recommend next best actions
+- Generate press release draft
+- Build email campaign draft
+- Diagnose ad health
+- Brainstorm campaign ideas
+
+Design requirements:
+- Use CCA navy, electric blue, white, silver, and controlled colorful accents like teal, lime, coral, magenta, and violet.
+- Avoid yellow-heavy branding.
+- Avoid generic purple-gradient SaaS styling.
+- Avoid a flat white admin dashboard.
+- Make the dashboard feel like a real daily-use product.
+- Use cards, charts, tabs, filters, status chips, progress rings, tables, and action buttons.
+- Make every major module look clickable and useful.
+- Include realistic sample data for all sections.
+- Make the app fully responsive on desktop, tablet, and mobile.
+- The first screen should show the most important command-center information immediately.
+
+Acceptance criteria:
+- The app must look visually aligned with the CCA Marketing Command Center reference.
+- CCA branding must be obvious in the first viewport.
+- The dashboard must provide real insight, not just decorative cards.
+- Leadership should be able to quickly understand ROI, campaign health, lead quality, SEO health, ad performance, market movement, competitor activity, and next recommended actions.
+- The interface should feel polished, modern, interactive, and ready for daily marketing operations.
