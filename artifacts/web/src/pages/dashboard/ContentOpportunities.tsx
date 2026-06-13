@@ -1,10 +1,10 @@
 import { ModuleCard } from "./Shared";
 import { contentOpportunities } from "./sampleData";
-import { Search } from "lucide-react";
+import { Search, FileText } from "lucide-react";
 
 export function ContentOpportunities() {
   return (
-    <ModuleCard title="Content Opportunities" actionLabel="Draft" actionHref="/assistant">
+    <ModuleCard title="Content Opportunities" actionLabel="Draft" actionHref="/assistant" icon={FileText} accent="var(--c-emerald)">
       <div className="space-y-3">
         {contentOpportunities.map((c, i) => (
           <div key={i} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-3">

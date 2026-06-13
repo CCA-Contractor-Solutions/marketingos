@@ -1,9 +1,10 @@
 import { ModuleCard, ProgressRing } from "./Shared";
 import { seoAnalytics } from "./sampleData";
+import { Search } from "lucide-react";
 
 export function SeoAnalytics() {
   return (
-    <ModuleCard title="SEO Analytics" actionLabel="View report" actionHref="/analytics">
+    <ModuleCard title="SEO Analytics" actionLabel="View report" actionHref="/analytics" icon={Search} accent="var(--c-sky)">
       <div className="flex items-center gap-6">
         <div className="relative flex items-center justify-center shrink-0">
           <ProgressRing progress={seoAnalytics.progress} size={70} strokeWidth={6} color="var(--c-brand)" />

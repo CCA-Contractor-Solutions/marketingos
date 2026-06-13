@@ -5,7 +5,7 @@ import { Link } from "wouter";
 
 export function BrainstormCorner() {
   return (
-    <ModuleCard title="Brainstorm Corner">
+    <ModuleCard title="Brainstorm Corner" icon={Lightbulb} accent="#a855f7">
       <div className="flex flex-wrap gap-2 mb-4">
         {brainstormCorner.map(idea => (
           <div key={idea.id} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 border border-purple-100 rounded-full">

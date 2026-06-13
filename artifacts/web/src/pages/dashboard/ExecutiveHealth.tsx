@@ -4,7 +4,7 @@ import { ShieldCheck } from "lucide-react";
 
 export function ExecutiveHealth() {
   return (
-    <ModuleCard title="Executive Marketing Health" actionLabel="View report" actionHref="/analytics">
+    <ModuleCard title="Executive Marketing Health" actionLabel="View report" actionHref="/analytics" icon={ShieldCheck} accent="var(--c-emerald)">
       <div className="flex items-center gap-6">
         <div className="relative flex items-center justify-center shrink-0">
           <ProgressRing progress={executiveHealth.score} size={80} strokeWidth={8} color="var(--c-emerald)" />

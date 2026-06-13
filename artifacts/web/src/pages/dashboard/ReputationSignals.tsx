@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 
 export function ReputationSignals() {
   return (
-    <ModuleCard title="Reputation Signals" actionLabel="View all" actionHref="/analytics">
+    <ModuleCard title="Reputation Signals" actionLabel="View all" actionHref="/analytics" icon={Star} accent="var(--c-amber)">
       <div className="flex items-center gap-6 h-full">
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-amber-400 mb-1">

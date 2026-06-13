@@ -1,9 +1,10 @@
 import { ModuleCard } from "./Shared";
 import { competitorWatch } from "./sampleData";
+import { Eye } from "lucide-react";
 
 export function CompetitorWatch() {
   return (
-    <ModuleCard title="Competitor Watch">
+    <ModuleCard title="Competitor Watch" icon={Eye} accent="var(--c-rose)">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>

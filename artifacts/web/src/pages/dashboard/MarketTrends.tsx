@@ -1,9 +1,10 @@
 import { ModuleCard } from "./Shared";
 import { marketTrends } from "./sampleData";
+import { BarChart3 } from "lucide-react";
 
 export function MarketTrends() {
   return (
-    <ModuleCard title="Market Trends" actionLabel="View report" actionHref="/analytics">
+    <ModuleCard title="Market Trends" actionLabel="View report" actionHref="/analytics" icon={BarChart3} accent="var(--c-sky)">
       <div className="space-y-4">
         {marketTrends.map((t, i) => (
           <div key={i} className="flex items-center gap-3">

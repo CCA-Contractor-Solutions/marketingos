@@ -4,7 +4,7 @@ import { Activity } from "lucide-react";
 
 export function AdHealth() {
   return (
-    <ModuleCard title="Ad Health" actionLabel="Diagnose" actionHref="/assistant">
+    <ModuleCard title="Ad Health" actionLabel="Diagnose" actionHref="/assistant" icon={Activity} accent="var(--c-coral)">
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
           <ProgressRing progress={adHealth.score} size={48} strokeWidth={5} color="var(--c-brand)" />

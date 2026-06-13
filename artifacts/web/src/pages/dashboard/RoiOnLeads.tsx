@@ -1,9 +1,10 @@
 import { ModuleCard } from "./Shared";
 import { roiOnLeads } from "./sampleData";
+import { TrendingUp } from "lucide-react";
 
 export function RoiOnLeads() {
   return (
-    <ModuleCard title="ROI on Leads" actionLabel="View all" actionHref="/analytics">
+    <ModuleCard title="ROI on Leads" actionLabel="View all" actionHref="/analytics" icon={TrendingUp} accent="var(--c-brand)">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <div className="text-[11px] text-slate-500 font-medium mb-0.5">Cost per Lead</div>

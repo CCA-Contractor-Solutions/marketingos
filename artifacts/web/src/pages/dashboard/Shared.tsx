@@ -1,42 +1,68 @@
 import { type ReactNode } from "react";
 import { Link } from "wouter";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, type LucideIcon } from "lucide-react";
 
 export function ModuleCard({
   title,
   actionLabel,
   actionHref,
+  icon: Icon,
+  accent = "var(--c-brand)",
   children,
   className = "",
 }: {
   title: string;
   actionLabel?: string;
   actionHref?: string;
+  icon?: LucideIcon;
+  accent?: string;
   children: ReactNode;
   className?: string;
 }) {
   return (
     <div
-      className={`flex flex-col rounded-2xl p-5 ${className}`}
+      className="flex flex-col rounded-2xl p-5 relative overflow-hidden"
       style={{
         background: "var(--c-surface)",
         border: "1px solid var(--c-border)",
         boxShadow: "var(--c-shadow-sm)",
       }}
     >
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-display text-[16px] font-bold">{title}</h2>
-        {actionLabel && actionHref && (
-          <Link
-            href={actionHref}
-            className="flex items-center gap-1 text-[12px] font-semibold transition-colors hover:text-[var(--c-brand-600)]"
-            style={{ color: "var(--c-brand)" }}
-          >
-            {actionLabel} <ArrowRight size={13} />
-          </Link>
-        )}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-1"
+        style={{
+          background: `linear-gradient(90deg, ${accent}, color-mix(in srgb, ${accent} 45%, transparent))`,
+        }}
+      />
+      <div className={`flex flex-col flex-1 min-h-0 ${className}`}>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            {Icon && (
+              <span
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white"
+                style={{
+                  background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 60%, #0b1224))`,
+                  boxShadow: `0 4px 10px -3px color-mix(in srgb, ${accent} 70%, transparent)`,
+                }}
+              >
+                <Icon size={16} strokeWidth={2.4} />
+              </span>
+            )}
+            <h2 className="font-display truncate text-[16px] font-bold">{title}</h2>
+          </div>
+          {actionLabel && actionHref && (
+            <Link
+              href={actionHref}
+              className="flex shrink-0 items-center gap-1 text-[12px] font-semibold transition-colors hover:text-[var(--c-brand-600)]"
+              style={{ color: "var(--c-brand)" }}
+            >
+              {actionLabel} <ArrowRight size={13} />
+            </Link>
+          )}
+        </div>
+        <div className="flex-1 min-h-0">{children}</div>
       </div>
-      <div className="flex-1 min-h-0">{children}</div>
     </div>
   );
 }

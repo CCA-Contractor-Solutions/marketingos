@@ -1,9 +1,10 @@
 import { ModuleCard } from "./Shared";
 import { seoSuggestions } from "./sampleData";
+import { Lightbulb } from "lucide-react";
 
 export function SeoSuggestions() {
   return (
-    <ModuleCard title="SEO Suggestions" actionLabel="View all" actionHref="/assistant">
+    <ModuleCard title="SEO Suggestions" actionLabel="View all" actionHref="/assistant" icon={Lightbulb} accent="var(--c-amber)">
       <div className="space-y-3">
         {seoSuggestions.slice(0,3).map(s => (
           <div key={s.id} className="flex flex-col gap-1.5 p-3 bg-slate-50 rounded-xl">

@@ -1,10 +1,11 @@
 import { ModuleCard, ProgressRing } from "./Shared";
 import { budgetPacing } from "./sampleData";
 import { fmtMoney } from "@/lib/format";
+import { Wallet } from "lucide-react";
 
 export function BudgetPacing() {
   return (
-    <ModuleCard title="Budget Pacing">
+    <ModuleCard title="Budget Pacing" icon={Wallet} accent="var(--c-emerald)">
       <div className="flex items-center gap-6 p-2">
         <div className="relative flex items-center justify-center shrink-0">
           <ProgressRing progress={budgetPacing.percent} size={80} strokeWidth={8} color="var(--c-brand)" />

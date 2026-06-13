@@ -1,11 +1,11 @@
 import { ModuleCard } from "./Shared";
 import { pressReleases } from "./sampleData";
 import { Link } from "wouter";
-import { FileText } from "lucide-react";
+import { FileText, Newspaper } from "lucide-react";
 
 export function PressReleases() {
   return (
-    <ModuleCard title="Press Releases" actionLabel="Draft new" actionHref="/assistant">
+    <ModuleCard title="Press Releases" actionLabel="Draft new" actionHref="/assistant" icon={Newspaper} accent="var(--c-sky)">
       <div className="space-y-3">
         {pressReleases.map(pr => (
           <div key={pr.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">

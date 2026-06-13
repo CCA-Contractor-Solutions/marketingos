@@ -168,7 +168,7 @@ export default function Dashboard() {
                 <Section id="roi-leads"><RoiOnLeads /></Section>
                 <Section id="seo-analytics"><SeoAnalytics /></Section>
 
-                <Section id="campaign-center"><CampaignCommandCenter campaigns={data?.campaigns ?? []} /></Section>
+                <Section id="campaign-center" span><CampaignCommandCenter campaigns={data?.campaigns ?? []} /></Section>
                 <Section id="futurecast"><Futurecast /></Section>
 
                 <Section id="market-trends"><MarketTrends /></Section>
@@ -177,7 +177,7 @@ export default function Dashboard() {
 
                 <Section id="ad-health"><AdHealth /></Section>
                 <Section id="budget-pacing"><BudgetPacing /></Section>
-                <Section id="funnel-quality"><FunnelQuality /></Section>
+                <Section id="funnel-quality" span><FunnelQuality /></Section>
 
                 <Section id="press-releases"><PressReleases /></Section>
                 <Section id="email-builder"><EmailBuilder /></Section>
@@ -189,7 +189,7 @@ export default function Dashboard() {
 
                 {/* AI Suggestions (Real Data) */}
                 <Section id="ai-suggestions" span>
-                  <ModuleCard title="AI Suggestions" actionLabel="View all" actionHref="/assistant">
+                  <ModuleCard title="AI Suggestions" actionLabel="View all" actionHref="/assistant" icon={Sparkles} accent="var(--c-brand)">
                     <div className="space-y-2.5">
                       {(data?.insights ?? []).slice(0, 3).map((ins) => (
                         <InsightCard key={ins.id} insight={ins} />
@@ -200,7 +200,7 @@ export default function Dashboard() {
 
                 {/* Attention (Real Data) */}
                 <Section id="needs-attention">
-                  <ModuleCard title="Needs Attention" actionLabel="Open tasks" actionHref="/tasks">
+                  <ModuleCard title="Needs Attention" actionLabel="Open tasks" actionHref="/tasks" icon={AlertTriangle} accent="var(--c-rose)">
                     <div className="divide-y divide-slate-100">
                       {(data?.attention ?? []).slice(0, 4).map((a) => (
                         <AttentionRow key={a.id} a={a} />

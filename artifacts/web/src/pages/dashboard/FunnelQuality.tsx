@@ -1,9 +1,10 @@
 import { ModuleCard } from "./Shared";
 import { funnelQuality } from "./sampleData";
+import { Filter } from "lucide-react";
 
 export function FunnelQuality() {
   return (
-    <ModuleCard title="Funnel Quality" className="md:col-span-2">
+    <ModuleCard title="Funnel Quality" icon={Filter} accent="var(--c-brand)">
       <div className="flex flex-col gap-2 mt-2">
         {funnelQuality.map((stage, i) => (
           <div key={i} className="flex items-center gap-4">

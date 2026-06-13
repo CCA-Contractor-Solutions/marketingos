@@ -4,7 +4,7 @@ import { Mail, Edit3 } from "lucide-react";
 
 export function EmailBuilder() {
   return (
-    <ModuleCard title="Email Builder">
+    <ModuleCard title="Email Builder" icon={Mail} accent="var(--c-violet)">
       <div className="flex flex-col items-center justify-center text-center p-6 h-full border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
         <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-3">
           <Mail size={24} />

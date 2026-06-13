@@ -1,12 +1,12 @@
 import { Link } from "wouter";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Megaphone } from "lucide-react";
 import type { CampaignSummary } from "@workspace/api-client-react";
 import { ModuleCard } from "./Shared";
 import { fmtMoney } from "@/lib/format";
 
 export function CampaignCommandCenter({ campaigns }: { campaigns: CampaignSummary[] }) {
   return (
-    <ModuleCard title="Campaign Command Center" actionLabel="View all" actionHref="/campaigns" className="md:col-span-2">
+    <ModuleCard title="Campaign Command Center" actionLabel="View all" actionHref="/campaigns" icon={Megaphone} accent="var(--c-violet)">
       <div className="flex flex-col gap-2">
         {campaigns.slice(0, 4).map((c) => (
           <Link

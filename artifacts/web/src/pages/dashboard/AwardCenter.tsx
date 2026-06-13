@@ -4,7 +4,7 @@ import { Trophy } from "lucide-react";
 
 export function AwardCenter() {
   return (
-    <ModuleCard title="Award Center" actionLabel="View all" actionHref="/collaboration">
+    <ModuleCard title="Award Center" actionLabel="View all" actionHref="/collaboration" icon={Trophy} accent="var(--c-amber)">
       <div className="space-y-3">
         {awardCenter.map(award => (
           <div key={award.id} className="flex items-center gap-3 p-3 bg-amber-50/50 border border-amber-100/50 rounded-xl">
