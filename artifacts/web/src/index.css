@@ -105,67 +105,48 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: red; /*replace with H S L */
+  --background: 210 33% 97%;
+  --foreground: 222 47% 11%;
+  --border: 214 32% 91%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 214 32% 91%;
 
-  --foreground: red; /*replace with H S L */
+  --sidebar: 222 45% 6%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-border: 217 33% 18%;
+  --sidebar-primary: 221 83% 53%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217 33% 17%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 221 83% 53%;
 
-  --border: red; /*replace with H S L */
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 214 32% 91%;
 
-  --card: red; /*replace with H S L */
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
 
-  --card-foreground: red; /*replace with H S L */
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
 
-  --card-border: red; /*replace with H S L */
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
-  --sidebar: red; /*replace with H S L */
+  --accent: 210 40% 96%;
+  --accent-foreground: 222 47% 11%;
 
-  --sidebar-foreground: red; /*replace with H S L */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
 
-  --sidebar-border: red; /*replace with H S L */
-
-  --sidebar-primary: red; /*replace with H S L */
-
-  --sidebar-primary-foreground: red; /*replace with H S L */
-
-  --sidebar-accent: red; /*replace with H S L */
-
-  --sidebar-accent-foreground: red; /*replace with H S L */
-
-  --sidebar-ring: red; /*replace with H S L */
-
-  --popover: red; /*replace with H S L */
-
-  --popover-foreground: red; /*replace with H S L */
-
-  --popover-border: red; /*replace with H S L */
-
-  --primary: red; /*replace with H S L */
-
-  --primary-foreground: red; /*replace with H S L */
-
-  --secondary: red; /*replace with H S L */
-
-  --secondary-foreground: red; /*replace with H S L */
-
-  --muted: red; /*replace with H S L */
-
-  --muted-foreground: red; /*replace with H S L */
-
-  --accent: red; /*replace with H S L */
-
-  --accent-foreground: red; /*replace with H S L */
-
-  --destructive: red; /*replace with H S L */
-
-  --destructive-foreground: red; /*replace with H S L */
-
-  --input: red; /*replace with H S L */
-  --ring: red; /*replace with H S L */
-  --chart-1: red; /*replace with H S L */
-  --chart-2: red; /*replace with H S L */
-  --chart-3: red; /*replace with H S L */
-  --chart-4: red; /*replace with H S L */
-  --chart-5: red; /*replace with H S L */
+  --input: 214 32% 91%;
+  --ring: 221 83% 53%;
+  --chart-1: 221 83% 53%;
+  --chart-2: 173 80% 40%;
+  --chart-3: 25 95% 53%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 142 71% 45%;
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
@@ -223,68 +204,49 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: red; /*replace with H S L */
+  --background: 222 47% 8%;
+  --foreground: 210 40% 98%;
+  --border: 217 33% 18%;
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 98%;
+  --card-border: 217 33% 18%;
 
-  --foreground: red; /*replace with H S L */
+  --sidebar: 222 45% 6%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-border: 217 33% 18%;
+  --sidebar-primary: 221 83% 60%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217 33% 17%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 221 83% 60%;
 
-  --border: red; /*replace with H S L */
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 98%;
+  --popover-border: 217 33% 18%;
 
-  --card: red; /*replace with H S L */
+  --primary: 221 83% 60%;
+  --primary-foreground: 0 0% 100%;
 
-  --card-foreground: red; /*replace with H S L */
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
 
-  --card-border: red; /*replace with H S L */
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
 
-  --sidebar: red; /*replace with H S L */
+  --accent: 217 33% 17%;
+  --accent-foreground: 210 40% 98%;
 
-  --sidebar-foreground: red; /*replace with H S L */
-
-  --sidebar-border: red; /*replace with H S L */
-
-  --sidebar-primary: red; /*replace with H S L */
-
-  --sidebar-primary-foreground: red; /*replace with H S L */
-
-  --sidebar-accent: red; /*replace with H S L */
-
-  --sidebar-accent-foreground: red; /*replace with H S L */
-
-  --sidebar-ring: red; /*replace with H S L */
-
-  --popover: red; /*replace with H S L */
-
-  --popover-foreground: red; /*replace with H S L */
-
-  --popover-border: red; /*replace with H S L */
-
-  --primary: red; /*replace with H S L */
-
-  --primary-foreground: red; /*replace with H S L */
-
-  --secondary: red; /*replace with H S L */
-
-  --secondary-foreground: red; /*replace with H S L */
-
-  --muted: red; /*replace with H S L */
-
-  --muted-foreground: red; /*replace with H S L */
-
-  --accent: red; /*replace with H S L */
-
-  --accent-foreground: red; /*replace with H S L */
-
-  --destructive: red; /*replace with H S L */
-
-  --destructive-foreground: red; /*replace with H S L */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
 
   /* Used as the border around inputs. Dark mode: Should be a border that is light enough to have high contrast when rendered on a --card background. More contrast than standard --border */
-  --input: red; /*replace with H S L */
-  --ring: red; /*replace with H S L */
-  --chart-1: red; /*replace with H S L */
-  --chart-2: red; /*replace with H S L */
-  --chart-3: red; /*replace with H S L */
-  --chart-4: red; /*replace with H S L */
-  --chart-5: red; /*replace with H S L */
+  --input: 217 33% 25%;
+  --ring: 221 83% 60%;
+  --chart-1: 221 83% 60%;
+  --chart-2: 173 80% 45%;
+  --chart-3: 25 95% 58%;
+  --chart-4: 280 65% 66%;
+  --chart-5: 142 71% 50%;
 
   --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
@@ -423,33 +385,33 @@
    CCA — Marketing OS design language (graduated from mockups)
    ============================================================ */
 
-/* shadcn token overrides mapped to the CCA palette (HSL) */
+/* shadcn token overrides mapped to the CCA palette (HSL) - LIGHT MODE DEFAULT */
 :root {
-  --background: 228 50% 6%;
-  --foreground: 0 0% 100%;
-  --border: 228 30% 20%;
-  --input: 228 30% 20%;
+  --background: 210 20% 98%;
+  --foreground: 228 50% 6%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
   --ring: 221 83% 53%;
 
-  --card: 228 40% 10%;
-  --card-foreground: 0 0% 100%;
-  --card-border: 228 30% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 228 50% 6%;
+  --card-border: 214 32% 91%;
 
-  --popover: 228 40% 10%;
-  --popover-foreground: 0 0% 100%;
-  --popover-border: 228 30% 20%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 228 50% 6%;
+  --popover-border: 214 32% 91%;
 
   --primary: 221 83% 53%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 228 40% 15%;
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 228 50% 6%;
 
-  --muted: 228 40% 15%;
-  --muted-foreground: 222 14% 65%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
-  --accent: 228 40% 15%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 228 50% 6%;
 
   --destructive: 350 89% 60%;
   --destructive-foreground: 0 0% 100%;
@@ -472,26 +434,25 @@
 
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background: #060913;
+  background: #f8fafc;
 }
 
-/* CCA scope tokens — defined on :root so portaled UI (Sheet, Popover,
-   Dialog) that renders outside the .cadence wrapper still resolves them. */
+/* CCA scope tokens — LIGHT workspace */
 :root,
 .cadence {
-  --c-bg: #060913;
-  --c-surface: #0f1423;
-  --c-surface-2: #161c2d;
-  --c-surface-3: #1f273d;
-  --c-ink: #ffffff;
-  --c-ink-soft: #a0aabf;
-  --c-muted: #727b93;
-  --c-border: #20273a;
-  --c-border-strong: #2f3852;
+  --c-bg: #f4f7fb;
+  --c-surface: #ffffff;
+  --c-surface-2: #f1f5f9;
+  --c-surface-3: #e2e8f0;
+  --c-ink: #0f172a;
+  --c-ink-soft: #475569;
+  --c-muted: #64748b;
+  --c-border: #e2e8f0;
+  --c-border-strong: #cbd5e1;
 
-  --c-brand: #3b82f6;
-  --c-brand-600: #2563eb;
-  --c-brand-50: rgba(59, 130, 246, 0.15);
+  --c-brand: #2563eb;
+  --c-brand-600: #1d4ed8;
+  --c-brand-50: rgba(37, 99, 235, 0.08);
   --c-violet: #6366f1;
   --c-navy: #0b1224;
   --c-navy-2: #1e3a8a;
@@ -501,13 +462,13 @@ body {
   --c-rose: #f43f6b;
   --c-sky: #0ea5e9;
 
-  --c-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --c-shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
-  --c-shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
+  --c-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --c-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --c-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
 
   font-family: "Inter", system-ui, sans-serif;
   color: var(--c-ink);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 .cadence .font-display {
@@ -536,5 +497,5 @@ body {
 .cadence-ai-glow { animation: cadence-pulse-glow 2.8s ease-in-out infinite; }
 
 .cadence-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
-.cadence-scroll::-webkit-scrollbar-thumb { background: #d7d9e8; border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+.cadence-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
 .cadence-scroll::-webkit-scrollbar-track { background: transparent; }

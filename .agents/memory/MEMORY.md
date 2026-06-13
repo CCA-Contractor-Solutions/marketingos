@@ -8,5 +8,6 @@
 - [Task dueDate is ISO date-only](task-duedate-format.md) — dueDate is real `YYYY-MM-DD` (not free-form); parse/format via task-views/dates.ts (local time), never `new Date("YYYY-MM-DD")`.
 - [api-client-react stale dist](api-client-stale-dist.md) — artifacts type-check against the lib's built dist via project refs; rebuild with `pnpm run typecheck:libs` when a src field looks "missing".
 - [Radix portal CSS tokens](radix-portal-css-tokens.md) — portaled menus render outside the app root; scope design tokens to :root or they're undefined (transparent menus).
+- [shadcn theme tokens are hsl(red)](shadcn-theme-tokens.md) — scaffold ships --background/--popover/etc. as placeholder hsl(red); fill :root + .dark with real H S L triples or portaled shadcn components render unstyled.
 - [Composite project typecheck](composite-project-typecheck.md) — `tsc -p --noEmit` uses stale lib dist; rebuild with `tsc --build <lib> --force` when a workspace export looks "missing".
 - [Gesture handlers inside a Modal](mobile-gesture-in-modal.md) — RN Modal is a detached view tree; GestureDetector needs its own nested GestureHandlerRootView or pans never fire.

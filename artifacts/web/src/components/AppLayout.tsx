@@ -67,15 +67,14 @@ function SidebarContent({
       <Link
         href="/"
         onClick={onNavigate}
-        className="flex items-center gap-2.5 px-5"
-        style={{ height: 68, borderBottom: "1px solid var(--c-border)" }}
+        className="flex items-center gap-2.5 px-5 text-white"
+        style={{ height: 68, borderBottom: "1px solid rgba(255,255,255,0.1)" }}
       >
         <CcaLogo size={36} />
         <div className="leading-tight">
           <div className="font-display text-[17px] font-bold">CCA</div>
           <div
-            className="text-[11px] font-medium"
-            style={{ color: "var(--c-muted)" }}
+            className="text-[11px] font-medium text-blue-200/70"
           >
             Contractor Compliance Authority
           </div>
@@ -84,8 +83,7 @@ function SidebarContent({
 
       <nav className="flex-1 overflow-y-auto px-3 py-3">
         <div
-          className="px-2.5 pb-2 pt-2 text-[10px] font-semibold uppercase tracking-wider"
-          style={{ color: "var(--c-muted)" }}
+          className="px-2.5 pb-2 pt-2 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50"
         >
           Workspace
         </div>
@@ -100,9 +98,9 @@ function SidebarContent({
                 onClick={onNavigate}
                 className="flex items-center gap-3 rounded-xl px-2.5 py-2 text-[13.5px] font-medium transition-all"
                 style={{
-                  color: on ? "var(--c-brand-600)" : "var(--c-ink-soft)",
-                  background: on ? "var(--c-brand-50)" : "transparent",
-                  boxShadow: on ? "inset 0 0 0 1px rgba(37,99,235,0.14)" : "none",
+                  color: on ? "#fff" : "rgba(255,255,255,0.6)",
+                  background: on ? "rgba(255,255,255,0.1)" : "transparent",
+                  boxShadow: on ? "inset 0 0 0 1px rgba(255,255,255,0.1)" : "none",
                 }}
               >
                 <Icon size={18} strokeWidth={on ? 2.4 : 2} />
@@ -150,12 +148,9 @@ function SidebarContent({
       {/* Brand tagline + user */}
       <div
         className="px-3 pb-4 pt-3"
-        style={{ borderTop: "1px solid var(--c-border)" }}
+        style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
       >
-        <p
-          className="px-1 pb-3 text-[11px] font-medium italic leading-snug"
-          style={{ color: "var(--c-muted)" }}
-        >
+        <p className="px-1 pb-3 text-[11px] font-medium italic leading-snug text-blue-200/55">
           Your license. Our expertise. Your success.
         </p>
         <div className="flex items-center gap-2.5 px-1">
@@ -168,13 +163,10 @@ function SidebarContent({
             JM
           </div>
           <div className="min-w-0 leading-tight">
-            <div className="truncate text-[13px] font-semibold">
+            <div className="truncate text-[13px] font-semibold text-white">
               Jessica Miller
             </div>
-            <div
-              className="truncate text-[11px]"
-              style={{ color: "var(--c-muted)" }}
-            >
+            <div className="truncate text-[11px] text-blue-200/55">
               Marketing Director
             </div>
           </div>
@@ -250,7 +242,7 @@ export function AppLayout({
             height: 76,
             background: "var(--c-surface)",
             borderBottom: "1px solid var(--c-border)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.2)"
+            boxShadow: "0 4px 20px rgba(0,0,0,0.03)"
           }}
         >
           <button
