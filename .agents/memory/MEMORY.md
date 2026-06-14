@@ -11,3 +11,4 @@
 - [shadcn theme tokens are hsl(red)](shadcn-theme-tokens.md) — scaffold ships --background/--popover/etc. as placeholder hsl(red); fill :root + .dark with real H S L triples or portaled shadcn components render unstyled.
 - [Composite project typecheck](composite-project-typecheck.md) — `tsc -p --noEmit` uses stale lib dist; rebuild with `tsc --build <lib> --force` when a workspace export looks "missing".
 - [Gesture handlers inside a Modal](mobile-gesture-in-modal.md) — RN Modal is a detached view tree; GestureDetector needs its own nested GestureHandlerRootView or pans never fire.
+- [Tailwind v4 external @import ordering](tailwind-v4-font-imports.md) — external font @import after `@import "tailwindcss"` throws "must precede"; put font <link>s in index.html instead.

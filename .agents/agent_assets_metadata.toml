@@ -1,8 +1,43 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "msDvI-eIuKGpkrmB1thlE"
 uri = "file://artifacts/mobile/assets/images/icon.png"
 type = "image"
 title = "cadence app icon"
+
+[[outputs]]
+id = "9gc1r34gqcR288v1PbUFU"
+uri = "file://artifacts/walkthrough/public/audio/bg_music.mp3"
+type = "audio"
+title = "background music"
+
+[[outputs]]
+id = "TcMN9IqQGVM-_ASzcnHoD"
+uri = "file://artifacts/walkthrough/public/audio/vo_intro.mp3"
+type = "audio"
+title = "intro voiceover"
+
+[[outputs]]
+id = "JuQZRdq8QcTtMKLNtqVm_"
+uri = "file://artifacts/walkthrough/public/audio/vo_modules.mp3"
+type = "audio"
+title = "modules voiceover"
+
+[[outputs]]
+id = "iqHwrVuoHRGJOuz7QYVOm"
+uri = "file://artifacts/walkthrough/public/audio/vo_kpis.mp3"
+type = "audio"
+title = "kpis voiceover"
+
+[[outputs]]
+id = "GzRraeA4CmuBBnetzn30U"
+uri = "file://artifacts/walkthrough/public/audio/vo_outro.mp3"
+type = "audio"
+title = "outro voiceover"
+
+[[outputs]]
+id = "Dz38vZ1SM-wpOH2BkdcYR"
+uri = "file://artifacts/walkthrough/public/audio/vo_copilot.mp3"
+type = "audio"
+title = "copilot voiceover"

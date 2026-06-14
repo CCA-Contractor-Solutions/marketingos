@@ -134,6 +134,7 @@ export default function Dashboard() {
               
               {/* Dark Navy Hero Banner */}
               <div
+                data-tour="hero"
                 className="cadence-rise relative overflow-hidden rounded-3xl px-8 py-10 text-white"
                 style={{
                   background: "linear-gradient(120deg, #090e18 0%, #1e3a8a 70%, #2563eb 100%)",
@@ -172,10 +173,12 @@ export default function Dashboard() {
               </div>
 
               {/* KPI Row (Real Data) */}
-              <DashboardMetrics kpis={data?.kpis ?? []} isLoading={isLoading} />
+              <div data-tour="kpis">
+                <DashboardMetrics kpis={data?.kpis ?? []} isLoading={isLoading} />
+              </div>
 
               {/* Colorful module bands */}
-              <div className="space-y-8">
+              <div data-tour="modules" className="space-y-8">
                 <SectionBand title="Performance Pulse" subtitle="Health, ROI and pipeline at a glance" icon={Gauge} accent="var(--c-brand)">
                   <Section id="executive-health"><ExecutiveHealth /></Section>
                   <Section id="roi-leads"><RoiOnLeads /></Section>
@@ -240,7 +243,7 @@ export default function Dashboard() {
 
             {/* Right side Copilot panel (1 col) */}
             <div className="xl:col-span-1">
-              <div className="sticky top-6 h-[calc(100vh-140px)]">
+              <div data-tour="copilot" className="sticky top-6 h-[calc(100vh-140px)]">
                 <AiCopilotPanel />
               </div>
             </div>

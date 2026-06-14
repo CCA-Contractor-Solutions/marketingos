@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -38,8 +38,10 @@ import {
   CalendarClock,
   Gift,
   Workflow,
+  Compass,
 } from "lucide-react";
 import { CcaLogo } from "@/components/CcaLogo";
+import { Tour, TOUR_STEPS } from "@/components/Tour";
 
 export type NavKey =
   | "dashboard"
@@ -144,7 +146,7 @@ function SidebarContent({
         </div>
       </Link>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-3">
+      <nav data-tour="nav" className="flex-1 overflow-y-auto px-3 py-3">
         <div
           className="px-2.5 pb-2 pt-2 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50"
         >
@@ -273,10 +275,22 @@ export function AppLayout({
   children: ReactNode;
 }) {
   const [navOpen, setNavOpen] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
   const { data } = useGetDashboardSummary();
   const attention = data?.attention ?? [];
   const attentionCount = attention.length;
   const overdueCount = data?.taskRollup?.overdue ?? 0;
+
+  useEffect(() => {
+    if (active !== "dashboard") return;
+    if (typeof window === "undefined") return;
+    if (localStorage.getItem("cca-tour-seen") === "1") return;
+    const t = setTimeout(() => {
+      setTourOpen(true);
+      localStorage.setItem("cca-tour-seen", "1");
+    }, 900);
+    return () => clearTimeout(t);
+  }, [active]);
 
   return (
     <div
@@ -366,6 +380,20 @@ export function AppLayout({
           <div className="ml-auto flex items-center gap-3">
             {actions}
 
+            <button
+              type="button"
+              onClick={() => setTourOpen(true)}
+              className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-colors hover:bg-[var(--c-surface-2)]"
+              style={{
+                background: "var(--c-surface)",
+                border: "1px solid var(--c-border)",
+                color: "var(--c-ink-soft)",
+              }}
+            >
+              <Compass size={16} style={{ color: "var(--c-brand)" }} />
+              <span className="hidden md:inline">Take a tour</span>
+            </button>
+
             <Popover>
               <PopoverTrigger asChild>
                 <button
@@ -443,6 +471,7 @@ export function AppLayout({
 
             <Link
               href="/campaigns"
+              data-tour="new-campaign"
               className="hidden items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-bold text-white sm:flex transition-transform hover:scale-105"
               style={{
                 background:
@@ -472,6 +501,12 @@ export function AppLayout({
           {children}
         </main>
       </div>
+
+      <Tour
+        open={tourOpen}
+        steps={TOUR_STEPS}
+        onClose={() => setTourOpen(false)}
+      />
     </div>
   );
 }
