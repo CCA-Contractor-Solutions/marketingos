@@ -24,7 +24,7 @@ export const futurecast = {
 };
 
 export const pressReleases = [
-  { id: 1, title: "CCA Expands to Texas", date: "Oct 12, 2026", status: "Draft" },
+  { id: 1, title: "MarketingOS Expands to Texas", date: "Oct 12, 2026", status: "Draft" },
   { id: 2, title: "Q3 Compliance Report", date: "Sep 28, 2026", status: "Published" },
   { id: 3, title: "New AI Assistant Launch", date: "Nov 01, 2026", status: "Planning" },
 ];

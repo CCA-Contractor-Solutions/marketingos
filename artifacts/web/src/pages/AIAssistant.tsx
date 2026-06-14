@@ -177,7 +177,7 @@ export default function AIAssistant() {
   return (
     <AppLayout
       active="assistant"
-      title="CCA AI Assistant"
+      title="MarketingOS AI Assistant"
       subtitle="Your marketing copilot"
     >
       <div className="flex h-full w-full">
@@ -237,7 +237,7 @@ export default function AIAssistant() {
                   }
                 }}
                 className="w-full resize-none bg-transparent px-4 py-3.5 pr-14 text-[14px] outline-none placeholder:text-[var(--c-muted)]"
-                placeholder="Ask CCA AI to write, analyze, or plan..."
+                placeholder="Ask MarketingOS AI to write, analyze, or plan..."
                 rows={2}
               />
               <button
@@ -250,7 +250,7 @@ export default function AIAssistant() {
               </button>
             </div>
             <div className="mt-2 text-center text-[11px]" style={{ color: "var(--c-muted)" }}>
-              CCA AI can make mistakes. Verify important information.
+              MarketingOS AI can make mistakes. Verify important information.
             </div>
           </div>
         </div>

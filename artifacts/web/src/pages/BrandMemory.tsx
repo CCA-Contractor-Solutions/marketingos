@@ -29,7 +29,7 @@ export default function BrandMemory() {
           <h2 className="font-display mt-5 text-[18px] font-bold">Brand Memory</h2>
           <p className="mt-2 text-[13.5px] leading-relaxed" style={{ color: "var(--c-muted)" }}>
             Your brand voice, tone guardrails, and reusable messaging will live here so
-            CCA AI stays on-brand across every campaign.
+            MarketingOS AI stays on-brand across every campaign.
           </p>
           <div
             className="mt-5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[12px] font-semibold"

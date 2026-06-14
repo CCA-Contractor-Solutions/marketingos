@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Sparkles, MessageSquare, Megaphone, CheckCircle2, TrendingUp, PenTool } from "lucide-react";
-import { CcaLogo } from "@/components/CcaLogo";
+import { BrandMark } from "@/components/BrandMark";
 
 export function AiCopilotPanel() {
   const actions = [
@@ -27,9 +27,9 @@ export function AiCopilotPanel() {
           style={{ background: "rgba(59,130,246,0.25)", filter: "blur(24px)" }}
         />
         <div className="relative flex items-center gap-3 mb-6">
-          <CcaLogo size={32} />
+          <BrandMark size={32} />
           <div>
-            <h2 className="font-display text-[18px] font-bold tracking-tight">CCA AI Copilot</h2>
+            <h2 className="font-display text-[18px] font-bold tracking-tight">MarketingOS AI Copilot</h2>
             <p className="text-[12px] text-blue-200/70 font-medium">Ready to assist</p>
           </div>
         </div>

@@ -39,11 +39,16 @@ import {
   Gift,
   Workflow,
   Compass,
+  Sparkle,
+  Rocket,
+  PenLine,
+  Gauge,
 } from "lucide-react";
-import { CcaLogo } from "@/components/CcaLogo";
+import { BrandMark } from "@/components/BrandMark";
 import { Tour, TOUR_STEPS } from "@/components/Tour";
 
 export type NavKey =
+  | "welcome"
   | "dashboard"
   | "campaigns"
   | "tasks"
@@ -72,42 +77,89 @@ const NAV: {
   { key: "brand", label: "Brand Memory", href: "/brand", icon: BookMarked },
 ];
 
-const MODULES: { id: string; label: string; icon: typeof LayoutDashboard }[] = [
-  { id: "executive-health", label: "Executive Health", icon: Activity },
-  { id: "roi-leads", label: "ROI on Leads", icon: TrendingUp },
-  { id: "seo-analytics", label: "SEO Analytics", icon: Search },
-  { id: "campaign-center", label: "Campaign Center", icon: Megaphone },
-  { id: "futurecast", label: "Futurecast", icon: LineChart },
-  { id: "market-trends", label: "Market Trends", icon: BarChartBig },
-  { id: "competitor-watch", label: "Competitor Watch", icon: Eye },
-  { id: "seo-suggestions", label: "SEO Suggestions", icon: Lightbulb },
-  { id: "ad-health", label: "Ad Health", icon: Activity },
-  { id: "budget-pacing", label: "Budget Pacing", icon: Wallet },
-  { id: "funnel-quality", label: "Funnel Quality", icon: Filter },
-  { id: "social-pulse", label: "Social Pulse", icon: Video },
-  { id: "webinars", label: "Webinars & Events", icon: CalendarClock },
-  { id: "referral-engine", label: "Referral Engine", icon: Gift },
-  { id: "automation-flows", label: "Automation Flows", icon: Workflow },
-  { id: "press-releases", label: "Press Releases", icon: Newspaper },
-  { id: "email-builder", label: "Email Builder", icon: Mail },
-  { id: "brainstorm", label: "Brainstorm Corner", icon: Brain },
-  { id: "content-opportunities", label: "Content Ideas", icon: FileText },
-  { id: "reputation", label: "Reputation Signals", icon: Star },
-  { id: "award-center", label: "Award Center", icon: Award },
-  { id: "ai-suggestions", label: "AI Suggestions", icon: Sparkles },
-  { id: "needs-attention", label: "Needs Attention", icon: AlertTriangle },
+type ModuleItem = { id: string; label: string; icon: typeof LayoutDashboard };
+
+const MODULE_GROUPS: {
+  label: string;
+  icon: typeof LayoutDashboard;
+  items: ModuleItem[];
+}[] = [
+  {
+    label: "Performance Pulse",
+    icon: Gauge,
+    items: [
+      { id: "executive-health", label: "Executive Health", icon: Activity },
+      { id: "roi-leads", label: "ROI on Leads", icon: TrendingUp },
+      { id: "budget-pacing", label: "Budget Pacing", icon: Wallet },
+      { id: "funnel-quality", label: "Funnel Quality", icon: Filter },
+    ],
+  },
+  {
+    label: "Growth Engine",
+    icon: Rocket,
+    items: [
+      { id: "social-pulse", label: "Social Pulse", icon: Video },
+      { id: "webinars", label: "Webinars & Events", icon: CalendarClock },
+      { id: "referral-engine", label: "Referral Engine", icon: Gift },
+      { id: "automation-flows", label: "Automation Flows", icon: Workflow },
+    ],
+  },
+  {
+    label: "Campaigns & Ads",
+    icon: Megaphone,
+    items: [
+      { id: "campaign-center", label: "Campaign Center", icon: Megaphone },
+      { id: "ad-health", label: "Ad Health", icon: Activity },
+      { id: "email-builder", label: "Email Builder", icon: Mail },
+    ],
+  },
+  {
+    label: "Content & SEO",
+    icon: PenLine,
+    items: [
+      { id: "seo-analytics", label: "SEO Analytics", icon: Search },
+      { id: "seo-suggestions", label: "SEO Suggestions", icon: Lightbulb },
+      { id: "content-opportunities", label: "Content Ideas", icon: FileText },
+      { id: "press-releases", label: "Press Releases", icon: Newspaper },
+    ],
+  },
+  {
+    label: "Market Intelligence",
+    icon: BarChartBig,
+    items: [
+      { id: "futurecast", label: "Futurecast", icon: LineChart },
+      { id: "market-trends", label: "Market Trends", icon: BarChartBig },
+      { id: "competitor-watch", label: "Competitor Watch", icon: Eye },
+    ],
+  },
+  {
+    label: "Brand & Signals",
+    icon: Star,
+    items: [
+      { id: "reputation", label: "Reputation Signals", icon: Star },
+      { id: "award-center", label: "Award Center", icon: Award },
+      { id: "brainstorm", label: "Brainstorm Corner", icon: Brain },
+      { id: "ai-suggestions", label: "AI Suggestions", icon: Sparkles },
+      { id: "needs-attention", label: "Needs Attention", icon: AlertTriangle },
+    ],
+  },
 ];
+
+const SECTION_LABEL =
+  "px-2.5 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50";
 
 function SidebarContent({
   active,
   attentionCount,
   overdueCount,
   onNavigate,
+  onStartTour,
 }: {
   active: NavKey;
   attentionCount: number;
   overdueCount: number;
   onNavigate?: () => void;
+  onStartTour: () => void;
 }) {
   const [location, setLocation] = useLocation();
 
@@ -135,23 +187,65 @@ function SidebarContent({
         className="flex items-center gap-2.5 px-5 text-white"
         style={{ height: 68, borderBottom: "1px solid rgba(255,255,255,0.1)" }}
       >
-        <CcaLogo size={36} />
+        <BrandMark size={38} />
         <div className="leading-tight">
-          <div className="font-display text-[17px] font-bold">CCA</div>
-          <div
-            className="text-[11px] font-medium text-blue-200/70"
-          >
-            Contractor Compliance Authority
+          <div className="font-display text-[16px] font-bold">
+            <span
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--c-violet), var(--c-purple))",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              MarketingOS
+            </span>
+          </div>
+          <div className="text-[11px] font-medium text-blue-200/70">
+            Command Center
           </div>
         </div>
       </Link>
 
       <nav data-tour="nav" className="flex-1 overflow-y-auto px-3 py-3">
-        <div
-          className="px-2.5 pb-2 pt-2 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50"
-        >
-          Workspace
+        {/* Getting Started */}
+        <div className={SECTION_LABEL.replace("pt-5", "pt-2")}>
+          Getting Started
         </div>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            href="/welcome"
+            onClick={onNavigate}
+            className="flex items-center gap-3 rounded-xl px-2.5 py-2 text-[13.5px] font-medium transition-all"
+            style={{
+              color: active === "welcome" ? "#fff" : "rgba(255,255,255,0.6)",
+              background:
+                active === "welcome" ? "rgba(255,255,255,0.1)" : "transparent",
+              boxShadow:
+                active === "welcome"
+                  ? "inset 0 0 0 1px rgba(255,255,255,0.1)"
+                  : "none",
+            }}
+          >
+            <Sparkle size={18} strokeWidth={active === "welcome" ? 2.4 : 2} />
+            <span>Welcome Center</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate?.();
+              onStartTour();
+            }}
+            className="flex items-center gap-3 rounded-xl px-2.5 py-2 text-left text-[13.5px] font-medium text-white/60 transition-all hover:bg-white/10 hover:text-white"
+          >
+            <Compass size={18} strokeWidth={2} />
+            <span>Take a tour</span>
+          </button>
+        </div>
+
+        {/* Workspace */}
+        <div className={SECTION_LABEL}>Workspace</div>
         <div className="flex flex-col gap-0.5">
           {NAV.map((item) => {
             const on = item.key === active;
@@ -175,25 +269,34 @@ function SidebarContent({
           })}
         </div>
 
-        <div className="px-2.5 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50">
-          Modules
-        </div>
-        <div className="flex flex-col gap-0.5">
-          {MODULES.map((m) => {
-            const Icon = m.icon;
-            return (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => goToModule(m.id)}
-                className="flex items-center gap-3 rounded-xl px-2.5 py-1.5 text-left text-[13px] font-medium text-white/55 transition-all hover:bg-white/10 hover:text-white"
-              >
-                <Icon size={16} strokeWidth={2} className="shrink-0" />
-                <span className="truncate">{m.label}</span>
-              </button>
-            );
-          })}
-        </div>
+        {/* Modules grouped */}
+        {MODULE_GROUPS.map((group) => {
+          const GroupIcon = group.icon;
+          return (
+            <div key={group.label}>
+              <div className={`${SECTION_LABEL} flex items-center gap-1.5`}>
+                <GroupIcon size={11} strokeWidth={2.5} />
+                {group.label}
+              </div>
+              <div className="flex flex-col gap-0.5">
+                {group.items.map((m) => {
+                  const Icon = m.icon;
+                  return (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => goToModule(m.id)}
+                      className="flex items-center gap-3 rounded-xl px-2.5 py-1.5 text-left text-[13px] font-medium text-white/55 transition-all hover:bg-white/10 hover:text-white"
+                    >
+                      <Icon size={16} strokeWidth={2} className="shrink-0" />
+                      <span className="truncate">{m.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </nav>
 
       {/* AI Copilot — real-data counts */}
@@ -213,7 +316,7 @@ function SidebarContent({
           />
           <div className="relative">
             <div className="flex items-center gap-1.5 text-[12px] font-semibold">
-              <Sparkles size={14} /> CCA AI Copilot
+              <Sparkles size={14} /> MarketingOS AI Copilot
             </div>
             <p className="mt-1 text-[11.5px] leading-snug text-white/85">
               {attentionCount} item{attentionCount === 1 ? "" : "s"} need
@@ -236,7 +339,7 @@ function SidebarContent({
         style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
       >
         <p className="px-1 pb-3 text-[11px] font-medium italic leading-snug text-blue-200/55">
-          Your license. Our expertise. Your success.
+          Plan. Launch. Optimize. Grow.
         </p>
         <div className="flex items-center gap-2.5 px-1">
           <div
@@ -276,18 +379,35 @@ export function AppLayout({
 }) {
   const [navOpen, setNavOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
+  const [, setLocation] = useLocation();
   const { data } = useGetDashboardSummary();
   const attention = data?.attention ?? [];
   const attentionCount = attention.length;
   const overdueCount = data?.taskRollup?.overdue ?? 0;
 
+  const startTour = () => {
+    if (active === "dashboard") {
+      setTourOpen(true);
+    } else {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("start-tour", "1");
+      }
+      setLocation("/");
+    }
+  };
+
   useEffect(() => {
     if (active !== "dashboard") return;
     if (typeof window === "undefined") return;
-    if (localStorage.getItem("cca-tour-seen") === "1") return;
+    if (sessionStorage.getItem("start-tour") === "1") {
+      sessionStorage.removeItem("start-tour");
+      const t = setTimeout(() => setTourOpen(true), 500);
+      return () => clearTimeout(t);
+    }
+    if (localStorage.getItem("marketingos-tour-seen") === "1") return;
     const t = setTimeout(() => {
       setTourOpen(true);
-      localStorage.setItem("cca-tour-seen", "1");
+      localStorage.setItem("marketingos-tour-seen", "1");
     }, 900);
     return () => clearTimeout(t);
   }, [active]);
@@ -303,13 +423,14 @@ export function AppLayout({
         style={{
           background: "linear-gradient(180deg, #090e18 0%, #060913 100%)",
           borderRight: "1px solid var(--c-border)",
-          boxShadow: "1px 0 24px rgba(0,0,0,0.4)"
+          boxShadow: "1px 0 24px rgba(0,0,0,0.4)",
         }}
       >
         <SidebarContent
           active={active}
           attentionCount={attentionCount}
           overdueCount={overdueCount}
+          onStartTour={startTour}
         />
       </aside>
 
@@ -326,6 +447,7 @@ export function AppLayout({
             attentionCount={attentionCount}
             overdueCount={overdueCount}
             onNavigate={() => setNavOpen(false)}
+            onStartTour={startTour}
           />
         </SheetContent>
       </Sheet>
@@ -339,7 +461,7 @@ export function AppLayout({
             height: 76,
             background: "var(--c-surface)",
             borderBottom: "1px solid var(--c-border)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.03)"
+            boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
           }}
         >
           <span
@@ -382,7 +504,7 @@ export function AppLayout({
 
             <button
               type="button"
-              onClick={() => setTourOpen(true)}
+              onClick={startTour}
               className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-colors hover:bg-[var(--c-surface-2)]"
               style={{
                 background: "var(--c-surface)",
@@ -487,8 +609,7 @@ export function AppLayout({
             <div
               className="flex h-10 w-10 items-center justify-center rounded-xl text-[13px] font-bold text-white shadow-sm ring-1 ring-[var(--c-border)]"
               style={{
-                background:
-                  "linear-gradient(135deg, #1e293b, #0f172a)",
+                background: "linear-gradient(135deg, #1e293b, #0f172a)",
               }}
             >
               JM
@@ -502,11 +623,7 @@ export function AppLayout({
         </main>
       </div>
 
-      <Tour
-        open={tourOpen}
-        steps={TOUR_STEPS}
-        onClose={() => setTourOpen(false)}
-      />
+      <Tour open={tourOpen} steps={TOUR_STEPS} onClose={() => setTourOpen(false)} />
     </div>
   );
 }

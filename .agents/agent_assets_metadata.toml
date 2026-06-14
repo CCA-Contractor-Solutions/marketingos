@@ -41,3 +41,39 @@ id = "Dz38vZ1SM-wpOH2BkdcYR"
 uri = "file://artifacts/walkthrough/public/audio/vo_copilot.mp3"
 type = "audio"
 title = "copilot voiceover"
+
+[[outputs]]
+id = "LmJgsAZOVn3j29nFYntxN"
+uri = "file://artifacts/web/public/audio/vo_modules.mp3"
+type = "audio"
+title = "welcome_modules"
+
+[[outputs]]
+id = "kAyaGlGjbF7_MxQXXF1VM"
+uri = "file://artifacts/web/public/audio/vo_intro.mp3"
+type = "audio"
+title = "welcome_intro"
+
+[[outputs]]
+id = "TPNIrlq_8dGsbdgc_hNAJ"
+uri = "file://artifacts/web/public/audio/vo_kpis.mp3"
+type = "audio"
+title = "welcome_kpis"
+
+[[outputs]]
+id = "Xcb6VWNgfhCF6E5HYyW5j"
+uri = "file://artifacts/web/public/audio/vo_outro.mp3"
+type = "audio"
+title = "welcome_outro"
+
+[[outputs]]
+id = "YZwUxM4dTwyYn2uROcMgH"
+uri = "file://artifacts/web/public/audio/vo_copilot.mp3"
+type = "audio"
+title = "welcome_copilot"
+
+[[outputs]]
+id = "plqSwZS2IfVUzjHQGMDCt"
+uri = "file://artifacts/web/public/audio/bg_music.mp3"
+type = "audio"
+title = "welcome_high_energy"

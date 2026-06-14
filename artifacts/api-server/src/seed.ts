@@ -79,7 +79,7 @@ const campaigns: CampaignSeed[] = [
       },
       {
         id: "ac2",
-        user: "CCA AI",
+        user: "MarketingOS AI",
         action: "auto-flagged",
         target: "low LinkedIn engagement",
         time: "1 day ago",
@@ -156,7 +156,7 @@ const campaigns: CampaignSeed[] = [
       },
       {
         id: "ac2",
-        user: "CCA AI",
+        user: "MarketingOS AI",
         action: "detected",
         target: "high CPA on Display",
         time: "1 day ago",
@@ -309,7 +309,7 @@ const campaigns: CampaignSeed[] = [
       },
       {
         id: "ac2",
-        user: "CCA AI",
+        user: "MarketingOS AI",
         action: "generated",
         target: "3 audience personas",
         time: "4 hours ago",
@@ -601,7 +601,7 @@ const assistantMessages: AssistantSeed[] = [
         platform: "Twitter / X",
         tone: "Punchy & Direct",
         content:
-          "What if you knew your campaign's ROI before launching? The new CCA Predictive Analytics engine for Enterprise is here. Built for marketing leaders who demand precision.",
+          "What if you knew your campaign's ROI before launching? The new MarketingOS Predictive Analytics engine for Enterprise is here. Built for marketing leaders who demand precision.",
         tags: "#MarketingStrategy #Martech",
       },
       {
@@ -746,7 +746,7 @@ export async function seedDatabase(): Promise<void> {
     return;
   }
 
-  logger.info("Seeding database with CCA marketing data");
+  logger.info("Seeding database with MarketingOS marketing data");
 
   await db.insert(campaignsTable).values(campaigns);
   await db.insert(tasksTable).values(tasks);

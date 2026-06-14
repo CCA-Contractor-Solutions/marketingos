@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { Link } from "wouter";
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { AppLayout, PageError } from "@/components/AppLayout";
-import { CcaLogo } from "@/components/CcaLogo";
+import { BrandMark } from "@/components/BrandMark";
 import { Sparkles, ArrowRight, AlertTriangle, Gauge, Rocket, Megaphone, PenLine, Radar } from "lucide-react";
 import type { Insight, AttentionItem } from "@workspace/api-client-react";
 
@@ -156,14 +156,25 @@ export default function Dashboard() {
                 />
                 <div className="relative flex items-center gap-6">
                   <div className="hidden shrink-0 sm:block rounded-2xl bg-white/5 p-4 backdrop-blur-sm border border-white/10">
-                    <CcaLogo size={56} />
+                    <BrandMark size={56} />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.2em] text-blue-200">
-                      <Sparkles size={14} /> Contractor Compliance Authority
+                      <Sparkles size={14} /> Marketing Operations Platform
                     </div>
                     <h2 className="font-display mt-2 text-[28px] font-bold leading-tight sm:text-[36px] tracking-tight">
-                      CCA Marketing Command Center
+                      <span
+                        style={{
+                          background:
+                            "linear-gradient(90deg, #c4b5fd, #e9d5ff)",
+                          WebkitBackgroundClip: "text",
+                          backgroundClip: "text",
+                          color: "transparent",
+                        }}
+                      >
+                        MarketingOS
+                      </span>{" "}
+                      Command Center
                     </h2>
                     <p className="mt-2 text-[15px] text-blue-100/90 font-medium">
                       Plan. Launch. Optimize. Grow.

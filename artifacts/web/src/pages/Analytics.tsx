@@ -53,7 +53,7 @@ export default function Analytics() {
               <div className="cadence-ai-glow pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full" style={{ background: "rgba(255,255,255,0.15)", filter: "blur(24px)" }} />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 text-[14px] font-bold uppercase tracking-wider text-white/90">
-                  <Sparkles size={16} /> CCA AI Insight
+                  <Sparkles size={16} /> MarketingOS AI Insight
                 </div>
                 <h2 className="font-display mt-3 text-2xl font-bold leading-tight">{data.insight.headline}</h2>
                 <div className="mt-4 flex flex-col gap-3 md:flex-row">

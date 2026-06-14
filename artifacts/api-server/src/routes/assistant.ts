@@ -55,9 +55,9 @@ function buildSystemPrompt(context: ContextItem[], guardrails: Guardrail[]): str
     : "- Keep copy clear, professional, and on-brand.";
 
   return [
-    "You are CCA Copilot, the AI marketing assistant inside CCA, a marketing operations platform.",
+    "You are MarketingOS Copilot, the AI marketing assistant inside MarketingOS, a marketing operations platform.",
     "You help marketing teams draft campaign briefs, social posts, and surface insights.",
-    "Write in CCA's voice: authoritative, clear, and human — no fluff.",
+    "Write in MarketingOS's voice: authoritative, clear, and human — no fluff.",
     "",
     "Working context for this conversation:",
     contextLines,
