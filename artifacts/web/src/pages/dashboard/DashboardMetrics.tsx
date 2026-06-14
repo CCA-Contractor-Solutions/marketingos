@@ -80,7 +80,7 @@ export function KpiCard({ kpi, index = 0 }: { kpi: KpiTile; index?: number }) {
   const Icon = kpiIcon(kpi.title);
   return (
     <div
-      className="relative overflow-hidden rounded-2xl bg-white p-5"
+      className="cadence-card relative overflow-hidden rounded-2xl bg-white p-5"
       style={{
         border: "1px solid var(--c-border)",
         boxShadow: "var(--c-shadow-sm)",

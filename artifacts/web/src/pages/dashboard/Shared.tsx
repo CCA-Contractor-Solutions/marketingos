@@ -21,7 +21,7 @@ export function ModuleCard({
 }) {
   return (
     <div
-      className="flex flex-col rounded-2xl p-5 relative overflow-hidden"
+      className="cadence-card flex flex-col rounded-2xl p-5 relative overflow-hidden"
       style={{
         background: "var(--c-surface)",
         border: "1px solid var(--c-border)",

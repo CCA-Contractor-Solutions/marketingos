@@ -137,9 +137,9 @@ export default function Dashboard() {
                 data-tour="hero"
                 className="cadence-rise relative overflow-hidden rounded-3xl px-8 py-10 text-white"
                 style={{
-                  background: "linear-gradient(120deg, #090e18 0%, #14532d 70%, #16a34a 100%)",
-                  boxShadow: "0 10px 25px -5px rgba(30, 58, 138, 0.4)",
-                  border: "1px solid rgba(255,255,255,0.1)"
+                  background: "linear-gradient(120deg, #07120d 0%, #0f3d24 58%, #15803d 100%)",
+                  boxShadow: "0 24px 48px -18px rgba(7, 18, 13, 0.55)",
+                  border: "1px solid rgba(255,255,255,0.08)"
                 }}
               >
                 <div

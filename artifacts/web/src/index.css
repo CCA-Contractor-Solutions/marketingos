@@ -450,9 +450,9 @@ body {
   --c-border: #e2e8f0;
   --c-border-strong: #cbd5e1;
 
-  --c-brand: #16a34a;
-  --c-brand-600: #15803d;
-  --c-brand-50: rgba(22, 163, 74, 0.08);
+  --c-brand: #15803d;
+  --c-brand-600: #14532d;
+  --c-brand-50: rgba(21, 128, 61, 0.08);
   --c-violet: #6366f1;
   --c-navy: #0b1224;
   --c-navy-2: #14532d;
@@ -467,9 +467,9 @@ body {
   --c-indigo: #6366f1;
   --c-lime: #84cc16;
 
-  --c-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-  --c-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --c-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  --c-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.05);
+  --c-shadow-md: 0 4px 16px -4px rgba(16, 24, 40, 0.10), 0 2px 6px -2px rgba(16, 24, 40, 0.06);
+  --c-shadow-lg: 0 24px 48px -16px rgba(16, 24, 40, 0.18), 0 8px 20px -8px rgba(16, 24, 40, 0.08);
 
   font-family: "Inter", system-ui, sans-serif;
   color: var(--c-ink);
@@ -477,12 +477,22 @@ body {
 }
 
 .cadence .font-display {
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  letter-spacing: -0.02em;
+  font-family: "Fraunces", "Plus Jakarta Sans", "Inter", serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.005em;
+}
+
+.cadence .cadence-card {
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+.cadence .cadence-card:hover {
+  box-shadow: var(--c-shadow-md) !important;
+  transform: translateY(-2px);
+  border-color: var(--c-border-strong) !important;
 }
 
 .cadence ::selection {
-  background: rgba(22, 163, 74, 0.18);
+  background: rgba(21, 128, 61, 0.16);
 }
 
 @keyframes cadence-rise {

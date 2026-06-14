@@ -307,7 +307,7 @@ function SidebarContent({
           className="relative block overflow-hidden rounded-2xl p-3.5 text-white transition-transform hover:scale-[1.01]"
           style={{
             background: "linear-gradient(135deg, var(--c-brand), var(--c-navy-2))",
-            boxShadow: "0 10px 22px -10px rgba(22,163,74,0.7)",
+            boxShadow: "0 14px 28px -12px rgba(21,128,61,0.55)",
           }}
         >
           <div
@@ -421,9 +421,9 @@ export function AppLayout({
       <aside
         className="hidden lg:flex w-[260px] shrink-0 flex-col"
         style={{
-          background: "linear-gradient(180deg, #090e18 0%, #060913 100%)",
-          borderRight: "1px solid var(--c-border)",
-          boxShadow: "1px 0 24px rgba(0,0,0,0.4)",
+          background: "linear-gradient(180deg, #0a1410 0%, #05090a 100%)",
+          borderRight: "1px solid rgba(255,255,255,0.06)",
+          boxShadow: "1px 0 32px rgba(0,0,0,0.45)",
         }}
       >
         <SidebarContent
@@ -438,8 +438,8 @@ export function AppLayout({
       <Sheet open={navOpen} onOpenChange={setNavOpen}>
         <SheetContent
           side="left"
-          className="cadence w-[280px] p-0 border-r-[#20273a]"
-          style={{ background: "#090e18" }}
+          className="cadence w-[280px] p-0 border-r-[#16201a]"
+          style={{ background: "#0a1410" }}
         >
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <SidebarContent
@@ -469,7 +469,7 @@ export function AppLayout({
             className="pointer-events-none absolute inset-x-0 top-0 h-1"
             style={{
               background:
-                "linear-gradient(90deg, var(--c-brand), var(--c-purple), var(--c-pink), var(--c-coral), var(--c-amber), var(--c-teal))",
+                "linear-gradient(90deg, var(--c-brand), color-mix(in srgb, var(--c-brand) 55%, var(--c-teal)), transparent)",
             }}
           />
           <button
@@ -597,8 +597,8 @@ export function AppLayout({
               className="hidden items-center gap-2 rounded-xl px-4 py-2.5 text-[13.5px] font-bold text-white sm:flex transition-transform hover:scale-105"
               style={{
                 background:
-                  "linear-gradient(135deg, var(--c-brand), var(--c-violet))",
-                boxShadow: "0 4px 12px rgba(22,163,74,0.4)",
+                  "linear-gradient(135deg, var(--c-brand), var(--c-brand-600))",
+                boxShadow: "0 6px 16px -4px rgba(21,128,61,0.45)",
               }}
             >
               <Plus size={16} strokeWidth={3} /> New campaign
