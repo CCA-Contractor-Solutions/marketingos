@@ -1,0 +1,124 @@
+You must build the app to match the attached mockup EXACTLY.
+
+The attached image is the visual source of truth. Do not redesign it. Do not reinterpret it. Do not “improve” the style. Recreate the mockup as closely as technically possible in React + TypeScript + Vite + Tailwind.
+
+Before coding:
+1. Analyze the attached mockup.
+2. Identify its layout, colors, spacing, typography, card structure, sidebar, header, panels, and visual hierarchy.
+3. Then implement the app to match it.
+
+NON-NEGOTIABLE DESIGN RULES:
+- Match the attached mockup exactly.
+- Use the same dark navy / slate / charcoal background system.
+- Use the same teal-blue accent style.
+- Do not use yellow, gold, amber, orange, mustard, purple, neon, beige, or playful colors.
+- Do not replace the design with a generic dashboard template.
+- Do not create a landing page.
+- The first screen must be the Command Dashboard shown in the mockup.
+- Keep the same executive, premium, dense, high-end SaaS intelligence feel.
+- Keep the same card-based structure, sidebar layout, header hierarchy, KPI row, module panels, and right-side compliance coach area.
+- Preserve the visual density and polished enterprise look.
+- Use the CCA logo in the sidebar/header area.
+- No lorem ipsum.
+- No TODO placeholders.
+- No unfinished sections.
+
+PRODUCT:
+CCA Sales Intelligence OS
+
+STACK:
+- React
+- TypeScript
+- Vite
+- Tailwind
+
+LAYOUT TO MATCH:
+- Left fixed sidebar
+- Dark main background
+- Top header area
+- KPI cards across the top
+- Large Service Mastery Training Center panel
+- Scenario Script Builder panel
+- What If Simulator panel
+- Deal Intelligence panel
+- Compliance-Safe Coach panel
+- Lower module preview cards
+
+SIDEBAR NAV ITEMS:
+- Command Dashboard
+- Service Mastery
+- Scenario Builder
+- Roleplay Mode
+- Email Builder
+- What If Simulator
+- Deal Intelligence
+- Objection Memory
+- Lost Deal Autopsy
+- Cross-Sell Engine
+- Trade Matrix
+- Partnerships
+- Audit Scoring
+- Resources
+
+DASHBOARD TEXT:
+Header:
+CCA Sales Intelligence OS
+
+Subtitle:
+Simulation-driven sales enablement + compliance-safe coaching
+
+KPI cards:
+- Training Progress
+- Deal Intelligence Score
+- Roleplay Streak
+- Scripts Generated
+- Follow-Ups Due
+
+Main panels:
+- Service Mastery Training Center
+- Scenario Script Builder
+- What If Simulator
+- Deal Intelligence
+- Compliance-Safe Coach
+
+Service cards:
+- Licensing Strategy
+- Compliance Audit & Risk Review
+- Expansion Roadmap
+- Renewal Tracking
+- Qualifier Coordination
+- Entity Structuring
+- Monthly Compliance Management
+
+Compliance-Safe Coach bullets:
+- No guaranteed approvals
+- Say support, structure, readiness
+- Frame CCA as compliance infrastructure
+- Recommend qualified professional review
+
+Lower module preview cards:
+- Roleplay Mode
+- Objection Memory
+- Lost Deal Autopsy
+- Cross-Sell Engine
+- Service + Trade Matrix
+
+COMPLIANCE LANGUAGE RULES:
+- Never say “we get you licensed.”
+- Never promise approvals, legal outcomes, board decisions, agency decisions, or timelines.
+- Always position CCA as compliance infrastructure, licensing strategy, operational risk visibility, support, structure, readiness, coordination, tracking, planning, and administrative organization.
+- CCA does not provide legal, tax, insurance, bonding, HR, or final compliance determinations.
+
+QUALITY BAR:
+- Pixel-close to the attached mockup.
+- Production-quality spacing.
+- Clean component architecture.
+- Responsive desktop-first layout.
+- Subtle hover states.
+- Smooth transitions.
+- No broken imports.
+- No fake backend.
+- Use seeded data only.
+- Must run with the Replit run button.
+
+If there is any conflict between this prompt and your default design instincts, follow the attached mockup.
