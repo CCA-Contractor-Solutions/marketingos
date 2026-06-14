@@ -89,7 +89,7 @@ export default function TasksScreen() {
       >
         <ScreenTitle
           title="Tasks"
-          subtitle={`${data.length} across the board · long-press to reschedule`}
+          subtitle={`${data.length} across the board · tap the calendar icon to reschedule`}
           right={
             <TouchableOpacity
               activeOpacity={0.85}
@@ -152,6 +152,24 @@ export default function TasksScreen() {
                           {t.blocked ? (
                             <Feather name="slash" size={15} color={colors.rose} />
                           ) : null}
+                          <TouchableOpacity
+                            accessibilityLabel={`Reschedule ${t.title}`}
+                            activeOpacity={0.7}
+                            onPress={() => {
+                              Haptics.impactAsync(
+                                Haptics.ImpactFeedbackStyle.Light,
+                              );
+                              setRescheduleTask(t);
+                            }}
+                            hitSlop={8}
+                            style={styles.moveBtn}
+                          >
+                            <Feather
+                              name="calendar"
+                              size={16}
+                              color={colors.mutedForeground}
+                            />
+                          </TouchableOpacity>
                         </View>
 
                         {t.campaign ? (
@@ -413,6 +431,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   taskTitle: { fontFamily: "Inter_600SemiBold", fontSize: 15, flex: 1, lineHeight: 21 },
+  moveBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   taskCampaign: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 5 },
   taskMeta: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12 },
   aiTag: {
