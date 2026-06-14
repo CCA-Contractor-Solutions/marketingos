@@ -3,13 +3,13 @@ import { Link } from "wouter";
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { AppLayout, PageError } from "@/components/AppLayout";
 import { CcaLogo } from "@/components/CcaLogo";
-import { Sparkles, ArrowRight, AlertTriangle } from "lucide-react";
+import { Sparkles, ArrowRight, AlertTriangle, Gauge, Rocket, Megaphone, PenLine, Radar } from "lucide-react";
 import type { Insight, AttentionItem } from "@workspace/api-client-react";
 
 // Primitives and Top Row
 import { DashboardMetrics } from "./dashboard/DashboardMetrics";
 import { AiCopilotPanel } from "./dashboard/AiCopilotPanel";
-import { ModuleCard } from "./dashboard/Shared";
+import { ModuleCard, SectionBand } from "./dashboard/Shared";
 
 // Modules
 import { ExecutiveHealth } from "./dashboard/ExecutiveHealth";
@@ -29,6 +29,10 @@ import { BudgetPacing } from "./dashboard/BudgetPacing";
 import { FunnelQuality } from "./dashboard/FunnelQuality";
 import { ContentOpportunities } from "./dashboard/ContentOpportunities";
 import { ReputationSignals } from "./dashboard/ReputationSignals";
+import { SocialPulse } from "./dashboard/SocialPulse";
+import { WebinarsEvents } from "./dashboard/WebinarsEvents";
+import { ReferralEngine } from "./dashboard/ReferralEngine";
+import { AutomationFlows } from "./dashboard/AutomationFlows";
 
 const INSIGHT_STYLE: Record<
   string,
@@ -141,6 +145,14 @@ export default function Dashboard() {
                   className="cadence-ai-glow pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full"
                   style={{ background: "rgba(59,130,246,0.35)", filter: "blur(32px)" }}
                 />
+                <div
+                  className="cadence-ai-glow pointer-events-none absolute right-32 -bottom-24 h-56 w-56 rounded-full"
+                  style={{ background: "rgba(168,85,247,0.3)", filter: "blur(40px)", animationDelay: "0.6s" }}
+                />
+                <div
+                  className="cadence-ai-glow pointer-events-none absolute -left-16 top-10 h-48 w-48 rounded-full"
+                  style={{ background: "rgba(20,184,166,0.25)", filter: "blur(40px)", animationDelay: "1.2s" }}
+                />
                 <div className="relative flex items-center gap-6">
                   <div className="hidden shrink-0 sm:block rounded-2xl bg-white/5 p-4 backdrop-blur-sm border border-white/10">
                     <CcaLogo size={56} />
@@ -162,52 +174,66 @@ export default function Dashboard() {
               {/* KPI Row (Real Data) */}
               <DashboardMetrics kpis={data?.kpis ?? []} isLoading={isLoading} />
 
-              {/* Dense Grid of Modules */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 cadence-rise" style={{ animationDelay: "80ms" }}>
-                <Section id="executive-health"><ExecutiveHealth /></Section>
-                <Section id="roi-leads"><RoiOnLeads /></Section>
-                <Section id="seo-analytics"><SeoAnalytics /></Section>
+              {/* Colorful module bands */}
+              <div className="space-y-8">
+                <SectionBand title="Performance Pulse" subtitle="Health, ROI and pipeline at a glance" icon={Gauge} accent="var(--c-brand)">
+                  <Section id="executive-health"><ExecutiveHealth /></Section>
+                  <Section id="roi-leads"><RoiOnLeads /></Section>
+                  <Section id="budget-pacing"><BudgetPacing /></Section>
+                  <Section id="funnel-quality" span><FunnelQuality /></Section>
+                </SectionBand>
 
-                <Section id="campaign-center" span><CampaignCommandCenter campaigns={data?.campaigns ?? []} /></Section>
-                <Section id="futurecast"><Futurecast /></Section>
+                <SectionBand title="Growth Engine" subtitle="Modern channels driving new demand" icon={Rocket} accent="var(--c-purple)">
+                  <Section id="social-pulse"><SocialPulse /></Section>
+                  <Section id="webinars"><WebinarsEvents /></Section>
+                  <Section id="referral-engine"><ReferralEngine /></Section>
+                  <Section id="automation-flows"><AutomationFlows /></Section>
+                </SectionBand>
 
-                <Section id="market-trends"><MarketTrends /></Section>
-                <Section id="competitor-watch"><CompetitorWatch /></Section>
-                <Section id="seo-suggestions"><SeoSuggestions /></Section>
+                <SectionBand title="Campaigns & Ads" subtitle="Live campaigns, ad health and outreach" icon={Megaphone} accent="var(--c-coral)">
+                  <Section id="campaign-center" span><CampaignCommandCenter campaigns={data?.campaigns ?? []} /></Section>
+                  <Section id="ad-health"><AdHealth /></Section>
+                  <Section id="email-builder"><EmailBuilder /></Section>
+                </SectionBand>
 
-                <Section id="ad-health"><AdHealth /></Section>
-                <Section id="budget-pacing"><BudgetPacing /></Section>
-                <Section id="funnel-quality" span><FunnelQuality /></Section>
+                <SectionBand title="Content & SEO" subtitle="Search visibility and content pipeline" icon={PenLine} accent="var(--c-sky)">
+                  <Section id="seo-analytics"><SeoAnalytics /></Section>
+                  <Section id="seo-suggestions"><SeoSuggestions /></Section>
+                  <Section id="content-opportunities"><ContentOpportunities /></Section>
+                  <Section id="press-releases"><PressReleases /></Section>
+                </SectionBand>
 
-                <Section id="press-releases"><PressReleases /></Section>
-                <Section id="email-builder"><EmailBuilder /></Section>
-                <Section id="brainstorm"><BrainstormCorner /></Section>
+                <SectionBand title="Market Intelligence" subtitle="Trends, competitors and forecasts" icon={Radar} accent="var(--c-amber)">
+                  <Section id="market-trends"><MarketTrends /></Section>
+                  <Section id="competitor-watch"><CompetitorWatch /></Section>
+                  <Section id="futurecast"><Futurecast /></Section>
+                  <Section id="brainstorm"><BrainstormCorner /></Section>
+                </SectionBand>
 
-                <Section id="content-opportunities"><ContentOpportunities /></Section>
-                <Section id="reputation"><ReputationSignals /></Section>
-                <Section id="award-center"><AwardCenter /></Section>
+                <SectionBand title="Brand & AI" subtitle="Reputation, wins and smart suggestions" icon={Sparkles} accent="var(--c-emerald)">
+                  <Section id="reputation"><ReputationSignals /></Section>
+                  <Section id="award-center"><AwardCenter /></Section>
 
-                {/* AI Suggestions (Real Data) */}
-                <Section id="ai-suggestions" span>
-                  <ModuleCard title="AI Suggestions" actionLabel="View all" actionHref="/assistant" icon={Sparkles} accent="var(--c-brand)">
-                    <div className="space-y-2.5">
-                      {(data?.insights ?? []).slice(0, 3).map((ins) => (
-                        <InsightCard key={ins.id} insight={ins} />
-                      ))}
-                    </div>
-                  </ModuleCard>
-                </Section>
+                  <Section id="ai-suggestions" span>
+                    <ModuleCard title="AI Suggestions" actionLabel="View all" actionHref="/assistant" icon={Sparkles} accent="var(--c-brand)">
+                      <div className="space-y-2.5">
+                        {(data?.insights ?? []).slice(0, 3).map((ins) => (
+                          <InsightCard key={ins.id} insight={ins} />
+                        ))}
+                      </div>
+                    </ModuleCard>
+                  </Section>
 
-                {/* Attention (Real Data) */}
-                <Section id="needs-attention">
-                  <ModuleCard title="Needs Attention" actionLabel="Open tasks" actionHref="/tasks" icon={AlertTriangle} accent="var(--c-rose)">
-                    <div className="divide-y divide-slate-100">
-                      {(data?.attention ?? []).slice(0, 4).map((a) => (
-                        <AttentionRow key={a.id} a={a} />
-                      ))}
-                    </div>
-                  </ModuleCard>
-                </Section>
+                  <Section id="needs-attention">
+                    <ModuleCard title="Needs Attention" actionLabel="Open tasks" actionHref="/tasks" icon={AlertTriangle} accent="var(--c-rose)">
+                      <div className="divide-y divide-slate-100">
+                        {(data?.attention ?? []).slice(0, 4).map((a) => (
+                          <AttentionRow key={a.id} a={a} />
+                        ))}
+                      </div>
+                    </ModuleCard>
+                  </Section>
+                </SectionBand>
               </div>
 
             </div>

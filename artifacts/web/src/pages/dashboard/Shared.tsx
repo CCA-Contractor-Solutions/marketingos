@@ -67,6 +67,59 @@ export function ModuleCard({
   );
 }
 
+export function SectionBand({
+  title,
+  subtitle,
+  icon: Icon,
+  accent = "var(--c-brand)",
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  icon: LucideIcon;
+  accent?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="cadence-rise">
+      <div className="mb-4 flex items-center gap-3">
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-white"
+          style={{
+            background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 55%, #0b1224))`,
+            boxShadow: `0 6px 16px -6px color-mix(in srgb, ${accent} 75%, transparent)`,
+          }}
+        >
+          <Icon size={20} strokeWidth={2.3} />
+        </span>
+        <div className="min-w-0">
+          <h3 className="font-display text-[17px] font-bold leading-tight tracking-tight">
+            {title}
+          </h3>
+          {subtitle && (
+            <p
+              className="text-[12.5px] font-medium"
+              style={{ color: "var(--c-muted)" }}
+            >
+              {subtitle}
+            </p>
+          )}
+        </div>
+        <span
+          aria-hidden
+          className="ml-2 hidden h-px flex-1 sm:block"
+          style={{
+            background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 45%, transparent), transparent)`,
+          }}
+        />
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        {children}
+      </div>
+    </section>
+  );
+}
+
 export function ProgressRing({
   progress,
   size = 60,

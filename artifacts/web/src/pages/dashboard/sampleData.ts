@@ -94,6 +94,41 @@ export const seoAnalytics = {
   progress: 75,
 };
 
+export const socialPulse = [
+  { platform: "TikTok", views: "412K", delta: "+62%", trend: [20, 35, 30, 55, 70, 90, 120], color: "var(--c-sky)" },
+  { platform: "Instagram Reels", views: "284K", delta: "+38%", trend: [30, 28, 45, 50, 62, 70, 85], color: "var(--c-pink)" },
+  { platform: "YouTube Shorts", views: "156K", delta: "+21%", trend: [15, 22, 20, 30, 34, 40, 48], color: "var(--c-rose)" },
+  { platform: "LinkedIn", views: "48K", delta: "+12%", trend: [8, 10, 12, 11, 14, 16, 18], color: "var(--c-brand)" },
+];
+
+export const webinarsEvents = {
+  next: {
+    title: "2027 Licensing Law Changes",
+    date: "Nov 18",
+    registered: 342,
+    capacity: 500,
+  },
+  upcoming: [
+    { id: 1, title: "HVAC Permit Masterclass", date: "Nov 25", registered: 128 },
+    { id: 2, title: "Florida License Transfer 101", date: "Dec 02", registered: 87 },
+  ],
+};
+
+export const referralEngine = {
+  activeReferrers: 184,
+  referredLeads: 526,
+  conversion: "28%",
+  rewardPaid: "$12,400",
+  topReferrer: "ProBuild Co.",
+  growth: "+19%",
+};
+
+export const automationFlows = [
+  { id: 1, name: "New Lead Welcome", contacts: 1240, openRate: 62, status: "Active" },
+  { id: 2, name: "License Renewal Reminder", contacts: 860, openRate: 71, status: "Active" },
+  { id: 3, name: "Re-engagement Win-back", contacts: 420, openRate: 34, status: "Paused" },
+];
+
 export const adHealth = {
   score: 85,
   adSets: [

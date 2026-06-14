@@ -34,6 +34,10 @@ import {
   FileText,
   Star,
   Award,
+  Video,
+  CalendarClock,
+  Gift,
+  Workflow,
 } from "lucide-react";
 import { CcaLogo } from "@/components/CcaLogo";
 
@@ -78,6 +82,10 @@ const MODULES: { id: string; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "ad-health", label: "Ad Health", icon: Activity },
   { id: "budget-pacing", label: "Budget Pacing", icon: Wallet },
   { id: "funnel-quality", label: "Funnel Quality", icon: Filter },
+  { id: "social-pulse", label: "Social Pulse", icon: Video },
+  { id: "webinars", label: "Webinars & Events", icon: CalendarClock },
+  { id: "referral-engine", label: "Referral Engine", icon: Gift },
+  { id: "automation-flows", label: "Automation Flows", icon: Workflow },
   { id: "press-releases", label: "Press Releases", icon: Newspaper },
   { id: "email-builder", label: "Email Builder", icon: Mail },
   { id: "brainstorm", label: "Brainstorm Corner", icon: Brain },
@@ -312,7 +320,7 @@ export function AppLayout({
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top bar */}
         <header
-          className="flex shrink-0 items-center gap-4 px-4 sm:px-8"
+          className="relative flex shrink-0 items-center gap-4 px-4 sm:px-8"
           style={{
             height: 76,
             background: "var(--c-surface)",
@@ -320,6 +328,14 @@ export function AppLayout({
             boxShadow: "0 4px 20px rgba(0,0,0,0.03)"
           }}
         >
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-1"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--c-brand), var(--c-purple), var(--c-pink), var(--c-coral), var(--c-amber), var(--c-teal))",
+            }}
+          />
           <button
             onClick={() => setNavOpen(true)}
             aria-label="Open navigation"

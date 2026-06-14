@@ -461,6 +461,11 @@ body {
   --c-emerald: #10b981;
   --c-rose: #f43f6b;
   --c-sky: #0ea5e9;
+  --c-purple: #a855f7;
+  --c-pink: #ec4899;
+  --c-teal: #14b8a6;
+  --c-indigo: #6366f1;
+  --c-lime: #84cc16;
 
   --c-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
   --c-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
