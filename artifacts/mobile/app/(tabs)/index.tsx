@@ -1,8 +1,16 @@
 import { Feather } from "@expo/vector-icons";
-import { useGetDashboardSummary } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  getGetDashboardSummaryQueryKey,
+  getListTasksQueryKey,
+  useGetDashboardSummary,
+  useListTasks,
+  type Task,
+} from "@workspace/api-client-react";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   RefreshControl,
   ScrollView,
@@ -26,8 +34,10 @@ import {
   useBottomInset,
   useTopInset,
 } from "@/components/ui";
+import { RescheduleSheet } from "@/components/RescheduleSheet";
 import { useColors } from "@/hooks/useColors";
 import { useNotifications } from "@/hooks/useNotifications";
+import { dayDiff, isOverdue, isSameDay, parseDueDate, relativeLabel } from "@/lib/dates";
 import { formatCurrency } from "@/lib/format";
 
 const SEVERITY_ACCENT = {
@@ -48,8 +58,33 @@ export default function DashboardScreen() {
   const topInset = useTopInset();
   const bottomInset = useBottomInset();
   const { optedIn, busy, permissionDenied, setOptedIn } = useNotifications();
+  const queryClient = useQueryClient();
   const { data, isLoading, isError, refetch, isRefetching } =
     useGetDashboardSummary();
+  const { data: tasks } = useListTasks();
+
+  const [rescheduleTask, setRescheduleTask] = useState<Task | null>(null);
+
+  // Surface the most time-sensitive tasks (overdue first, then due soon) so the
+  // user can reschedule them without leaving the home screen.
+  const pulseTasks = useMemo(() => {
+    const withDates = (tasks ?? [])
+      .filter((t) => t.status !== "done")
+      .map((t) => ({ task: t, date: parseDueDate(t.dueDate) }))
+      .filter(
+        (e): e is { task: Task; date: Date } =>
+          e.date !== null && dayDiff(e.date, new Date()) <= 3,
+      );
+    withDates.sort((a, b) => a.date.getTime() - b.date.getTime());
+    return withDates.slice(0, 4).map((e) => e.task);
+  }, [tasks]);
+
+  const onRescheduled = () => {
+    queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() });
+    queryClient.invalidateQueries({
+      queryKey: getGetDashboardSummaryQueryKey(),
+    });
+  };
 
   if (isLoading) return <LoadingView />;
   if (isError || !data) return <ErrorView onRetry={() => refetch()} />;
@@ -68,6 +103,7 @@ export default function DashboardScreen() {
   ] as const;
 
   return (
+    <>
     <ScrollView
       style={{ backgroundColor: colors.background }}
       contentContainerStyle={{
@@ -202,6 +238,66 @@ export default function DashboardScreen() {
             </Text>
           </View>
         </View>
+
+        {pulseTasks.length > 0 ? (
+          <View style={[styles.pulseList, { borderTopColor: colors.border }]}>
+            <Text style={[styles.pulseHint, { color: colors.mutedForeground }]}>
+              Needs scheduling attention
+            </Text>
+            {pulseTasks.map((t, i) => {
+              const due = parseDueDate(t.dueDate);
+              const overdue = !!due && isOverdue(due);
+              const isToday = !!due && isSameDay(due, new Date());
+              const tone = overdue
+                ? colors.rose
+                : isToday
+                  ? colors.primary
+                  : colors.mutedForeground;
+              return (
+                <View
+                  key={t.id}
+                  style={[
+                    styles.pulseRow,
+                    i < pulseTasks.length - 1 && {
+                      borderBottomWidth: 1,
+                      borderBottomColor: colors.border,
+                    },
+                  ]}
+                >
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <Text
+                      style={[styles.pulseTitle, { color: colors.foreground }]}
+                      numberOfLines={1}
+                    >
+                      {t.title}
+                    </Text>
+                    {due ? (
+                      <View style={styles.pulseDueRow}>
+                        <Feather name="calendar" size={11} color={tone} />
+                        <Text style={[styles.pulseDue, { color: tone }]}>
+                          {overdue ? "Overdue · " : ""}
+                          {relativeLabel(due)}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </View>
+                  <TouchableOpacity
+                    accessibilityLabel={`Reschedule ${t.title}`}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setRescheduleTask(t);
+                    }}
+                    hitSlop={8}
+                    style={[styles.pulseBtn, { borderColor: colors.border }]}
+                  >
+                    <Feather name="calendar" size={16} color={colors.primary} />
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
       </Card>
 
       {/* Active campaigns */}
@@ -393,6 +489,12 @@ export default function DashboardScreen() {
         </>
       )}
     </ScrollView>
+    <RescheduleSheet
+      task={rescheduleTask}
+      onClose={() => setRescheduleTask(null)}
+      onRescheduled={onRescheduled}
+    />
+    </>
   );
 }
 
@@ -481,6 +583,36 @@ const styles = StyleSheet.create({
   },
   rollupChip: { flexDirection: "row", alignItems: "center", gap: 6 },
   rollupChipText: { fontFamily: "Inter_500Medium", fontSize: 13 },
+  pulseList: {
+    borderTopWidth: 1,
+    marginTop: 14,
+    paddingTop: 6,
+  },
+  pulseHint: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginTop: 6,
+    marginBottom: 2,
+  },
+  pulseRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 12,
+  },
+  pulseTitle: { fontFamily: "Inter_500Medium", fontSize: 14 },
+  pulseDueRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },
+  pulseDue: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
+  pulseBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 9,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   campaignTop: {
     flexDirection: "row",
     alignItems: "flex-start",
