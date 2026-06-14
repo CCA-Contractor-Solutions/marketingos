@@ -438,8 +438,8 @@ export default function TaskBoard() {
                     key={col.id}
                     className="flex h-full w-[320px] shrink-0 flex-col rounded-xl transition-colors"
                     style={{
-                      background: isOver ? "rgba(22,163,74,0.06)" : "transparent",
-                      outline: isOver ? "2px dashed rgba(22,163,74,0.3)" : "none",
+                      background: isOver ? "rgba(13,148,136,0.06)" : "transparent",
+                      outline: isOver ? "2px dashed rgba(13,148,136,0.3)" : "none",
                     }}
                     onDragOver={(e) => {
                       e.preventDefault();

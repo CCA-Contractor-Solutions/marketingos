@@ -262,7 +262,7 @@ export default function Campaigns() {
                       className="flex h-11 w-11 items-center justify-center rounded-xl text-[13px] font-bold text-white"
                       style={{
                         background:
-                          c.ownerColor ?? "linear-gradient(135deg,#16a34a,#166534)",
+                          c.ownerColor ?? "linear-gradient(135deg,#0d9488,#115e59)",
                       }}
                     >
                       {c.owner

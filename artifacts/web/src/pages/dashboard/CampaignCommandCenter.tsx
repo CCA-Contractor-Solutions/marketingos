@@ -16,7 +16,7 @@ export function CampaignCommandCenter({ campaigns }: { campaigns: CampaignSummar
           >
             <div
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[12px] font-bold text-white shadow-sm"
-              style={{ background: c.ownerColor ?? "linear-gradient(135deg,#16a34a,#166534)" }}
+              style={{ background: c.ownerColor ?? "linear-gradient(135deg,#0d9488,#115e59)" }}
             >
               {c.owner.split(" ").map((n) => n[0]).join("").slice(0, 2)}
             </div>

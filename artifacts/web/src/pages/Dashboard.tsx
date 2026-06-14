@@ -52,7 +52,7 @@ const INSIGHT_STYLE: Record<
   },
   info: {
     bg: "var(--c-brand-50)",
-    border: "rgba(22,163,74,0.18)",
+    border: "rgba(13,148,136,0.18)",
     icon: Sparkles,
     color: "var(--c-brand)",
   },

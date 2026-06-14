@@ -21,7 +21,7 @@ export default function BrandMemory() {
             className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-white"
             style={{
               background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))",
-              boxShadow: "0 10px 22px -10px rgba(22,163,74,0.7)",
+              boxShadow: "0 10px 22px -10px rgba(13,148,136,0.7)",
             }}
           >
             <BookMarked size={26} />

@@ -121,7 +121,7 @@ export default function Welcome() {
         <div
           className="cadence-rise relative overflow-hidden rounded-3xl px-7 py-10 text-white sm:px-10 sm:py-12"
           style={{
-            background: "linear-gradient(120deg, #090e18 0%, #14532d 68%, #16a34a 100%)",
+            background: "linear-gradient(120deg, #090e18 0%, #134e4a 68%, #0d9488 100%)",
             boxShadow: "0 10px 25px -5px rgba(30, 58, 138, 0.4)",
             border: "1px solid rgba(255,255,255,0.1)",
           }}
@@ -163,7 +163,7 @@ export default function Welcome() {
                 onClick={scrollToVideo}
                 className="flex items-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold text-white transition-transform hover:scale-105"
                 style={{
-                  background: "linear-gradient(135deg, #7c3aed, #16a34a)",
+                  background: "linear-gradient(135deg, #7c3aed, #0d9488)",
                   boxShadow: "0 10px 24px -8px rgba(124,58,237,0.7)",
                 }}
               >

@@ -56,7 +56,7 @@ export function AiCopilotPanel() {
       <div className="mt-auto p-6 pt-0 relative">
         <Link
           href="/assistant"
-          className="flex items-center justify-center w-full py-3.5 rounded-xl font-bold text-[14px] bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-[0_0_20px_rgba(22,163,74,0.4)]"
+          className="flex items-center justify-center w-full py-3.5 rounded-xl font-bold text-[14px] bg-teal-600 hover:bg-teal-500 transition-colors shadow-[0_0_20px_rgba(13,148,136,0.4)]"
         >
           <Sparkles size={16} className="mr-2" /> Ask Copilot Anything
         </Link>

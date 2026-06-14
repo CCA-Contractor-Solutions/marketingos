@@ -88,7 +88,7 @@ export default function CampaignDetail() {
           className="flex items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60"
           style={{
             background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))",
-            boxShadow: "0 8px 18px -8px rgba(22,163,74,0.8)",
+            boxShadow: "0 8px 18px -8px rgba(13,148,136,0.8)",
           }}
         >
           <CheckCircle2 size={16} /> {approve.isPending ? "Approving…" : "Approve"}
@@ -273,7 +273,7 @@ export default function CampaignDetail() {
           {/* Right column */}
           <div className="space-y-6 lg:space-y-8">
             {/* MarketingOS AI */}
-            <div className="cadence-rise relative overflow-hidden rounded-2xl p-5 text-white" style={{ background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))", boxShadow: "0 12px 24px -8px rgba(22,163,74,0.35)", animationDelay: "50ms" }}>
+            <div className="cadence-rise relative overflow-hidden rounded-2xl p-5 text-white" style={{ background: "linear-gradient(135deg,var(--c-brand),var(--c-violet))", boxShadow: "0 12px 24px -8px rgba(13,148,136,0.35)", animationDelay: "50ms" }}>
               <div className="cadence-ai-glow pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full" style={{ background: "rgba(255,255,255,0.2)", filter: "blur(20px)" }} />
               <div className="relative">
                 <div className="flex items-center gap-2 text-[14px] font-bold mb-4">

@@ -307,7 +307,7 @@ function SidebarContent({
           className="relative block overflow-hidden rounded-2xl p-3.5 text-white transition-transform hover:scale-[1.01]"
           style={{
             background: "linear-gradient(135deg, var(--c-brand), var(--c-navy-2))",
-            boxShadow: "0 14px 28px -12px rgba(21,128,61,0.55)",
+            boxShadow: "0 14px 28px -12px rgba(13,148,136,0.55)",
           }}
         >
           <div
@@ -598,7 +598,7 @@ export function AppLayout({
               style={{
                 background:
                   "linear-gradient(135deg, var(--c-brand), var(--c-brand-600))",
-                boxShadow: "0 6px 16px -4px rgba(21,128,61,0.45)",
+                boxShadow: "0 6px 16px -4px rgba(13,148,136,0.45)",
               }}
             >
               <Plus size={16} strokeWidth={3} /> New campaign

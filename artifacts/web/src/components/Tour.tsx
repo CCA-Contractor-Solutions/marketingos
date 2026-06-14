@@ -307,7 +307,7 @@ export function Tour({
               style={{
                 background:
                   "linear-gradient(135deg, var(--c-brand), var(--c-violet))",
-                boxShadow: "0 6px 16px -6px rgba(22,163,74,0.6)",
+                boxShadow: "0 6px 16px -6px rgba(13,148,136,0.6)",
               }}
             >
               {isLast ? (

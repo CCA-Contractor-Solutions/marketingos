@@ -217,7 +217,7 @@ function CopilotScene() {
         variants={item}
         className="flex h-16 w-16 items-center justify-center rounded-3xl"
         style={{
-          background: "linear-gradient(135deg, #16a34a, #7c3aed)",
+          background: "linear-gradient(135deg, #0d9488, #7c3aed)",
           boxShadow: "0 12px 30px -8px rgba(124,58,237,0.7)",
         }}
       >
@@ -377,7 +377,7 @@ export function WelcomeWalkthrough() {
         className="relative aspect-video w-full"
         style={{
           background:
-            "radial-gradient(120% 120% at 80% 0%, #14532d 0%, #0b1224 55%, #060913 100%)",
+            "radial-gradient(120% 120% at 80% 0%, #134e4a 0%, #0b1224 55%, #060913 100%)",
         }}
       >
         {/* ambient orbs */}
@@ -387,7 +387,7 @@ export function WelcomeWalkthrough() {
         />
         <div
           className="cadence-ai-glow pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full"
-          style={{ background: "rgba(22,163,74,0.3)", filter: "blur(54px)", animationDelay: "0.8s" }}
+          style={{ background: "rgba(13,148,136,0.3)", filter: "blur(54px)", animationDelay: "0.8s" }}
         />
 
         <div className="absolute inset-0">
@@ -417,7 +417,7 @@ export function WelcomeWalkthrough() {
             <span
               className="flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
               style={{
-                background: "linear-gradient(135deg, #16a34a, #7c3aed)",
+                background: "linear-gradient(135deg, #0d9488, #7c3aed)",
                 boxShadow: "0 16px 40px -10px rgba(124,58,237,0.8)",
               }}
             >
