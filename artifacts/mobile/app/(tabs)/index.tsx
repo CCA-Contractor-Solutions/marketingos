@@ -34,6 +34,7 @@ import {
   useBottomInset,
   useTopInset,
 } from "@/components/ui";
+import { EditTaskSheet } from "@/components/EditTaskSheet";
 import { RescheduleSheet } from "@/components/RescheduleSheet";
 import { useColors } from "@/hooks/useColors";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -64,6 +65,7 @@ export default function DashboardScreen() {
   const { data: tasks } = useListTasks();
 
   const [rescheduleTask, setRescheduleTask] = useState<Task | null>(null);
+  const [editTask, setEditTask] = useState<Task | null>(null);
 
   // Surface the most time-sensitive tasks (overdue first, then due soon) so the
   // user can reschedule them without leaving the home screen.
@@ -264,7 +266,15 @@ export default function DashboardScreen() {
                     },
                   ]}
                 >
-                  <View style={{ flex: 1, paddingRight: 10 }}>
+                  <TouchableOpacity
+                    accessibilityLabel={`Open ${t.title}`}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setEditTask(t);
+                    }}
+                    style={{ flex: 1, paddingRight: 10 }}
+                  >
                     <Text
                       style={[styles.pulseTitle, { color: colors.foreground }]}
                       numberOfLines={1}
@@ -280,7 +290,7 @@ export default function DashboardScreen() {
                         </Text>
                       </View>
                     ) : null}
-                  </View>
+                  </TouchableOpacity>
                   <TouchableOpacity
                     accessibilityLabel={`Reschedule ${t.title}`}
                     activeOpacity={0.7}
@@ -493,6 +503,11 @@ export default function DashboardScreen() {
       task={rescheduleTask}
       onClose={() => setRescheduleTask(null)}
       onRescheduled={onRescheduled}
+    />
+    <EditTaskSheet
+      task={editTask}
+      onClose={() => setEditTask(null)}
+      onUpdated={onRescheduled}
     />
     </>
   );
