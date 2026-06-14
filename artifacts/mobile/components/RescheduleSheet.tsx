@@ -153,6 +153,28 @@ export function RescheduleSheet({
     });
   };
 
+  const clearDueDate = () => {
+    if (!task || saving) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setHoverIndex(null);
+    setSaving(true);
+    updateTask.mutate(
+      { id: task.id, data: { dueDate: null } },
+      {
+        onSuccess: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setSaving(false);
+          onRescheduled();
+          onClose();
+        },
+        onError: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          setSaving(false);
+        },
+      },
+    );
+  };
+
   const commit = (ax: number, ay: number) => {
     setHoverIndex(null);
     const idx = indexAt(ax, ay);
@@ -399,6 +421,21 @@ export function RescheduleSheet({
                     : "Currently unscheduled"}
                 </Text>
 
+                {currentDue ? (
+                  <TouchableOpacity
+                    accessibilityLabel="Clear due date"
+                    activeOpacity={0.8}
+                    onPress={clearDueDate}
+                    disabled={saving}
+                    style={[styles.clearBtn, { borderColor: colors.rose }]}
+                  >
+                    <Feather name="calendar" size={15} color={colors.rose} />
+                    <Text style={[styles.clearText, { color: colors.rose }]}>
+                      Clear due date
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
+
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={onClose}
@@ -521,12 +558,23 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: "center",
   },
+  clearBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 13,
+    marginTop: 16,
+  },
+  clearText: { fontFamily: "Inter_600SemiBold", fontSize: 15 },
   closeBtn: {
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 13,
     alignItems: "center",
-    marginTop: 16,
+    marginTop: 10,
   },
   closeText: { fontFamily: "Inter_600SemiBold", fontSize: 15 },
 });

@@ -298,8 +298,8 @@ export const UpdateTaskBody = zod.object({
   "color": zod.string()
 })).optional(),
   "campaign": zod.string().optional(),
-  "dueDate": zod.string().optional(),
-  "dueAt": zod.string().optional(),
+  "dueDate": zod.string().nullish(),
+  "dueAt": zod.string().nullish(),
   "blocked": zod.boolean().optional()
 })
 

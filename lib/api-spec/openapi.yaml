@@ -621,8 +621,8 @@ components:
           type: array
           items: { $ref: "#/components/schemas/Assignee" }
         campaign: { type: string }
-        dueDate: { type: string }
-        dueAt: { type: string }
+        dueDate: { type: ["string", "null"] }
+        dueAt: { type: ["string", "null"] }
         blocked: { type: boolean }
 
     Thread:

@@ -16,7 +16,9 @@ export interface TaskUpdate {
   priority?: TaskUpdatePriority;
   assignees?: Assignee[];
   campaign?: string;
-  dueDate?: string;
-  dueAt?: string;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  dueAt?: string | null;
   blocked?: boolean;
 }
