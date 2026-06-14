@@ -5,6 +5,7 @@ import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useColors } from "@/hooks/useColors";
+import { parseDueDate, relativeLabel } from "@/lib/dates";
 import { useBottomInset } from "@/components/ui";
 
 export const STATUS_ORDER: Task["status"][] = [
@@ -64,6 +65,26 @@ export function EditTaskSheet({
       },
     );
   };
+
+  const clearDueDate = () => {
+    if (!task || updateTask.isPending) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    updateTask.mutate(
+      { id: task.id, data: { dueDate: null } },
+      {
+        onSuccess: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          onClose();
+          onUpdated();
+        },
+        onError: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        },
+      },
+    );
+  };
+
+  const due = task ? parseDueDate(task.dueDate) : null;
 
   return (
     <Modal
@@ -129,10 +150,40 @@ export function EditTaskSheet({
                   );
                 })}
               </View>
+              <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>
+                Due date
+              </Text>
+              {due ? (
+                <TouchableOpacity
+                  accessibilityLabel="Clear due date"
+                  activeOpacity={0.8}
+                  onPress={clearDueDate}
+                  disabled={updateTask.isPending}
+                  style={[styles.clearBtn, { borderColor: colors.rose }]}
+                >
+                  <Feather name="calendar" size={15} color={colors.rose} />
+                  <Text style={[styles.clearText, { color: colors.rose }]}>
+                    Clear due date · {relativeLabel(due)}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={[styles.unscheduledRow, { borderColor: colors.border }]}>
+                  <Feather
+                    name="calendar"
+                    size={15}
+                    color={colors.mutedForeground}
+                  />
+                  <Text
+                    style={[styles.unscheduledText, { color: colors.mutedForeground }]}
+                  >
+                    Unscheduled
+                  </Text>
+                </View>
+              )}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={onClose}
-                style={[styles.ghostBtn, { borderColor: colors.border, marginTop: 16 }]}
+                style={[styles.ghostBtn, { borderColor: colors.border, marginTop: 10 }]}
               >
                 <Text style={[styles.ghostText, { color: colors.inkSoft }]}>
                   Close
@@ -184,6 +235,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   ghostText: { fontFamily: "Inter_600SemiBold", fontSize: 15 },
+  clearBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 13,
+  },
+  clearText: { fontFamily: "Inter_600SemiBold", fontSize: 15 },
+  unscheduledRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 13,
+  },
+  unscheduledText: { fontFamily: "Inter_500Medium", fontSize: 15 },
   statusRow: {
     flexDirection: "row",
     alignItems: "center",
