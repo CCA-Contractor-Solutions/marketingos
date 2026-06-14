@@ -146,7 +146,7 @@ const MODULE_GROUPS: {
 ];
 
 const SECTION_LABEL =
-  "px-2.5 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/50";
+  "px-2.5 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-blue-200/50";
 
 function SidebarContent({
   active,
@@ -202,7 +202,7 @@ function SidebarContent({
               MarketingOS
             </span>
           </div>
-          <div className="text-[11px] font-medium text-emerald-200/70">
+          <div className="text-[11px] font-medium text-blue-200/70">
             Command Center
           </div>
         </div>
@@ -338,7 +338,7 @@ function SidebarContent({
         className="px-3 pb-4 pt-3"
         style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
       >
-        <p className="px-1 pb-3 text-[11px] font-medium italic leading-snug text-emerald-200/55">
+        <p className="px-1 pb-3 text-[11px] font-medium italic leading-snug text-blue-200/55">
           Plan. Launch. Optimize. Grow.
         </p>
         <div className="flex items-center gap-2.5 px-1">
@@ -354,7 +354,7 @@ function SidebarContent({
             <div className="truncate text-[13px] font-semibold text-white">
               Jessica Miller
             </div>
-            <div className="truncate text-[11px] text-emerald-200/55">
+            <div className="truncate text-[11px] text-blue-200/55">
               Marketing Director
             </div>
           </div>
