@@ -52,7 +52,7 @@ const INSIGHT_STYLE: Record<
   },
   info: {
     bg: "var(--c-brand-50)",
-    border: "rgba(37,99,235,0.18)",
+    border: "rgba(22,163,74,0.18)",
     icon: Sparkles,
     color: "var(--c-brand)",
   },
@@ -137,14 +137,14 @@ export default function Dashboard() {
                 data-tour="hero"
                 className="cadence-rise relative overflow-hidden rounded-3xl px-8 py-10 text-white"
                 style={{
-                  background: "linear-gradient(120deg, #090e18 0%, #1e3a8a 70%, #2563eb 100%)",
+                  background: "linear-gradient(120deg, #090e18 0%, #14532d 70%, #16a34a 100%)",
                   boxShadow: "0 10px 25px -5px rgba(30, 58, 138, 0.4)",
                   border: "1px solid rgba(255,255,255,0.1)"
                 }}
               >
                 <div
                   className="cadence-ai-glow pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full"
-                  style={{ background: "rgba(59,130,246,0.35)", filter: "blur(32px)" }}
+                  style={{ background: "rgba(34,197,94,0.35)", filter: "blur(32px)" }}
                 />
                 <div
                   className="cadence-ai-glow pointer-events-none absolute right-32 -bottom-24 h-56 w-56 rounded-full"
@@ -159,7 +159,7 @@ export default function Dashboard() {
                     <BrandMark size={56} />
                   </div>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.2em] text-blue-200">
+                    <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.2em] text-emerald-200">
                       <Sparkles size={14} /> Marketing Operations Platform
                     </div>
                     <h2 className="font-display mt-2 text-[28px] font-bold leading-tight sm:text-[36px] tracking-tight">
@@ -176,7 +176,7 @@ export default function Dashboard() {
                       </span>{" "}
                       Command Center
                     </h2>
-                    <p className="mt-2 text-[15px] text-blue-100/90 font-medium">
+                    <p className="mt-2 text-[15px] text-emerald-100/90 font-medium">
                       Plan. Launch. Optimize. Grow.
                     </p>
                   </div>

@@ -20,7 +20,7 @@ export function RoiOnLeads() {
         </div>
         <div>
           <div className="text-[11px] text-slate-500 font-medium mb-0.5">Overall ROI</div>
-          <div className="text-[18px] font-bold text-blue-600">{roiOnLeads.roi}</div>
+          <div className="text-[18px] font-bold text-emerald-600">{roiOnLeads.roi}</div>
         </div>
       </div>
     </ModuleCard>

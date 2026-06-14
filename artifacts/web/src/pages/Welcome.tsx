@@ -121,7 +121,7 @@ export default function Welcome() {
         <div
           className="cadence-rise relative overflow-hidden rounded-3xl px-7 py-10 text-white sm:px-10 sm:py-12"
           style={{
-            background: "linear-gradient(120deg, #090e18 0%, #1e3a8a 68%, #2563eb 100%)",
+            background: "linear-gradient(120deg, #090e18 0%, #14532d 68%, #16a34a 100%)",
             boxShadow: "0 10px 25px -5px rgba(30, 58, 138, 0.4)",
             border: "1px solid rgba(255,255,255,0.1)",
           }}
@@ -135,7 +135,7 @@ export default function Welcome() {
             style={{ background: "rgba(20,184,166,0.25)", filter: "blur(44px)", animationDelay: "0.8s" }}
           />
           <div className="relative max-w-2xl">
-            <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.25em] text-blue-200">
+            <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.25em] text-emerald-200">
               <Sparkles size={14} /> Marketing Operations Platform
             </div>
             <h2 className="font-display mt-3 text-[32px] font-bold leading-tight sm:text-[44px] tracking-tight">
@@ -152,7 +152,7 @@ export default function Welcome() {
               </span>{" "}
               Command Center
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-blue-100/85 sm:text-[16px]">
+            <p className="mt-4 text-[15px] leading-relaxed text-emerald-100/85 sm:text-[16px]">
               One workspace to plan, launch, optimize, and grow every marketing
               effort. Watch the quick walkthrough, take a guided tour, or jump
               straight into the action below.
@@ -163,7 +163,7 @@ export default function Welcome() {
                 onClick={scrollToVideo}
                 className="flex items-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold text-white transition-transform hover:scale-105"
                 style={{
-                  background: "linear-gradient(135deg, #7c3aed, #2563eb)",
+                  background: "linear-gradient(135deg, #7c3aed, #16a34a)",
                   boxShadow: "0 10px 24px -8px rgba(124,58,237,0.7)",
                 }}
               >

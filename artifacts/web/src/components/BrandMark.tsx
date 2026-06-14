@@ -1,3 +1,5 @@
+const CREST_SRC = `${import.meta.env.BASE_URL}brand/crest.png`;
+
 export function BrandMark({
   size = 36,
   className,
@@ -6,31 +8,20 @@ export function BrandMark({
   className?: string;
 }) {
   return (
-    <div
+    <img
+      src={CREST_SRC}
+      alt="MarketingOS"
+      width={size}
+      height={size}
       className={className}
-      aria-label="MarketingOS"
       style={{
         width: size,
         height: size,
-        borderRadius: size * 0.28,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background:
-          "linear-gradient(135deg, var(--c-brand) 0%, var(--c-violet) 55%, var(--c-purple) 100%)",
-        boxShadow:
-          "0 6px 16px -6px rgba(99,102,241,0.6), inset 0 0 0 1px rgba(255,255,255,0.2)",
-        color: "#fff",
-        fontWeight: 800,
-        fontFamily: "var(--font-display, 'Plus Jakarta Sans', system-ui, sans-serif)",
-        fontSize: size * 0.54,
-        lineHeight: 1,
-        letterSpacing: "-0.04em",
+        objectFit: "contain",
+        display: "block",
         flexShrink: 0,
       }}
-    >
-      M
-    </div>
+    />
   );
 }
 

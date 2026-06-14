@@ -14,7 +14,7 @@ export function FunnelQuality() {
                 className="h-full rounded-r-full flex items-center px-3"
                 style={{ 
                   width: `${stage.percent}%`, 
-                  background: "linear-gradient(90deg, #3b82f6, #6366f1)",
+                  background: "linear-gradient(90deg, #22c55e, #6366f1)",
                   minWidth: 'fit-content'
                 }}
               >

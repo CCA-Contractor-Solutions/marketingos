@@ -49,7 +49,7 @@ export default function Analytics() {
 
           {/* AI Insight & Reports */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 cadence-rise" style={{ animationDelay: "100ms" }}>
-            <div className="lg:col-span-2 relative overflow-hidden rounded-2xl p-6 text-white" style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))", boxShadow: "0 12px 24px -12px rgba(37,99,235,0.5)" }}>
+            <div className="lg:col-span-2 relative overflow-hidden rounded-2xl p-6 text-white" style={{ background: "linear-gradient(135deg, var(--c-brand), var(--c-violet))", boxShadow: "0 12px 24px -12px rgba(22,163,74,0.5)" }}>
               <div className="cadence-ai-glow pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full" style={{ background: "rgba(255,255,255,0.15)", filter: "blur(24px)" }} />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 text-[14px] font-bold uppercase tracking-wider text-white/90">

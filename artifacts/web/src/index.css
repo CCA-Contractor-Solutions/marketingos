@@ -450,12 +450,12 @@ body {
   --c-border: #e2e8f0;
   --c-border-strong: #cbd5e1;
 
-  --c-brand: #2563eb;
-  --c-brand-600: #1d4ed8;
-  --c-brand-50: rgba(37, 99, 235, 0.08);
+  --c-brand: #16a34a;
+  --c-brand-600: #15803d;
+  --c-brand-50: rgba(22, 163, 74, 0.08);
   --c-violet: #6366f1;
   --c-navy: #0b1224;
-  --c-navy-2: #1e3a8a;
+  --c-navy-2: #14532d;
   --c-coral: #fb6f5a;
   --c-amber: #f5a524;
   --c-emerald: #10b981;
@@ -482,7 +482,7 @@ body {
 }
 
 .cadence ::selection {
-  background: rgba(37, 99, 235, 0.18);
+  background: rgba(22, 163, 74, 0.18);
 }
 
 @keyframes cadence-rise {

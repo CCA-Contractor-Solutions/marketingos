@@ -62,7 +62,7 @@ function IntroScene() {
     >
       <motion.div
         variants={item}
-        className="text-[12px] font-bold uppercase tracking-[0.3em] text-blue-200/80"
+        className="text-[12px] font-bold uppercase tracking-[0.3em] text-emerald-200/80"
       >
         Marketing Operations Platform
       </motion.div>
@@ -86,7 +86,7 @@ function IntroScene() {
       </motion.h2>
       <motion.p
         variants={item}
-        className="mt-5 text-[16px] font-medium text-blue-100/80 sm:text-[19px]"
+        className="mt-5 text-[16px] font-medium text-emerald-100/80 sm:text-[19px]"
       >
         Plan. Launch. Optimize. Grow.
       </motion.p>
@@ -110,7 +110,7 @@ function KpisScene() {
       className="flex h-full flex-col justify-center px-8"
     >
       <motion.div variants={item} className="mb-6 flex items-center gap-2 text-white">
-        <Gauge size={20} style={{ color: "#60a5fa" }} />
+        <Gauge size={20} style={{ color: "#4ade80" }} />
         <span className="font-display text-[20px] font-bold sm:text-[24px]">
           Metrics that matter, live
         </span>
@@ -131,7 +131,7 @@ function KpisScene() {
                 >
                   <Icon size={17} />
                 </div>
-                <span className="text-[12px] font-medium text-blue-100/70">
+                <span className="text-[12px] font-medium text-emerald-100/70">
                   {k.label}
                 </span>
               </div>
@@ -150,7 +150,7 @@ function KpisScene() {
 }
 
 const GROUPS = [
-  { label: "Performance Pulse", icon: Gauge, color: "#3b82f6" },
+  { label: "Performance Pulse", icon: Gauge, color: "#22c55e" },
   { label: "Growth Engine", icon: Rocket, color: "#a855f7" },
   { label: "Campaigns & Ads", icon: Megaphone, color: "#fb6f5a" },
   { label: "Content & SEO", icon: PenLine, color: "#0ea5e9" },
@@ -217,7 +217,7 @@ function CopilotScene() {
         variants={item}
         className="flex h-16 w-16 items-center justify-center rounded-3xl"
         style={{
-          background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+          background: "linear-gradient(135deg, #16a34a, #7c3aed)",
           boxShadow: "0 12px 30px -8px rgba(124,58,237,0.7)",
         }}
       >
@@ -233,7 +233,7 @@ function CopilotScene() {
         {PROMPTS.map((p) => (
           <span
             key={p}
-            className="rounded-full border border-white/15 bg-white/[0.08] px-4 py-2 text-[13px] font-medium text-blue-50 backdrop-blur-sm"
+            className="rounded-full border border-white/15 bg-white/[0.08] px-4 py-2 text-[13px] font-medium text-emerald-50 backdrop-blur-sm"
           >
             {p}
           </span>
@@ -265,7 +265,7 @@ function OutroScene() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] text-white">
                 <Icon size={22} />
               </div>
-              <span className="text-[12px] font-medium text-blue-100/70">
+              <span className="text-[12px] font-medium text-emerald-100/70">
                 {o.label}
               </span>
             </div>
@@ -290,7 +290,7 @@ function OutroScene() {
       </motion.h2>
       <motion.p
         variants={item}
-        className="mt-2 text-[16px] font-semibold text-blue-100/80 sm:text-[18px]"
+        className="mt-2 text-[16px] font-semibold text-emerald-100/80 sm:text-[18px]"
       >
         Let's go make some noise.
       </motion.p>
@@ -377,7 +377,7 @@ export function WelcomeWalkthrough() {
         className="relative aspect-video w-full"
         style={{
           background:
-            "radial-gradient(120% 120% at 80% 0%, #1e3a8a 0%, #0b1224 55%, #060913 100%)",
+            "radial-gradient(120% 120% at 80% 0%, #14532d 0%, #0b1224 55%, #060913 100%)",
         }}
       >
         {/* ambient orbs */}
@@ -387,7 +387,7 @@ export function WelcomeWalkthrough() {
         />
         <div
           className="cadence-ai-glow pointer-events-none absolute -left-20 bottom-0 h-72 w-72 rounded-full"
-          style={{ background: "rgba(37,99,235,0.3)", filter: "blur(54px)", animationDelay: "0.8s" }}
+          style={{ background: "rgba(22,163,74,0.3)", filter: "blur(54px)", animationDelay: "0.8s" }}
         />
 
         <div className="absolute inset-0">
@@ -417,7 +417,7 @@ export function WelcomeWalkthrough() {
             <span
               className="flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
               style={{
-                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                background: "linear-gradient(135deg, #16a34a, #7c3aed)",
                 boxShadow: "0 16px 40px -10px rgba(124,58,237,0.8)",
               }}
             >

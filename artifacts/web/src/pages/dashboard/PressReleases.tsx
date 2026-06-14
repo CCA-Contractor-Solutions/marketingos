@@ -10,7 +10,7 @@ export function PressReleases() {
         {pressReleases.map(pr => (
           <div key={pr.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
             <div className="p-2 bg-white rounded-lg shadow-sm">
-              <FileText size={16} className="text-blue-500" />
+              <FileText size={16} className="text-emerald-500" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-[13px] font-semibold text-slate-800 truncate">{pr.title}</div>

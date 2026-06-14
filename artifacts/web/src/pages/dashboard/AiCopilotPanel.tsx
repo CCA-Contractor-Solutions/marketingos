@@ -4,7 +4,7 @@ import { BrandMark } from "@/components/BrandMark";
 
 export function AiCopilotPanel() {
   const actions = [
-    { icon: TrendingUp, label: "Forecast Campaign", color: "text-blue-400" },
+    { icon: TrendingUp, label: "Forecast Campaign", color: "text-emerald-400" },
     { icon: CheckCircle2, label: "Diagnose Ad Health", color: "text-emerald-400" },
     { icon: Sparkles, label: "Suggest SEO Wins", color: "text-amber-400" },
     { icon: PenTool, label: "Draft Press Release", color: "text-purple-400" },
@@ -24,13 +24,13 @@ export function AiCopilotPanel() {
       <div className="p-6 relative">
         <div
           className="cadence-ai-glow pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full"
-          style={{ background: "rgba(59,130,246,0.25)", filter: "blur(24px)" }}
+          style={{ background: "rgba(34,197,94,0.25)", filter: "blur(24px)" }}
         />
         <div className="relative flex items-center gap-3 mb-6">
           <BrandMark size={32} />
           <div>
             <h2 className="font-display text-[18px] font-bold tracking-tight">MarketingOS AI Copilot</h2>
-            <p className="text-[12px] text-blue-200/70 font-medium">Ready to assist</p>
+            <p className="text-[12px] text-emerald-200/70 font-medium">Ready to assist</p>
           </div>
         </div>
 
@@ -56,7 +56,7 @@ export function AiCopilotPanel() {
       <div className="mt-auto p-6 pt-0 relative">
         <Link
           href="/assistant"
-          className="flex items-center justify-center w-full py-3.5 rounded-xl font-bold text-[14px] bg-blue-600 hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+          className="flex items-center justify-center w-full py-3.5 rounded-xl font-bold text-[14px] bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-[0_0_20px_rgba(22,163,74,0.4)]"
         >
           <Sparkles size={16} className="mr-2" /> Ask Copilot Anything
         </Link>
