@@ -1,3 +1,2 @@
-- [Marketing app rebrand & reseed](marketing-app-rebrand.md) — brand text is split across web + api-server seed/assistant route; reseed needs truncate + restart.
-- [Welcome walkthrough audio sync](welcome-walkthrough-audio-sync.md) — in-app walkthrough couples a composite mp3 to hardcoded scene offsets; change both in lockstep.
-- [Web executive design language](web-executive-design-language.md) — Fraunces serif on .font-display, deep-green brand w/ intentional violet accent, .cadence-card hover needs !important over inline card styles.
+- [api-server dev rebuild](api-server-dev-rebuild.md) — api-server dev runs build→start (no HMR); restart the workflow after any server source edit or env-var change to pick it up.
+- [shared app-token guard](shared-app-token-guard.md) — the API bearer token is shipped to web/mobile clients and is NOT a per-user secret; it only gates anonymous abuse. Real auth is a separate feature.

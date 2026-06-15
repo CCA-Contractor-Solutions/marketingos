@@ -23,7 +23,7 @@ export default function Analytics() {
     <AppLayout
       active="analytics"
       title="Analytics Overview"
-      subtitle="Last 30 Days"
+      subtitle="Last 30 Days · Demo data"
     >
       {isLoading ? (
         <PageLoading />

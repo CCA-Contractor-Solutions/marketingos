@@ -45,6 +45,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
+import { DemoBadge } from "@/components/DemoBadge";
 import { Tour, TOUR_STEPS } from "@/components/Tour";
 
 export type NavKey =
@@ -264,6 +265,17 @@ function SidebarContent({
               >
                 <Icon size={18} strokeWidth={on ? 2.4 : 2} />
                 <span>{item.label}</span>
+                {item.key === "brand" && (
+                  <span
+                    className="ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide"
+                    style={{
+                      background: "rgba(255,255,255,0.12)",
+                      color: "rgba(255,255,255,0.7)",
+                    }}
+                  >
+                    Soon
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -500,6 +512,7 @@ export function AppLayout({
           </div>
 
           <div className="ml-auto flex items-center gap-3">
+            <DemoBadge className="hidden sm:inline-flex" />
             {actions}
 
             <button

@@ -3,8 +3,13 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { corsOptions, requireApiToken, aiRateLimiter } from "./lib/security";
 
 const app: Express = express();
+
+// Resolve the real client IP from the Replit proxy's X-Forwarded-For header
+// so rate limiting buckets per user rather than per proxy.
+app.set("trust proxy", true);
 
 app.use(
   pinoHttp({
@@ -25,9 +30,16 @@ app.use(
     },
   }),
 );
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Throttle the AI endpoint (OpenAI cost / abuse protection) before auth so a
+// flood is capped per IP regardless of token validity.
+app.use("/api/assistant/messages", aiRateLimiter);
+
+// Require the shared app token on all mutating (non-GET) endpoints.
+app.use("/api", requireApiToken);
 
 app.use("/api", router);
 

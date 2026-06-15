@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
@@ -12,6 +13,13 @@ import AIAssistant from "@/pages/AIAssistant";
 import Collaboration from "@/pages/Collaboration";
 import Analytics from "@/pages/Analytics";
 import BrandMemory from "@/pages/BrandMemory";
+
+// Attach the shared app token to mutating API requests. This token is bundled
+// with the client by design and is not a per-user secret.
+const API_ACCESS_TOKEN =
+  (import.meta.env as Record<string, string | undefined>)
+    .VITE_API_ACCESS_TOKEN ?? null;
+setAuthTokenGetter(() => API_ACCESS_TOKEN);
 
 const queryClient = new QueryClient();
 

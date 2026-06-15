@@ -6,7 +6,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/inter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { setBaseUrl } from "@workspace/api-client-react";
+import { setAuthTokenGetter, setBaseUrl } from "@workspace/api-client-react";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
@@ -20,6 +20,10 @@ import { NotificationsProvider } from "@/hooks/useNotifications";
 // Expo bundles run outside the web proxy and need an absolute URL to reach the
 // API server. The domain is injected at build time and varies per environment.
 setBaseUrl(`https://${process.env.EXPO_PUBLIC_DOMAIN}`);
+
+// Attach the shared app token to mutating API requests. This token is bundled
+// with the client by design and is not a per-user secret.
+setAuthTokenGetter(() => process.env.EXPO_PUBLIC_API_ACCESS_TOKEN ?? null);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
