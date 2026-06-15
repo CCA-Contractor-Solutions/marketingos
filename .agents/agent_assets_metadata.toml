@@ -77,3 +77,9 @@ id = "plqSwZS2IfVUzjHQGMDCt"
 uri = "file://artifacts/web/public/audio/bg_music.mp3"
 type = "audio"
 title = "welcome_high_energy"
+
+[[outputs]]
+id = "_Fhh5ha8sLWjC0tqdV4Cu"
+uri = "file://MARKETINGOS-HANDOFF.md"
+type = "text"
+title = "MarketingOS Handoff & Migration Notes (Pass 2)"

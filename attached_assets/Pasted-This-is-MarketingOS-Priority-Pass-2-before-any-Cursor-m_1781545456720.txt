@@ -1,0 +1,65 @@
+This is MarketingOS Priority Pass 2 before any Cursor migration. Do not add new features. Preserve existing behavior. Do not expose or print secrets.
+
+Context from Pass 1:
+- Non-GET API routes and the AI route now have a shared bearer-token guard.
+- AI endpoint has rate limiting.
+- CORS is restricted.
+- Web and mobile send the shared token.
+- Global Demo data badge was added.
+- Analytics subtitle says “Last 30 Days · Demo data.”
+- Brand Memory nav item has a Soon badge.
+- Typecheck passed for changed packages.
+- Important residual risk: shared token is not real per-user authentication.
+
+Tasks for this pass:
+
+1. Real vs demo inventory
+   - Create or update a short documentation file such as MARKETINGOS-HANDOFF.md or MIGRATION-NOTES.md.
+   - List what is real DB-backed data.
+   - List what is seeded/demo data.
+   - List what is hardcoded/static sample data.
+   - List what is real AI vs simulated/sample.
+
+2. Data-source cleanup plan
+   - Identify where campaigns, tasks, threads, messages, assistant history, and app content live.
+   - Identify where SEO Suggestions, Market Trends, Competitor Watch, and Analytics values come from.
+   - Do not replace data sources in this pass.
+   - Recommend whether each data source should stay Postgres, move to Zoho, connect to Company Brain, or stay demo.
+
+3. Branding cleanup review
+   - Find old CCA crest/badge assets or naming conflicts inside MarketingOS.
+   - Do not delete assets unless clearly unused and safe.
+   - Create a cleanup list: keep, replace, archive, or delete.
+   - Confirm whether the visible brand should be MarketingOS, Cadence, or another final name.
+
+4. Walkthrough decision prep
+   - Identify all walkthrough/video/onboarding artifacts.
+   - Document which one is currently linked or visible in the app.
+   - Recommend one canonical walkthrough and which duplicate/orphan assets can be archived later.
+   - Do not delete walkthrough files in this pass.
+
+5. Production deployment surface
+   - Identify which artifacts are currently deployable or publicly reachable: web, mobile, api-server, walkthrough, mockup-sandbox.
+   - Recommend what should be included or excluded from production.
+   - Specifically check whether mockup-sandbox could be public and recommend how to exclude it if needed.
+
+6. Auth migration note
+   - Document that the shared token is a temporary hardening guard, not real auth.
+   - Recommend the future auth model options:
+     a. Replit Auth
+     b. Clerk
+     c. internal-only access gate
+   - Do not implement full auth in this pass.
+
+7. Verification
+   - Run typecheck for affected packages.
+   - Run any existing tests if present.
+   - Verify the app still loads.
+   - Report changed files, findings, and remaining blockers.
+
+Important:
+- Do not implement real auth yet.
+- Do not delete seeded data.
+- Do not delete assets unless clearly safe and explain why.
+- Do not change AI prompts.
+- Do not move to Cursor yet.
