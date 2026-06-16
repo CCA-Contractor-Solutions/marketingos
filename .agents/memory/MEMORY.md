@@ -1,2 +1,3 @@
-- [api-server dev rebuild](api-server-dev-rebuild.md) — api-server dev runs build→start (no HMR); restart the workflow after any server source edit or env-var change to pick it up.
-- [shared app-token guard](shared-app-token-guard.md) — the API bearer token is shipped to web/mobile clients and is NOT a per-user secret; it only gates anonymous abuse. Real auth is a separate feature.
+- [Artifact deployment exclusion](deployment-exclusion.md) — exclude an artifact from the public deploy by removing its `[services.production]` block from artifact.toml; root `.replit` ports only affect dev.
+- [Shared app-token guard](shared-app-token-guard.md) — `API_ACCESS_TOKEN` (+VITE_/EXPO_PUBLIC_ copies) is client-bundled by design, NOT a secret/auth; don't move to Secrets, replace with real auth instead.
+- [api-server dev rebuild](api-server-dev-rebuild.md) — api-server dev is build→start (no HMR); restart its workflow after server-code or env-var changes.
