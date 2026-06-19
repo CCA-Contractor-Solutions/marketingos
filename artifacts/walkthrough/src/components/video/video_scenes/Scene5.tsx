@@ -34,7 +34,7 @@ export function Scene5() {
           animate={phase >= 2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.8 }}
         >
-          Cadence
+          MarketingOS
         </motion.h1>
         
         <motion.div 
@@ -43,7 +43,7 @@ export function Scene5() {
           animate={phase >= 2 ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          CCA Marketing Command Center
+          Marketing Command Center
         </motion.div>
 
         <motion.div 

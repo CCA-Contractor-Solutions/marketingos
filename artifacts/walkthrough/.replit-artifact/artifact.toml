@@ -1,6 +1,6 @@
 kind = "video"
 previewPath = "/walkthrough/"
-title = "Cadence Walkthrough"
+title = "MarketingOS Walkthrough"
 version = "1.0.0"
 id = "artifacts/walkthrough"
 router = "path"

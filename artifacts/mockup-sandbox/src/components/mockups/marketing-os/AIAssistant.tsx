@@ -29,7 +29,7 @@ export function AIAssistant() {
   return (
     <AppLayout
       active="dashboard"
-      title="Cadence AI"
+      title="MarketingOS AI"
       subtitle="Your marketing copilot"
       actions={
         <button
@@ -86,7 +86,7 @@ export function AIAssistant() {
                     number="2"
                     platform="Twitter / X"
                     tone="Punchy & Direct"
-                    content="What if you knew your campaign's ROI before launching? The new Cadence Predictive Analytics engine for Enterprise is here. Built for marketing leaders who demand precision."
+                    content="What if you knew your campaign's ROI before launching? The new MarketingOS Predictive Analytics engine for Enterprise is here. Built for marketing leaders who demand precision."
                     tags="#MarketingStrategy #Martech"
                   />
                   <VariantCard 
@@ -138,7 +138,7 @@ export function AIAssistant() {
             >
               <textarea 
                 className="w-full resize-none bg-transparent px-4 py-3.5 pr-14 text-[14px] outline-none placeholder:text-[var(--c-muted)]"
-                placeholder="Ask Cadence AI to write, analyze, or plan..."
+                placeholder="Ask MarketingOS AI to write, analyze, or plan..."
                 rows={2}
               />
               <button 
@@ -149,7 +149,7 @@ export function AIAssistant() {
               </button>
             </div>
             <div className="mt-2 text-center text-[11px]" style={{ color: "var(--c-muted)" }}>
-              Cadence AI can make mistakes. Verify important information.
+              MarketingOS AI can make mistakes. Verify important information.
             </div>
           </div>
         </div>

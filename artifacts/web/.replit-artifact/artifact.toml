@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "Cadence"
+title = "MarketingOS"
 version = "1.0.0"
 id = "artifacts/web"
 router = "path"

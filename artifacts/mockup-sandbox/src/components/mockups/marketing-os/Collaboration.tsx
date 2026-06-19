@@ -338,7 +338,7 @@ export function Collaboration() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 font-display font-bold text-[15px]">
                   <Sparkles size={18} className="text-indigo-200" />
-                  Cadence AI Summary
+                  MarketingOS AI Summary
                 </div>
                 <button className="p-1 hover:bg-white/10 rounded-md transition-colors">
                   <MoreHorizontal size={16} />

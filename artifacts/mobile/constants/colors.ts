@@ -1,5 +1,5 @@
 /**
- * Cadence design tokens for the mobile app.
+ * MarketingOS design tokens for the mobile app.
  *
  * Mirrors the sibling web artifact (artifacts/web/src/index.css) so both
  * surfaces share one visual identity. HSL values from the web tokens are

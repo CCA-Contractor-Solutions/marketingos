@@ -57,7 +57,7 @@ export function Scene4() {
             initial={{ opacity: 0, x: 50 }}
             animate={phase >= 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
           >
-            CCA AI Copilot
+            MarketingOS AI Copilot
           </motion.h2>
           
           <div className="flex flex-col gap-4">

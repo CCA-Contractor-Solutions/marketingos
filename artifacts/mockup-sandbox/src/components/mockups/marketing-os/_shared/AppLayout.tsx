@@ -72,7 +72,7 @@ export function AppLayout({
             <Sparkles size={18} strokeWidth={2.4} />
           </div>
           <div className="leading-tight">
-            <div className="font-display text-[17px] font-bold">Cadence</div>
+            <div className="font-display text-[17px] font-bold">MarketingOS</div>
             <div
               className="text-[11px] font-medium"
               style={{ color: "var(--c-muted)" }}
@@ -147,7 +147,7 @@ export function AppLayout({
             />
             <div className="relative">
               <div className="flex items-center gap-1.5 text-[12px] font-semibold">
-                <Sparkles size={14} /> Cadence AI
+                <Sparkles size={14} /> MarketingOS AI
               </div>
               <p className="mt-1 text-[11.5px] leading-snug text-white/85">
                 3 campaigns need attention and 2 tasks are overdue.

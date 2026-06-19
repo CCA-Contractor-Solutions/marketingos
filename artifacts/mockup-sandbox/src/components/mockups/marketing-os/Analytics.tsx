@@ -142,7 +142,7 @@ export function Analytics() {
             />
             <div className="relative z-10">
               <div className="flex items-center gap-2 text-[14px] font-bold uppercase tracking-wider text-white/90">
-                <Sparkles size={16} /> Cadence AI Insight
+                <Sparkles size={16} /> MarketingOS AI Insight
               </div>
               <h2 className="font-display mt-3 text-2xl font-bold leading-tight">
                 Paid Search ROAS is underperforming, while Email drives highest LTV.

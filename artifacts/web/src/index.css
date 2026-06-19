@@ -382,10 +382,10 @@
 }
 
 /* ============================================================
-   CCA — Marketing OS design language (graduated from mockups)
+   MarketingOS — design language (graduated from mockups)
    ============================================================ */
 
-/* shadcn token overrides mapped to the CCA palette (HSL) - LIGHT MODE DEFAULT */
+/* shadcn token overrides mapped to the MarketingOS palette (HSL) - LIGHT MODE DEFAULT */
 :root {
   --background: 210 20% 98%;
   --foreground: 228 50% 6%;
@@ -437,7 +437,7 @@ body {
   background: #f8fafc;
 }
 
-/* CCA scope tokens — LIGHT workspace */
+/* MarketingOS scope tokens — LIGHT workspace */
 :root,
 .cadence {
   --c-bg: #f4f7fb;

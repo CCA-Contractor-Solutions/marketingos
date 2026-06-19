@@ -19,7 +19,7 @@ tags:
   - name: collaboration
     description: Collaboration threads
   - name: assistant
-    description: Cadence AI assistant
+    description: MarketingOS AI assistant
   - name: analytics
     description: Analytics overview
 paths:

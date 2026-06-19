@@ -177,7 +177,7 @@ export function Dashboard() {
 
           {/* Sidebar Column */}
           <div className="space-y-6">
-            {/* Cadence AI Panel */}
+            {/* MarketingOS AI Panel */}
             <div
               className="relative overflow-hidden rounded-2xl p-5 text-white shadow-lg"
               style={{
@@ -192,7 +192,7 @@ export function Dashboard() {
               <div className="relative">
                 <div className="flex items-center gap-2 font-display text-[16px] font-bold mb-4">
                   <Sparkles size={18} />
-                  Cadence AI Insights
+                  MarketingOS AI Insights
                 </div>
 
                 <div className="space-y-3">

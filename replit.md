@@ -1,4 +1,4 @@
-# MarketingOS (working name; "Cadence" still appears in some configs — final brand pending Rose/Carmen)
+# MarketingOS
 
 A marketing "command center": create and approve campaigns, manage tasks, collaborate in threads, view analytics/KPI dashboards, and chat with an AI marketing copilot. Ships as a web app and a companion Expo mobile app, backed by one Express API server.
 
@@ -47,7 +47,7 @@ Campaigns, task board, collaboration threads, analytics/KPI dashboards, and an A
 
 - Do not add features or implement real auth unless explicitly asked.
 - Do not change AI prompts without explicit approval.
-- Final brand name (MarketingOS vs Cadence) is a Rose/Carmen decision — do not mass-rename until confirmed.
+- Brand name is **MarketingOS** (confirmed). Lowercase `cadence` may still appear as a common marketing noun (e.g. "posting cadence") and as internal CSS class names (`cadence`, `cadence-rise`, `cadence-scroll`) — these are intentional and are NOT the old brand name; do not rename them.
 
 ## Gotchas
 
