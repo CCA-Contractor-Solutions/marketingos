@@ -34,7 +34,7 @@ const GUIDE: {
     value: "command-center",
     title: "Command Center",
     icon: LayoutDashboard,
-    body: "Your home base. Live KPIs, color-coded module bands, and an AI copilot panel give you the full marketing pulse the moment you log in.",
+    body: "Your home base. Dashboard KPIs are demo-labeled until real feeds replace them; color-coded module bands and an AI copilot panel orient the workspace the moment you log in.",
     href: "/",
     cta: "Open Command Center",
   },
@@ -74,7 +74,7 @@ const GUIDE: {
     value: "analytics",
     title: "Analytics",
     icon: BarChart3,
-    body: "Dive into performance across channels with rich charts and AI insights that explain what changed and what to do next.",
+    body: "Dive into channel performance charts — treat sample/demo widgets as labeled demos until Company Brain or real feeds own them.",
     href: "/analytics",
     cta: "Explore analytics",
   },
@@ -82,7 +82,7 @@ const GUIDE: {
     value: "brand",
     title: "Brand Memory",
     icon: BookMarked,
-    body: "Your voice, tone, and guidelines in one living source of truth, so every campaign and AI draft stays perfectly on-brand.",
+    body: "Standing founder guardrails (no navy default, no gold, AI phrase not locked). Full palette and voice packs wait on Rose visual input.",
     href: "/brand",
     cta: "Open Brand Memory",
   },
@@ -91,7 +91,7 @@ const GUIDE: {
 const QUICK_START = [
   { title: "Launch a campaign", desc: "Spin up your first campaign in seconds.", href: "/campaigns", icon: Megaphone, color: "var(--c-coral)" },
   { title: "Ask the AI Copilot", desc: "Draft, analyze, and forecast instantly.", href: "/assistant", icon: Sparkles, color: "var(--c-violet)" },
-  { title: "Check your metrics", desc: "See live KPIs on the Command Center.", href: "/", icon: BarChart3, color: "var(--c-brand)" },
+  { title: "Check your metrics", desc: "Open the Command Center — demo KPIs labeled until real feeds replace them.", href: "/", icon: BarChart3, color: "var(--c-brand)" },
   { title: "Organize your tasks", desc: "Plan the work across five views.", href: "/tasks", icon: ListChecks, color: "var(--c-emerald)" },
 ];
 

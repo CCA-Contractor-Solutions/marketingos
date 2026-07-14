@@ -265,17 +265,6 @@ function SidebarContent({
               >
                 <Icon size={18} strokeWidth={on ? 2.4 : 2} />
                 <span>{item.label}</span>
-                {item.key === "brand" && (
-                  <span
-                    className="ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide"
-                    style={{
-                      background: "rgba(255,255,255,0.12)",
-                      color: "rgba(255,255,255,0.7)",
-                    }}
-                  >
-                    Soon
-                  </span>
-                )}
               </Link>
             );
           })}

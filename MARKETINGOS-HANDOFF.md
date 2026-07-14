@@ -4,6 +4,24 @@
 > changed, no auth implemented.** This document inventories the current state and
 > recommends next steps ahead of any future migration.
 
+Date: 2026-06-15  
+**Carmen delta 2026-07-13:** Repo cloned to `/home/ubuntu/projects/marketingos`. Re-checked against live tree:
+
+- Crest-under-MarketingOS conflict in §3 is **partly stale** — `BrandMark.tsx` is now a CSS monogram (not `crest.png`).
+- Mobile `app.json` name is already **MarketingOS**.
+- OpenAPI assistant text is already **MarketingOS**.
+- Brand Memory was a Coming-soon stub → **seeded with founder visual/brand guardrails** (navy not default; no gold; AI phrase not locked). Sidebar “Soon” badge removed.
+- Dashboard widgets remain `sampleData.ts` / Demo badge — unchanged intentionally.
+- **Do not repalette** navy/purple tokens until Rose visual input (Command Center Decision Log D22).
+- Full pain-point map: `cca-command-center-cloud/docs/command-center/marketing-pain-points-concrete-map-2026-07-13.md`
+
+**Carmen delta 2026-07-14 (ops honesty):**
+
+- Re-verified: web Brand Memory has guardrails + **no “Soon”** badge in `AppLayout` / `Brand Memory` page.
+- §0 Pass 1 bullet that still listed `"Soon" badge on Brand Memory` is **historical shipped-then-removed** — not current tree truth.
+- Welcome Brand Memory blurb toned to standing guardrails (not fake full CMS).
+- STATUS file: `STATUS-2026-07-14.md`.
+
 Date: 2026-06-15
 Scope: pnpm monorepo, artifacts: `web`, `mobile`, `api-server`, `walkthrough`,
 `mockup-sandbox`. Canonical user-facing app is **`artifacts/web`**.
@@ -17,7 +35,7 @@ Scope: pnpm monorepo, artifacts: `web`, `mobile`, `api-server`, `walkthrough`,
 - CORS restricted to Replit domains + localhost + no-origin clients.
 - Web and mobile attach the shared token via `setAuthTokenGetter`.
 - Global "Demo data" badge in the app header; Analytics subtitle = "Last 30 Days · Demo data".
-- "Soon" badge on the Brand Memory nav item.
+- ~~"Soon" badge on the Brand Memory nav item~~ — **removed 2026-07-13**; Brand Memory now shows standing D22/M1–M5 guardrails (not a Coming-soon stub). Do not re-add “Soon.”
 - **Residual risk:** the shared token is NOT real per-user authentication (see §6).
 
 ---
