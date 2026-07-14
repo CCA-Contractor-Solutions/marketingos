@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Typecheck & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable corepack (pinned pnpm)
+        run: corepack enable
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # NOTE: the committed pnpm-lock.yaml is currently out of sync with the
+      # workspace `overrides` on the pinned pnpm version (a pre-existing
+      # condition). Until Carmen regenerates and reviews the lockfile in a
+      # dedicated PR, CI cannot use --frozen-lockfile. Switch this back to
+      # `pnpm install --frozen-lockfile` once the lockfile is refreshed.
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      # Typecheck all product surfaces (web, mobile, api-server, walkthrough,
+      # scripts) + shared libs. The internal-only mockup-sandbox is excluded
+      # because a transitive dep (react-day-picker via the mobile Expo
+      # toolchain's @types/react) causes a duplicate-types conflict. Run
+      # `pnpm run typecheck:all` locally to include it.
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      # Build the two deployed surfaces only. The mobile app's build is a
+      # Replit/Expo deploy step that requires a deployment domain and is not
+      # run in generic CI.
+      - name: Build libraries
+        run: pnpm run typecheck:libs
+
+      - name: Build web
+        run: pnpm --filter @workspace/web run build
+
+      - name: Build api-server
+        run: pnpm --filter @workspace/api-server run build

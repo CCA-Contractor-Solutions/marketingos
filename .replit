@@ -52,7 +52,8 @@ channel = "stable-25_05"
 
 [userenv]
 
-[userenv.shared]
-API_ACCESS_TOKEN = "b282010fc09dc12327701cebb7f7ffea627f78a8b3b86041"
-VITE_API_ACCESS_TOKEN = "b282010fc09dc12327701cebb7f7ffea627f78a8b3b86041"
-EXPO_PUBLIC_API_ACCESS_TOKEN = "b282010fc09dc12327701cebb7f7ffea627f78a8b3b86041"
+# API access tokens are NOT stored here. The previous committed values were
+# rotated and moved to the deploy environment's secret store (Replit Secrets):
+#   API_ACCESS_TOKEN, VITE_API_ACCESS_TOKEN, EXPO_PUBLIC_API_ACCESS_TOKEN
+# Set them there so they are never committed to source control.
+# See docs/source-of-truth.md (Security notes).

@@ -69,8 +69,19 @@ export function requireApiToken(
 
   const configured = process.env["API_ACCESS_TOKEN"];
   if (!configured) {
+    // Fail CLOSED. Previously this path called next() when the token was
+    // unset, leaving every mutating endpoint unprotected. In production we now
+    // refuse the request; in local development we warn and allow so devs are
+    // not blocked without a token configured.
+    if (process.env["NODE_ENV"] === "production") {
+      logger.error(
+        "API_ACCESS_TOKEN is not configured — refusing mutating request (fail-closed)",
+      );
+      res.status(503).json({ error: "Server auth not configured" });
+      return;
+    }
     logger.warn(
-      "API_ACCESS_TOKEN is not configured — mutating endpoints are UNPROTECTED",
+      "API_ACCESS_TOKEN is not configured — allowing mutation in non-production only",
     );
     next();
     return;
