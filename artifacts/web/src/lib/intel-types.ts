@@ -245,3 +245,109 @@ export type Recommendation = {
 export type UpdateRecommendationRequest = {
   status: RecommendationStatus;
 };
+
+// ---------------------------------------------------------------------------
+// Phase 4 — External Data Integrations (Module 8 extension)
+// ---------------------------------------------------------------------------
+
+export type IntegrationCategory = "advertising" | "analytics" | "communication" | "email" | "automation";
+export type IntegrationStatus = "available" | "connected" | "error" | "disabled";
+export type IntegrationAuthMethod = "oauth2" | "api_key" | "webhook" | "none";
+export type IntegrationSyncFrequency = "realtime" | "hourly" | "daily" | "manual";
+export type SyncJobStatus = "running" | "success" | "error";
+
+export type SyncJobSummary = {
+  id: string;
+  status: SyncJobStatus;
+  startedAt: string;
+  completedAt: string | null;
+  recordsProcessed: number;
+};
+
+// --- GET /integrations ------------------------------------------------------
+export type Integration = {
+  id: string;
+  providerKey: string;
+  category: IntegrationCategory;
+  displayName: string;
+  status: IntegrationStatus;
+  config: Record<string, unknown>;
+  credentialsReference: string | null;
+  lastSyncedAt: string | null;
+  createdAt: string;
+  connectorAvailable: boolean;
+  authMethod: IntegrationAuthMethod;
+  requiredCredentials: string[];
+  dataAvailable: string[];
+  defaultSyncFrequency: IntegrationSyncFrequency;
+  lastSync: SyncJobSummary | null;
+  dataImported: number;
+  errorCount: number;
+};
+
+// --- POST /integrations/:id/connect -----------------------------------------
+export type ConnectIntegrationRequest = {
+  credentialsReference?: string | null;
+};
+
+export type ConnectIntegrationResponse = Integration & { connectReason?: string };
+
+// --- POST /integrations/:id/sync --------------------------------------------
+export type SyncIntegrationResponse = {
+  jobId: string;
+  status: SyncJobStatus;
+  recordsProcessed: number;
+  skippedDuplicates: number;
+  marketingEventsCreated: number;
+  leadsRefreshed: number;
+  errors: string[];
+};
+
+// --- GET /integrations/:id/sync-jobs ----------------------------------------
+export type SyncJob = {
+  id: string;
+  integrationId: string;
+  provider: string;
+  startedAt: string;
+  completedAt: string | null;
+  status: SyncJobStatus;
+  recordsProcessed: number;
+  errors: string[];
+  createdAt: string;
+};
+
+// --- GET /integrations/:id/errors -------------------------------------------
+export type IntegrationError = {
+  jobId: string;
+  occurredAt: string;
+  message: string;
+};
+
+// --- GET /external-events ---------------------------------------------------
+export type ExternalEvent = {
+  id: string;
+  provider: string;
+  externalId: string;
+  eventType: string;
+  payload: Record<string, unknown>;
+  processedAt: string | null;
+  marketingEventId: string | null;
+  createdAt: string;
+};
+
+// --- POST /ingest/website ----------------------------------------------------
+export type IngestWebsiteRequest = {
+  page?: string;
+  url?: string;
+  eventType?: string;
+  type?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  leadId?: string | null;
+  email?: string;
+  formName?: string;
+  asset?: string;
+  externalId?: string;
+  occurredAt?: string;
+};

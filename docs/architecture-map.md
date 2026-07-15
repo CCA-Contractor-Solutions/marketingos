@@ -2,6 +2,42 @@
 
 This is the canonical mental model for MarketingOS. Every future feature should fit somewhere on this spine. **MarketingOS is the source of truth for marketing intelligence** — external systems (Zoho, Google Ads, CallRail, etc.) are optional inputs/outputs that plug into the edges, never dependencies of the core.
 
+## External Data Layer (Phase 4)
+
+Before the spine, an **External Data Layer** now sits at the Events edge:
+third-party providers (website, GA4, Google Ads, CallRail, RingCentral, Meta
+Ads, LinkedIn Ads) feed the same `marketing_events` table the rest of the
+spine reads from, via a connector framework + ingestion service. No new
+events/leads/campaign model is introduced -- ingested data becomes
+`marketing_events` (intelligence-grade) plus `external_events` (raw log for
+dedup/audit).
+
+```
+  Website / GA4 / Google Ads / CallRail / RingCentral / Meta Ads / LinkedIn Ads
+                              |
+                              v
+     IntegrationConnector.mapToEvents()  (pure, per-provider mapping)
+                              |
+                              v
+     ingestExternalRecords()  -- dedup on (provider, externalId) via
+                                  external_events; wraps run in sync_jobs
+                              |
+                              v
+     insertMarketingEvent()  -- SAME shared helper routes/events.ts uses
+                              |
+                              v
+                     marketing_events  (spine's source of truth, unchanged)
+```
+
+**Ingestion invariant:** all external provider data enters the spine through
+exactly one write path -- `insertMarketingEvent` -- so Events remain the
+single source of truth regardless of how many connectors are active.
+Connectors: `website` (webhook, NEW/realtime), `ga4`, `google_ads`,
+`callrail`, `ringcentral`, `meta_ads`, `linkedin_ads` are fully implemented;
+`search_console` and `email` remain framework-registered stubs. See
+[`docs/integrations.md`](./integrations.md) for the full provider table,
+security model, and sync lifecycle.
+
 ## The spine
 
 ```
@@ -33,16 +69,16 @@ Read it as one sentence: **Channels produce Events; Events are turned into Intel
 | **Actions** | A recommendation becomes a tracked unit of work (owner, status, due date, completion). **Reuses the existing `tasks` table — no separate action model.** | `tasks` (with `aiGenerated: true`) | `POST /actions/from-recommendation` (in `routes/intelligence-summary.ts`) + existing task endpoints | "Create Action" dialogs → Task Board |
 | **Revenue** | Conversions record revenue; the Attribution Engine credits it back across the touch channels/campaigns (first / last / linear / assisted), closing the loop to Channels. | `conversions`, `revenue_attribution` | `lib/intelligence/attribution.ts`; `routes/attribution.ts` | Revenue Attribution chart, campaign revenue impact |
 
-## Integration edges (Phase 4 and beyond)
+## Integration edges (Phase 4 -- implemented)
 
-External providers attach at the **Events** edge (inbound activity) and the **Channels/Revenue** edge (spend + outcomes) through the provider-agnostic framework — never by becoming a core dependency.
+External providers attach at the **Events** edge (inbound activity) and the **Channels/Revenue** edge (spend + outcomes) through the provider-agnostic framework -- never by becoming a core dependency.
 
 | Edge | Inbound examples | Framework |
 |---|---|---|
-| Events in | Website forms, Google Analytics, CallRail, RingCentral, email opens/clicks | `integrations` table + `routes/integrations/providers.ts` (`IntegrationConnector` + `CONNECTOR_REGISTRY`, all stubs today) |
-| Spend in | Google Ads, Meta Ads, LinkedIn Ads (feeds channel `spend` → ROI) | same |
+| Events in | Website forms (webhook), Google Analytics 4, CallRail, RingCentral, email opens/clicks (stub) | `integrations` table + `routes/integrations/providers.ts` (`IntegrationConnector` v2 + `CONNECTOR_REGISTRY`) + `lib/integrations/ingestion.ts` |
+| Spend in | Google Ads, Meta Ads, LinkedIn Ads (feeds `campaign_interaction.metadata.spend` into recommendations ROI insights) | same |
 
-**Phase 4 priority order:** Website forms → Google Analytics → Google Ads → CallRail → RingCentral → Meta Ads → LinkedIn. Each is a connector implementation behind the existing interface; the core spine does not change.
+**Implemented in Phase 4:** Website forms, Google Analytics 4, Google Ads, CallRail, RingCentral, Meta Ads, LinkedIn Ads. `search_console` and `email` remain stubs. Every connector is behind the same interface; the core spine is unchanged -- see the External Data Layer section above and [`docs/integrations.md`](./integrations.md).
 
 ## Invariants (do not violate)
 

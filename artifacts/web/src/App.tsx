@@ -20,6 +20,7 @@ import LeadDetail from "@/pages/intel/LeadDetail";
 import CampaignOps from "@/pages/intel/CampaignOps";
 import CampaignOpsDetail from "@/pages/intel/CampaignOpsDetail";
 import Opportunities from "@/pages/intel/Opportunities";
+import Integrations from "@/pages/intel/Integrations";
 
 // Attach the shared app token to mutating API requests. This token is bundled
 // with the client by design and is not a per-user secret.
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/campaign-ops" component={CampaignOps} />
       <Route path="/campaign-ops/:campaignId" component={CampaignOpsDetail} />
       <Route path="/opportunities" component={Opportunities} />
+      <Route path="/integrations" component={Integrations} />
       <Route component={NotFound} />
     </Switch>
   );

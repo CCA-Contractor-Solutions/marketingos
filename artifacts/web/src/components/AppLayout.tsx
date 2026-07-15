@@ -47,6 +47,7 @@ import {
   Users,
   Target,
   Lightbulb as LightbulbIcon,
+  Plug,
 } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { DemoBadge } from "@/components/DemoBadge";
@@ -65,7 +66,8 @@ export type NavKey =
   | "intelligence"
   | "leads"
   | "campaign-ops"
-  | "opportunities";
+  | "opportunities"
+  | "integrations";
 
 const NAV: {
   key: NavKey;
@@ -101,6 +103,7 @@ const GROWTH_INTEL_NAV: {
   { key: "leads", label: "Leads", href: "/leads", icon: Users },
   { key: "campaign-ops", label: "Campaign Ops", href: "/campaign-ops", icon: Target },
   { key: "opportunities", label: "Opportunities", href: "/opportunities", icon: LightbulbIcon },
+  { key: "integrations", label: "Integrations", href: "/integrations", icon: Plug },
 ];
 
 type ModuleItem = { id: string; label: string; icon: typeof LayoutDashboard };
