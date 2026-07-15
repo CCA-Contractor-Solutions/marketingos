@@ -270,11 +270,70 @@ export const integrationsTable = pgTable("integrations", {
   // NEVER store secrets here — store a reference key only (e.g. an env var
   // name or vault key), never raw tokens/credentials.
   config: jsonb("config").$type<Record<string, unknown>>().notNull().default({}),
+  // Reference/vault-key NAME only (e.g. "GA4_OAUTH_TOKEN") — never a raw
+  // secret value. The actual credential is resolved at runtime from env via
+  // `lib/integrations/credentials.ts#resolveCredential`.
+  credentialsReference: text("credentials_reference"),
   lastSyncedAt: text("last_synced_at"),
   createdAt: text("created_at").notNull().default(""),
 });
 
 export type IntegrationRow = typeof integrationsTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// sync_jobs (Phase 4 — Module 8 extension)
+//
+// One row per connector sync attempt (manual "Sync now" or connect-time
+// validation run). Ingestion (lib/integrations/ingestion.ts) creates a
+// "running" row up front and updates it to "success"/"error" when finished.
+// ---------------------------------------------------------------------------
+
+export type SyncJobStatus = "running" | "success" | "error";
+
+export const syncJobsTable = pgTable("sync_jobs", {
+  id: text("id").primaryKey(),
+  integrationId: text("integration_id").notNull(),
+  provider: text("provider").notNull().default(""),
+  startedAt: text("started_at").notNull().default(""),
+  completedAt: text("completed_at"),
+  status: text("status").$type<SyncJobStatus>().notNull().default("running"),
+  recordsProcessed: integer("records_processed").notNull().default(0),
+  // Safe, sanitized error strings only — never raw secrets/tokens.
+  errors: jsonb("errors").$type<string[]>().notNull().default([]),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type SyncJobRow = typeof syncJobsTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// external_events (Phase 4 — Module 8 extension)
+//
+// Raw, provider-native record log — kept separate from `marketing_events`
+// (the normalized, provider-agnostic event model). Every raw record ingested
+// from a connector or webhook lands here first for idempotency/audit, then
+// (once mapped via a connector's `mapToEvents`) is turned into exactly one
+// `marketing_events` row, linked back via `marketingEventId`.
+//
+// Dedup invariant (enforced in code, not a DB constraint — matching this
+// schema's no-FK/no-unique-constraint convention): before inserting, callers
+// must check for an existing row with the same (provider, externalId) and
+// skip if one is already processed.
+// ---------------------------------------------------------------------------
+
+export const externalEventsTable = pgTable("external_events", {
+  id: text("id").primaryKey(),
+  provider: text("provider").notNull().default(""),
+  // The provider's own record id — used for dedup, never regenerated.
+  externalId: text("external_id").notNull().default(""),
+  eventType: text("event_type").notNull().default(""),
+  payload: jsonb("payload").$type<Record<string, unknown>>().notNull().default({}),
+  // Set once this raw record has been mapped into a marketing_events row.
+  processedAt: text("processed_at"),
+  marketingEventId: text("marketing_event_id"),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type ExternalEventRow = typeof externalEventsTable.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // marketing_assets (Module 6 support)

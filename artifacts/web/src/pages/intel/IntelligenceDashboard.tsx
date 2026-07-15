@@ -14,6 +14,9 @@ import { fmtMoney, fmtNumber } from "@/lib/format";
 import { campaignPerformanceScore, performanceTier } from "@/lib/intel-scoring";
 import { useRole } from "@/lib/roles";
 import { CreateActionDialog } from "@/components/intel/CreateActionDialog";
+import { useIntegrations } from "@/hooks/useIntel";
+import { DataSourcesStrip } from "@/components/intel/DataSourcesStrip";
+import { CustomerJourneyVisual } from "@/components/intel/CustomerJourneyVisual";
 import type { Recommendation } from "@/lib/intel-types";
 import {
   Table,
@@ -75,6 +78,7 @@ export default function IntelligenceDashboard() {
   const campaigns = useCampaignIntelligenceList();
   const recommendations = useRecommendations();
   const generateMutation = useGenerateRecommendations();
+  const integrations = useIntegrations();
 
   const [selectedRecommendation, setSelectedRecommendation] = useState<Recommendation | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -109,7 +113,7 @@ export default function IntelligenceDashboard() {
     <AppLayout
       active="intelligence"
       title="Executive Dashboard"
-      subtitle="Growth Intelligence · Real-time rollups from Phase 2 data"
+      subtitle="Growth Intelligence · Live rollups"
     >
       {isLoading ? (
         <PageLoading />
@@ -130,6 +134,12 @@ export default function IntelligenceDashboard() {
               delay={160}
             />
           </div>
+
+          {/* Phase 4 -- Data sources strip (additive) */}
+          <DataSourcesStrip integrations={integrations.data ?? []} isLoading={integrations.isLoading} />
+
+          {/* Phase 4 -- Customer journey mini-visual (additive) */}
+          <CustomerJourneyVisual />
 
           {/* Channel performance */}
           <div

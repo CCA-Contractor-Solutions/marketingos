@@ -22,8 +22,14 @@ import type {
   UpsertCampaignIntelligenceRequest,
   Recommendation,
   CreateActionFromRecommendationRequest,
+  Integration,
+  IntegrationStatus,
+  ConnectIntegrationRequest,
+  SyncJob,
+  IntegrationError,
+  ExternalEvent,
 } from "@/lib/intel-types";
-import type { ListLeadsParams } from "@/lib/intel-api";
+import type { ListLeadsParams, ListExternalEventsParams } from "@/lib/intel-api";
 
 // --- Query keys ----------------------------------------------------------------
 
@@ -39,6 +45,10 @@ export const intelKeys = {
   campaignIntelligenceList: ["intel", "campaign-intelligence"] as const,
   campaignIntelligence: (campaignId: string) => ["intel", "campaign-intelligence", campaignId] as const,
   recommendations: ["intel", "recommendations"] as const,
+  integrations: ["intel", "integrations"] as const,
+  integrationSyncJobs: (id: string) => ["intel", "integrations", id, "sync-jobs"] as const,
+  integrationErrors: (id: string) => ["intel", "integrations", id, "errors"] as const,
+  externalEvents: (params: ListExternalEventsParams) => ["intel", "external-events", params] as const,
 };
 
 // --- Intelligence summary -------------------------------------------------------
@@ -228,5 +238,78 @@ export function useUpdateRecommendation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: intelKeys.recommendations });
     },
+  });
+}
+
+// --- Integrations (Phase 4) -------------------------------------------------------------
+
+export function useIntegrations(options?: Partial<UseQueryOptions<Integration[]>>) {
+  return useQuery({
+    queryKey: intelKeys.integrations,
+    queryFn: intelApi.listIntegrations,
+    ...options,
+  });
+}
+
+export function useConnectIntegration(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: ConnectIntegrationRequest) => intelApi.connectIntegration(id, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.integrations });
+    },
+  });
+}
+
+export function useSyncIntegration(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (demo?: boolean) => intelApi.syncIntegration(id, demo),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.integrations });
+      queryClient.invalidateQueries({ queryKey: intelKeys.integrationSyncJobs(id) });
+      queryClient.invalidateQueries({ queryKey: intelKeys.integrationErrors(id) });
+      queryClient.invalidateQueries({ queryKey: ["intel", "external-events"] });
+      queryClient.invalidateQueries({ queryKey: intelKeys.recommendations });
+    },
+  });
+}
+
+export function useIntegrationSyncJobs(id: string, options?: Partial<UseQueryOptions<SyncJob[]>>) {
+  return useQuery({
+    queryKey: intelKeys.integrationSyncJobs(id),
+    queryFn: () => intelApi.getIntegrationSyncJobs(id),
+    enabled: !!id,
+    ...options,
+  });
+}
+
+export function useIntegrationErrors(id: string, options?: Partial<UseQueryOptions<IntegrationError[]>>) {
+  return useQuery({
+    queryKey: intelKeys.integrationErrors(id),
+    queryFn: () => intelApi.getIntegrationErrors(id),
+    enabled: !!id,
+    ...options,
+  });
+}
+
+export function useUpdateIntegrationStatus(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (status: IntegrationStatus) => intelApi.updateIntegrationStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.integrations });
+    },
+  });
+}
+
+export function useExternalEvents(
+  params: ListExternalEventsParams = {},
+  options?: Partial<UseQueryOptions<ExternalEvent[]>>,
+) {
+  return useQuery({
+    queryKey: intelKeys.externalEvents(params),
+    queryFn: () => intelApi.listExternalEvents(params),
+    ...options,
   });
 }

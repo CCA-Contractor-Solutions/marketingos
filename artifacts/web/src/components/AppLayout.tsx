@@ -1,5 +1,6 @@
 import { type ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { safeLocal, safeSession } from "@/lib/safe-storage";
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import {
@@ -47,6 +48,7 @@ import {
   Users,
   Target,
   Lightbulb as LightbulbIcon,
+  Plug,
 } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { DemoBadge } from "@/components/DemoBadge";
@@ -65,7 +67,8 @@ export type NavKey =
   | "intelligence"
   | "leads"
   | "campaign-ops"
-  | "opportunities";
+  | "opportunities"
+  | "integrations";
 
 const NAV: {
   key: NavKey;
@@ -101,6 +104,7 @@ const GROWTH_INTEL_NAV: {
   { key: "leads", label: "Leads", href: "/leads", icon: Users },
   { key: "campaign-ops", label: "Campaign Ops", href: "/campaign-ops", icon: Target },
   { key: "opportunities", label: "Opportunities", href: "/opportunities", icon: LightbulbIcon },
+  { key: "integrations", label: "Integrations", href: "/integrations", icon: Plug },
 ];
 
 type ModuleItem = { id: string; label: string; icon: typeof LayoutDashboard };
@@ -216,16 +220,18 @@ function SidebarContent({
         <BrandMark size={38} />
         <div className="leading-tight">
           <div className="font-display text-[16px] font-bold">
-            <span
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--c-violet), var(--c-purple))",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
-              }}
-            >
-              MarketingOS
+            <span>
+              <span style={{ color: "#fff" }}>Marketing</span>
+              <span
+                style={{
+                  background: "linear-gradient(90deg, #60A5FA, #A78BFA)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                OS
+              </span>
             </span>
           </div>
           <div className="text-[11px] font-medium text-blue-200/70">
@@ -441,7 +447,7 @@ export function AppLayout({
       setTourOpen(true);
     } else {
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("start-tour", "1");
+        safeSession.set("start-tour", "1");
       }
       setLocation("/");
     }
@@ -450,15 +456,15 @@ export function AppLayout({
   useEffect(() => {
     if (active !== "dashboard") return;
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("start-tour") === "1") {
-      sessionStorage.removeItem("start-tour");
+    if (safeSession.get("start-tour") === "1") {
+      safeSession.remove("start-tour");
       const t = setTimeout(() => setTourOpen(true), 500);
       return () => clearTimeout(t);
     }
-    if (localStorage.getItem("marketingos-tour-seen") === "1") return;
+    if (safeLocal.get("marketingos-tour-seen") === "1") return;
     const t = setTimeout(() => {
       setTourOpen(true);
-      localStorage.setItem("marketingos-tour-seen", "1");
+      safeLocal.set("marketingos-tour-seen", "1");
     }, 900);
     return () => clearTimeout(t);
   }, [active]);
@@ -566,7 +572,7 @@ export function AppLayout({
               }}
             >
               <Compass size={16} style={{ color: "var(--c-brand)" }} />
-              <span className="hidden md:inline">Take a tour</span>
+              <span className="hidden whitespace-nowrap md:inline">Take a tour</span>
             </button>
 
             <Popover>

@@ -1,0 +1,1692 @@
+{
+"overview": {
+"totalLeads": 6,
+"qualifiedLeads": 3,
+"customers": 2,
+"revenue": 23500,
+"conversionRate": 0.3333333333333333
+},
+"funnel": [
+{
+"stage": "Leads",
+"count": 6
+},
+{
+"stage": "Qualified",
+"count": 3
+},
+{
+"stage": "Sales Accepted",
+"count": 2
+},
+{
+"stage": "Customers",
+"count": 2
+}
+],
+"leadTrend": [
+{
+"period": "2026-05-25",
+"leads": 0,
+"customers": 0
+},
+{
+"period": "2026-06-01",
+"leads": 0,
+"customers": 0
+},
+{
+"period": "2026-06-08",
+"leads": 0,
+"customers": 0
+},
+{
+"period": "2026-06-15",
+"leads": 0,
+"customers": 0
+},
+{
+"period": "2026-06-22",
+"leads": 2,
+"customers": 0
+},
+{
+"period": "2026-06-29",
+"leads": 2,
+"customers": 0
+},
+{
+"period": "2026-07-06",
+"leads": 2,
+"customers": 2
+},
+{
+"period": "2026-07-13",
+"leads": 0,
+"customers": 0
+}
+],
+"channels": [
+{
+"channelId": "CH-100",
+"channelName": "Google Ads",
+"category": "paid",
+"leads": 2,
+"qualifiedLeads": 1,
+"customers": 1,
+"revenue": 15000,
+"spend": 0,
+"roi": null
+},
+{
+"channelId": "CH-102",
+"channelName": "LinkedIn",
+"category": "social",
+"leads": 2,
+"qualifiedLeads": 1,
+"customers": 1,
+"revenue": 8500,
+"spend": 16000,
+"roi": -0.46875
+},
+{
+"channelId": "CH-101",
+"channelName": "Google Organic",
+"category": "organic",
+"leads": 1,
+"qualifiedLeads": 1,
+"customers": 0,
+"revenue": 0,
+"spend": 0,
+"roi": null
+},
+{
+"channelId": "CH-103",
+"channelName": "Referral",
+"category": "referral",
+"leads": 1,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"spend": 0,
+"roi": null
+}
+],
+"campaigns": [
+{
+"campaignId": "summit",
+"objective": "Drive enterprise summit registrations and SQLs",
+"audience": "Enterprise Decision Makers, Existing Customers",
+"service": "Enterprise Platform",
+"industry": "B2B SaaS",
+"location": "National",
+"budget": 45000,
+"ownerName": "Sarah J.",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Email",
+"LinkedIn"
+]
+},
+{
+"campaignId": "nexus",
+"objective": "Launch Nexus 2.0 and drive product page visits",
+"audience": "Tech Early Adopters, Industry Analysts",
+"service": "Nexus 2.0",
+"industry": "Consumer Tech",
+"location": "National",
+"budget": 120000,
+"ownerName": "Mike T.",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Display",
+"Twitter",
+"PR"
+]
+},
+{
+"campaignId": "partner",
+"objective": "Co-host partner webinars and share pipeline",
+"audience": "Partner Audiences, Mid-Market Buyers",
+"service": "Partner Program",
+"industry": "B2B SaaS",
+"location": "National",
+"budget": 25000,
+"ownerName": "Elena R.",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Webinar",
+"Email"
+]
+},
+{
+"campaignId": "aurora",
+"objective": "Launch Aurora Headphones across social + search",
+"audience": "Audiophile Gen-Z, Commuting Professionals, Fitness Enthusiasts",
+"service": "Aurora Headphones",
+"industry": "Consumer Hardware",
+"location": "National",
+"budget": 150000,
+"ownerName": "Sarah Jenkins",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Instagram",
+"TikTok",
+"YouTube",
+"Email",
+"Paid Search"
+]
+},
+{
+"campaignId": "Multi-State Expansion",
+"objective": "Generate compliance-driven leads from multi-state commercial contractors",
+"audience": "Commercial contractors expanding across state lines",
+"service": "Multi-State Compliance Program",
+"industry": "Commercial Construction",
+"location": "FL, GA, NC, TX",
+"budget": 22000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 2,
+"qualifiedLeads": 1,
+"customers": 1,
+"revenue": 15000,
+"roi": -0.3181818,
+"channels": [
+"Google Ads"
+]
+},
+{
+"campaignId": "Residential Contractor Growth",
+"objective": "Grow pipeline among residential contractors via LinkedIn",
+"audience": "Residential contractor owners and GMs",
+"service": "Residential Compliance Program",
+"industry": "Residential Construction",
+"location": "TX, SC, FL",
+"budget": 14000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 1,
+"qualifiedLeads": 1,
+"customers": 1,
+"revenue": 8500,
+"roi": -0.39285713,
+"channels": [
+"LinkedIn"
+]
+},
+{
+"campaignId": "Commercial Contractor Awareness",
+"objective": "Build top-of-funnel awareness with commercial contractors",
+"audience": "Commercial contractor operations and compliance leads",
+"service": "Compliance Awareness Program",
+"industry": "Commercial Construction",
+"location": "CO, TX",
+"budget": 9000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 2,
+"qualifiedLeads": 1,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Google Organic",
+"LinkedIn"
+]
+},
+{
+"campaignId": "Referral Program",
+"objective": "Convert warm referral introductions into qualified pipeline",
+"audience": "Referred residential contractors",
+"service": "Referral Compliance Program",
+"industry": "Residential Construction",
+"location": "SC",
+"budget": 4000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 1,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Referral"
+]
+}
+],
+"attributionSummary": {
+"byModel": [
+{
+"model": "first_touch",
+"revenue": 23500,
+"attributions": 2
+},
+{
+"model": "last_touch",
+"revenue": 23500,
+"attributions": 2
+},
+{
+"model": "linear",
+"revenue": 23500,
+"attributions": 2
+}
+],
+"byChannel": [
+{
+"channel": "Google Ads",
+"revenue": 45000,
+"attributions": 3
+},
+{
+"channel": "LinkedIn",
+"revenue": 25500,
+"attributions": 3
+}
+],
+"byCampaign": [
+{
+"campaign": "Multi-State Expansion",
+"revenue": 45000,
+"attributions": 3
+},
+{
+"campaign": "Residential Contractor Growth",
+"revenue": 25500,
+"attributions": 3
+}
+]
+},
+"recommendations": [
+{
+"id": "REC-1002",
+"category": "segment",
+"title": "Residential Construction leads convert best",
+"body": "Residential Construction leads convert at 50% based on 2 leads. Consider prioritizing outreach and budget toward this segment.",
+"confidence": 0.6,
+"dataBasis": {
+"industry": "Residential Construction",
+"sampleSize": 2,
+"conversionRate": 0.5
+},
+"status": "new",
+"createdAt": "2026-07-15T02:39:27.054Z"
+},
+{
+"id": "REC-1003",
+"category": "channel",
+"title": "Google Ads delivers the most revenue per lead",
+"body": "Google Ads generated $15,000 in revenue from 2 leads (~$7,500/lead). Consider increasing investment in this channel relative to lower-yield channels.",
+"confidence": 0.6,
+"dataBasis": {
+"leads": 2,
+"channel": "Google Ads",
+"revenue": 15000
+},
+"status": "new",
+"createdAt": "2026-07-15T02:39:27.054Z"
+},
+{
+"id": "REC-1001",
+"category": "channel",
+"title": "Google Ads delivers the most revenue per lead",
+"body": "Google Ads generated $15,000 in revenue from 2 leads (~$7,500/lead). Consider increasing investment in this channel relative to lower-yield channels.",
+"confidence": 0.6,
+"dataBasis": {
+"leads": 2,
+"channel": "Google Ads",
+"revenue": 15000
+},
+"status": "new",
+"createdAt": "2026-07-15T02:00:15.047Z"
+},
+{
+"id": "REC-1000",
+"category": "segment",
+"title": "Residential Construction leads convert best",
+"body": "Residential Construction leads convert at 50% based on 2 leads. Consider prioritizing outreach and budget toward this segment.",
+"confidence": 0.6,
+"dataBasis": {
+"industry": "Residential Construction",
+"sampleSize": 2,
+"conversionRate": 0.5
+},
+"status": "applied",
+"createdAt": "2026-07-15T02:00:15.047Z"
+}
+],
+"leads": [
+{
+"id": "LEAD-1005",
+"companyName": "Lone Star Concrete Works",
+"industry": "Commercial Construction",
+"location": "Austin, TX",
+"contactName": "Priya Natarajan",
+"email": "priya@lonestarconcrete.example.com",
+"score": 16,
+"scoreTier": "low",
+"status": "new",
+"firstTouchChannel": "LinkedIn",
+"lastTouchChannel": "LinkedIn",
+"isCustomer": false,
+"revenueGenerated": 0,
+"createdAt": "2026-07-12T09:00:00.000Z"
+},
+{
+"id": "LEAD-1004",
+"companyName": "Multi-State Builders Group",
+"industry": "Commercial Construction",
+"location": "Multi-State (FL, GA, NC)",
+"contactName": "Angela Fitzpatrick",
+"email": "afitzpatrick@multistatebuilders.example.com",
+"score": 8,
+"scoreTier": "low",
+"status": "new",
+"firstTouchChannel": "Google Ads",
+"lastTouchChannel": "Google Ads",
+"isCustomer": false,
+"revenueGenerated": 0,
+"createdAt": "2026-07-08T09:00:00.000Z"
+},
+{
+"id": "LEAD-1003",
+"companyName": "Palmetto Home Builders",
+"industry": "Residential Construction",
+"location": "Charleston, SC",
+"contactName": "Renee Cho",
+"email": "renee@palmettohomebuilders.example.com",
+"score": 24,
+"scoreTier": "low",
+"status": "working",
+"firstTouchChannel": "Referral",
+"lastTouchChannel": "Referral",
+"isCustomer": false,
+"revenueGenerated": 0,
+"createdAt": "2026-07-05T09:00:00.000Z"
+},
+{
+"id": "LEAD-1002",
+"companyName": "Summit Grading & Excavation",
+"industry": "Commercial Construction",
+"location": "Denver, CO",
+"contactName": "Tyler Brooks",
+"email": "tyler@summitgrading.example.com",
+"score": 46,
+"scoreTier": "medium",
+"status": "qualified",
+"firstTouchChannel": "Google Organic",
+"lastTouchChannel": "Google Organic",
+"isCustomer": false,
+"revenueGenerated": 0,
+"createdAt": "2026-07-01T09:00:00.000Z"
+},
+{
+"id": "LEAD-1001",
+"companyName": "Coastal Roofing Co.",
+"industry": "Residential Construction",
+"location": "Houston, TX",
+"contactName": "Denise Alvarado",
+"email": "denise@coastalroofing.example.com",
+"score": 78,
+"scoreTier": "high",
+"status": "customer",
+"firstTouchChannel": "LinkedIn",
+"lastTouchChannel": "LinkedIn",
+"isCustomer": true,
+"revenueGenerated": 8500,
+"createdAt": "2026-06-27T09:00:00.000Z"
+},
+{
+"id": "LEAD-1000",
+"companyName": "ABC Construction",
+"industry": "Commercial Construction",
+"location": "Tampa, FL",
+"contactName": "Marcus Webb",
+"email": "marcus.webb@abcconstruction.example.com",
+"score": 83,
+"scoreTier": "high",
+"status": "customer",
+"firstTouchChannel": "Google Ads",
+"lastTouchChannel": "Google Ads",
+"isCustomer": true,
+"revenueGenerated": 15000,
+"createdAt": "2026-06-24T09:00:00.000Z"
+}
+],
+"leadDetails": {
+"LEAD-1005": {
+"id": "LEAD-1005",
+"createdAt": "2026-07-12T09:00:00.000Z",
+"updatedAt": "2026-07-12T09:00:00.000Z",
+"companyName": "Lone Star Concrete Works",
+"industry": "Commercial Construction",
+"location": "Austin, TX",
+"website": "https://lonestarconcrete.example.com",
+"companySize": "51-200",
+"contactName": "Priya Natarajan",
+"email": "priya@lonestarconcrete.example.com",
+"phone": "512-555-0184",
+"contactRole": "Safety & Compliance Manager",
+"firstTouchChannel": "LinkedIn",
+"firstTouchCampaign": "Commercial Contractor Awareness",
+"firstTouchAt": "2026-07-12T09:00:00.000Z",
+"lastTouchChannel": "LinkedIn",
+"lastTouchCampaign": "Commercial Contractor Awareness",
+"lastTouchAt": "2026-07-13T10:00:00.000Z",
+"campaigns": [
+"Commercial Contractor Awareness"
+],
+"pagesVisited": [
+"/solutions/commercial-contractors"
+],
+"contentConsumed": [],
+"callCount": 0,
+"emailCount": 1,
+"score": 16,
+"scoreTier": "low",
+"scoreReason": "Top signals: Email engagement (1); Website activity",
+"recommendedAction": "Continue monitoring",
+"qualified": false,
+"salesAccepted": false,
+"isCustomer": false,
+"customerId": null,
+"revenueGenerated": 0,
+"status": "new",
+"events": [
+{
+"id": "EVT-1023",
+"eventType": "website_visit",
+"source": "linkedin",
+"campaign": "Commercial Contractor Awareness",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-12T09:00:00.000Z",
+"metadata": {
+"page": "/solutions/commercial-contractors"
+}
+},
+{
+"id": "EVT-1024",
+"eventType": "email_click",
+"source": "email_nurture",
+"campaign": "Commercial Contractor Awareness",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-13T10:00:00.000Z",
+"metadata": {
+"emailName": "Compliance Tips Newsletter"
+}
+}
+],
+"attribution": []
+},
+"LEAD-1004": {
+"id": "LEAD-1004",
+"createdAt": "2026-07-08T09:00:00.000Z",
+"updatedAt": "2026-07-08T09:00:00.000Z",
+"companyName": "Multi-State Builders Group",
+"industry": "Commercial Construction",
+"location": "Multi-State (FL, GA, NC)",
+"website": "https://multistatebuilders.example.com",
+"companySize": "201-500",
+"contactName": "Angela Fitzpatrick",
+"email": "afitzpatrick@multistatebuilders.example.com",
+"phone": "404-555-0129",
+"contactRole": "Director of Compliance",
+"firstTouchChannel": "Google Ads",
+"firstTouchCampaign": "Multi-State Expansion",
+"firstTouchAt": "2026-07-08T09:00:00.000Z",
+"lastTouchChannel": "Google Ads",
+"lastTouchCampaign": "Multi-State Expansion",
+"lastTouchAt": "2026-07-08T09:00:00.000Z",
+"campaigns": [
+"Multi-State Expansion"
+],
+"pagesVisited": [
+"/solutions/multi-state-compliance"
+],
+"contentConsumed": [],
+"callCount": 0,
+"emailCount": 0,
+"score": 8,
+"scoreTier": "low",
+"scoreReason": "Top signals: Website activity",
+"recommendedAction": "Continue monitoring",
+"qualified": false,
+"salesAccepted": false,
+"isCustomer": false,
+"customerId": null,
+"revenueGenerated": 0,
+"status": "new",
+"events": [
+{
+"id": "EVT-1022",
+"eventType": "website_visit",
+"source": "google_search",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-07-08T09:00:00.000Z",
+"metadata": {
+"page": "/solutions/multi-state-compliance"
+}
+}
+],
+"attribution": []
+},
+"LEAD-1003": {
+"id": "LEAD-1003",
+"createdAt": "2026-07-05T09:00:00.000Z",
+"updatedAt": "2026-07-05T09:00:00.000Z",
+"companyName": "Palmetto Home Builders",
+"industry": "Residential Construction",
+"location": "Charleston, SC",
+"website": "https://palmettohomebuilders.example.com",
+"companySize": "1-10",
+"contactName": "Renee Cho",
+"email": "renee@palmettohomebuilders.example.com",
+"phone": "843-555-0163",
+"contactRole": "Principal",
+"firstTouchChannel": "Referral",
+"firstTouchCampaign": "Referral Program",
+"firstTouchAt": "2026-07-05T09:00:00.000Z",
+"lastTouchChannel": "Referral",
+"lastTouchCampaign": "Referral Program",
+"lastTouchAt": "2026-07-09T11:00:00.000Z",
+"campaigns": [
+"Referral Program"
+],
+"pagesVisited": [
+"/solutions/residential-contractors"
+],
+"contentConsumed": [
+"Residential Permitting Checklist"
+],
+"callCount": 0,
+"emailCount": 1,
+"score": 24,
+"scoreTier": "low",
+"scoreReason": "Top signals: Content download; Email engagement (1); Website activity",
+"recommendedAction": "Continue monitoring",
+"qualified": false,
+"salesAccepted": false,
+"isCustomer": false,
+"customerId": null,
+"revenueGenerated": 0,
+"status": "working",
+"events": [
+{
+"id": "EVT-1019",
+"eventType": "website_visit",
+"source": "referral",
+"campaign": "Referral Program",
+"channel": "Referral",
+"occurredAt": "2026-07-05T09:00:00.000Z",
+"metadata": {
+"page": "/solutions/residential-contractors"
+}
+},
+{
+"id": "EVT-1020",
+"eventType": "email_open",
+"source": "email_nurture",
+"campaign": "Referral Program",
+"channel": "Referral",
+"occurredAt": "2026-07-07T10:00:00.000Z",
+"metadata": {
+"emailName": "Welcome Series #1"
+}
+},
+{
+"id": "EVT-1021",
+"eventType": "content_download",
+"source": "referral",
+"campaign": "Referral Program",
+"channel": "Referral",
+"occurredAt": "2026-07-09T11:00:00.000Z",
+"metadata": {
+"contentName": "Residential Permitting Checklist"
+}
+}
+],
+"attribution": []
+},
+"LEAD-1002": {
+"id": "LEAD-1002",
+"createdAt": "2026-07-01T09:00:00.000Z",
+"updatedAt": "2026-07-01T09:00:00.000Z",
+"companyName": "Summit Grading & Excavation",
+"industry": "Commercial Construction",
+"location": "Denver, CO",
+"website": "https://summitgrading.example.com",
+"companySize": "11-50",
+"contactName": "Tyler Brooks",
+"email": "tyler@summitgrading.example.com",
+"phone": "303-555-0117",
+"contactRole": "General Manager",
+"firstTouchChannel": "Google Organic",
+"firstTouchCampaign": "Commercial Contractor Awareness",
+"firstTouchAt": "2026-07-01T09:00:00.000Z",
+"lastTouchChannel": "Google Organic",
+"lastTouchCampaign": "Commercial Contractor Awareness",
+"lastTouchAt": "2026-07-09T14:00:00.000Z",
+"campaigns": [
+"Commercial Contractor Awareness"
+],
+"pagesVisited": [
+"/solutions/commercial-contractors",
+"/pricing"
+],
+"contentConsumed": [
+"Excavation Compliance Guide"
+],
+"callCount": 1,
+"emailCount": 0,
+"score": 46,
+"scoreTier": "medium",
+"scoreReason": "Top signals: Phone call engagement; Content download; Website activity",
+"recommendedAction": "Nurture with targeted content",
+"qualified": true,
+"salesAccepted": false,
+"isCustomer": false,
+"customerId": null,
+"revenueGenerated": 0,
+"status": "qualified",
+"events": [
+{
+"id": "EVT-1015",
+"eventType": "website_visit",
+"source": "google_organic",
+"campaign": "Commercial Contractor Awareness",
+"channel": "Google Organic",
+"occurredAt": "2026-07-01T09:00:00.000Z",
+"metadata": {
+"page": "/solutions/commercial-contractors"
+}
+},
+{
+"id": "EVT-1016",
+"eventType": "website_visit",
+"source": "google_organic",
+"campaign": "Commercial Contractor Awareness",
+"channel": "Google Organic",
+"occurredAt": "2026-07-03T11:00:00.000Z",
+"metadata": {
+"page": "/pricing"
+}
+},
+{
+"id": "EVT-1017",
+"eventType": "content_download",
+"source": "google_organic",
+"campaign": "Commercial Contractor Awareness",
+"channel": "Google Organic",
+"occurredAt": "2026-07-05T13:00:00.000Z",
+"metadata": {
+"contentName": "Excavation Compliance Guide"
+}
+},
+{
+"id": "EVT-1018",
+"eventType": "phone_call",
+"source": "callrail",
+"campaign": "Commercial Contractor Awareness",
+"channel": "Google Organic",
+"occurredAt": "2026-07-09T14:00:00.000Z",
+"metadata": {
+"durationSeconds": 300
+}
+}
+],
+"attribution": []
+},
+"LEAD-1001": {
+"id": "LEAD-1001",
+"createdAt": "2026-06-27T09:00:00.000Z",
+"updatedAt": "2026-06-27T09:00:00.000Z",
+"companyName": "Coastal Roofing Co.",
+"industry": "Residential Construction",
+"location": "Houston, TX",
+"website": "https://coastalroofing.example.com",
+"companySize": "11-50",
+"contactName": "Denise Alvarado",
+"email": "denise@coastalroofing.example.com",
+"phone": "713-555-0198",
+"contactRole": "Owner",
+"firstTouchChannel": "LinkedIn",
+"firstTouchCampaign": "Residential Contractor Growth",
+"firstTouchAt": "2026-06-27T09:00:00.000Z",
+"lastTouchChannel": "LinkedIn",
+"lastTouchCampaign": "Residential Contractor Growth",
+"lastTouchAt": "2026-07-11T11:00:00.000Z",
+"campaigns": [
+"Residential Contractor Growth"
+],
+"pagesVisited": [
+"/solutions/residential-contractors"
+],
+"contentConsumed": [
+"Residential Permitting Checklist",
+"Roofing Safety Compliance Kit"
+],
+"callCount": 1,
+"emailCount": 0,
+"score": 78,
+"scoreTier": "high",
+"scoreReason": "Top signals: Requested consultation/meeting; Phone call engagement; Content engagement (2 downloads)",
+"recommendedAction": "Route to sales now",
+"qualified": true,
+"salesAccepted": true,
+"isCustomer": true,
+"customerId": "CUST-1001",
+"revenueGenerated": 8500,
+"status": "customer",
+"events": [
+{
+"id": "EVT-1008",
+"eventType": "website_visit",
+"source": "linkedin",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-06-27T09:00:00.000Z",
+"metadata": {
+"page": "/solutions/residential-contractors"
+}
+},
+{
+"id": "EVT-1009",
+"eventType": "content_download",
+"source": "linkedin",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-06-29T12:00:00.000Z",
+"metadata": {
+"contentName": "Residential Permitting Checklist"
+}
+},
+{
+"id": "EVT-1010",
+"eventType": "content_download",
+"source": "linkedin",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-01T10:00:00.000Z",
+"metadata": {
+"contentName": "Roofing Safety Compliance Kit"
+}
+},
+{
+"id": "EVT-1011",
+"eventType": "phone_call",
+"source": "ringcentral",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-04T14:00:00.000Z",
+"metadata": {
+"durationSeconds": 480
+}
+},
+{
+"id": "EVT-1012",
+"eventType": "meeting_request",
+"source": "sales_team",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-07T15:00:00.000Z",
+"metadata": {
+"consultation": true
+}
+},
+{
+"id": "EVT-1013",
+"eventType": "sales_conversion",
+"source": "sales_team",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-11T10:00:00.000Z",
+"metadata": {
+"dealSize": 8500
+}
+},
+{
+"id": "EVT-1014",
+"eventType": "customer_purchase",
+"source": "sales_team",
+"campaign": "Residential Contractor Growth",
+"channel": "LinkedIn",
+"occurredAt": "2026-07-11T11:00:00.000Z",
+"metadata": {
+"dealSize": 8500
+}
+}
+],
+"attribution": [
+{
+"id": "ATTR-1003",
+"conversionId": "CONV-1001",
+"leadId": "LEAD-1001",
+"model": "first_touch",
+"channel": "LinkedIn",
+"campaign": "Residential Contractor Growth",
+"weight": 1,
+"attributedAmount": 8500,
+"computedAt": "2026-07-15T01:58:33.197Z"
+},
+{
+"id": "ATTR-1004",
+"conversionId": "CONV-1001",
+"leadId": "LEAD-1001",
+"model": "last_touch",
+"channel": "LinkedIn",
+"campaign": "Residential Contractor Growth",
+"weight": 1,
+"attributedAmount": 8500,
+"computedAt": "2026-07-15T01:58:33.197Z"
+},
+{
+"id": "ATTR-1005",
+"conversionId": "CONV-1001",
+"leadId": "LEAD-1001",
+"model": "linear",
+"channel": "LinkedIn",
+"campaign": "Residential Contractor Growth",
+"weight": 1,
+"attributedAmount": 8500,
+"computedAt": "2026-07-15T01:58:33.197Z"
+}
+]
+},
+"LEAD-1000": {
+"id": "LEAD-1000",
+"createdAt": "2026-06-24T09:00:00.000Z",
+"updatedAt": "2026-06-24T09:00:00.000Z",
+"companyName": "ABC Construction",
+"industry": "Commercial Construction",
+"location": "Tampa, FL",
+"website": "https://abcconstruction.example.com",
+"companySize": "51-200",
+"contactName": "Marcus Webb",
+"email": "marcus.webb@abcconstruction.example.com",
+"phone": "813-555-0142",
+"contactRole": "VP of Operations",
+"firstTouchChannel": "Google Ads",
+"firstTouchCampaign": "Multi-State Expansion",
+"firstTouchAt": "2026-06-24T09:00:00.000Z",
+"lastTouchChannel": "Google Ads",
+"lastTouchCampaign": "Multi-State Expansion",
+"lastTouchAt": "2026-07-10T11:00:00.000Z",
+"campaigns": [
+"Multi-State Expansion"
+],
+"pagesVisited": [
+"/solutions/multi-state-compliance",
+"/pricing",
+"/case-studies/commercial-contractors"
+],
+"contentConsumed": [
+"Multi-State Compliance Guide"
+],
+"callCount": 1,
+"emailCount": 0,
+"score": 83,
+"scoreTier": "high",
+"scoreReason": "Top signals: Requested consultation/meeting; Phone call engagement; Multiple website visits (3)",
+"recommendedAction": "Route to sales now",
+"qualified": true,
+"salesAccepted": true,
+"isCustomer": true,
+"customerId": "CUST-1000",
+"revenueGenerated": 15000,
+"status": "customer",
+"events": [
+{
+"id": "EVT-1000",
+"eventType": "website_visit",
+"source": "google_search",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-06-24T09:00:00.000Z",
+"metadata": {
+"page": "/solutions/multi-state-compliance"
+}
+},
+{
+"id": "EVT-1001",
+"eventType": "content_download",
+"source": "google_search",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-06-25T11:00:00.000Z",
+"metadata": {
+"contentName": "Multi-State Compliance Guide"
+}
+},
+{
+"id": "EVT-1002",
+"eventType": "website_visit",
+"source": "direct",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-06-27T10:00:00.000Z",
+"metadata": {
+"page": "/pricing"
+}
+},
+{
+"id": "EVT-1003",
+"eventType": "website_visit",
+"source": "direct",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-06-30T14:00:00.000Z",
+"metadata": {
+"page": "/case-studies/commercial-contractors"
+}
+},
+{
+"id": "EVT-1004",
+"eventType": "phone_call",
+"source": "callrail",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-07-03T13:00:00.000Z",
+"metadata": {
+"durationSeconds": 640
+}
+},
+{
+"id": "EVT-1005",
+"eventType": "meeting_request",
+"source": "sales_team",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-07-06T15:00:00.000Z",
+"metadata": {
+"meetingType": "compliance_consultation",
+"consultation": true
+}
+},
+{
+"id": "EVT-1006",
+"eventType": "sales_conversion",
+"source": "sales_team",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-07-10T10:00:00.000Z",
+"metadata": {
+"dealSize": 15000
+}
+},
+{
+"id": "EVT-1007",
+"eventType": "customer_purchase",
+"source": "sales_team",
+"campaign": "Multi-State Expansion",
+"channel": "Google Ads",
+"occurredAt": "2026-07-10T11:00:00.000Z",
+"metadata": {
+"dealSize": 15000
+}
+}
+],
+"attribution": [
+{
+"id": "ATTR-1000",
+"conversionId": "CONV-1000",
+"leadId": "LEAD-1000",
+"model": "first_touch",
+"channel": "Google Ads",
+"campaign": "Multi-State Expansion",
+"weight": 1,
+"attributedAmount": 15000,
+"computedAt": "2026-07-15T01:58:33.196Z"
+},
+{
+"id": "ATTR-1001",
+"conversionId": "CONV-1000",
+"leadId": "LEAD-1000",
+"model": "last_touch",
+"channel": "Google Ads",
+"campaign": "Multi-State Expansion",
+"weight": 1,
+"attributedAmount": 15000,
+"computedAt": "2026-07-15T01:58:33.196Z"
+},
+{
+"id": "ATTR-1002",
+"conversionId": "CONV-1000",
+"leadId": "LEAD-1000",
+"model": "linear",
+"channel": "Google Ads",
+"campaign": "Multi-State Expansion",
+"weight": 1,
+"attributedAmount": 15000,
+"computedAt": "2026-07-15T01:58:33.196Z"
+}
+]
+}
+},
+"leadAttribution": {
+"LEAD-1005": [],
+"LEAD-1004": [],
+"LEAD-1003": [],
+"LEAD-1002": [],
+"LEAD-1001": [
+{
+"id": "ATTR-1003",
+"conversionId": "CONV-1001",
+"leadId": "LEAD-1001",
+"model": "first_touch",
+"channel": "LinkedIn",
+"campaign": "Residential Contractor Growth",
+"weight": 1,
+"attributedAmount": 8500,
+"computedAt": "2026-07-15T01:58:33.197Z"
+},
+{
+"id": "ATTR-1004",
+"conversionId": "CONV-1001",
+"leadId": "LEAD-1001",
+"model": "last_touch",
+"channel": "LinkedIn",
+"campaign": "Residential Contractor Growth",
+"weight": 1,
+"attributedAmount": 8500,
+"computedAt": "2026-07-15T01:58:33.197Z"
+},
+{
+"id": "ATTR-1005",
+"conversionId": "CONV-1001",
+"leadId": "LEAD-1001",
+"model": "linear",
+"channel": "LinkedIn",
+"campaign": "Residential Contractor Growth",
+"weight": 1,
+"attributedAmount": 8500,
+"computedAt": "2026-07-15T01:58:33.197Z"
+}
+],
+"LEAD-1000": [
+{
+"id": "ATTR-1000",
+"conversionId": "CONV-1000",
+"leadId": "LEAD-1000",
+"model": "first_touch",
+"channel": "Google Ads",
+"campaign": "Multi-State Expansion",
+"weight": 1,
+"attributedAmount": 15000,
+"computedAt": "2026-07-15T01:58:33.196Z"
+},
+{
+"id": "ATTR-1001",
+"conversionId": "CONV-1000",
+"leadId": "LEAD-1000",
+"model": "last_touch",
+"channel": "Google Ads",
+"campaign": "Multi-State Expansion",
+"weight": 1,
+"attributedAmount": 15000,
+"computedAt": "2026-07-15T01:58:33.196Z"
+},
+{
+"id": "ATTR-1002",
+"conversionId": "CONV-1000",
+"leadId": "LEAD-1000",
+"model": "linear",
+"channel": "Google Ads",
+"campaign": "Multi-State Expansion",
+"weight": 1,
+"attributedAmount": 15000,
+"computedAt": "2026-07-15T01:58:33.196Z"
+}
+]
+},
+"campaignDetails": {
+"summit": {
+"campaignId": "summit",
+"objective": "Drive enterprise summit registrations and SQLs",
+"audience": "Enterprise Decision Makers, Existing Customers",
+"service": "Enterprise Platform",
+"industry": "B2B SaaS",
+"location": "National",
+"budget": 45000,
+"ownerName": "Sarah J.",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Email",
+"LinkedIn"
+]
+},
+"nexus": {
+"campaignId": "nexus",
+"objective": "Launch Nexus 2.0 and drive product page visits",
+"audience": "Tech Early Adopters, Industry Analysts",
+"service": "Nexus 2.0",
+"industry": "Consumer Tech",
+"location": "National",
+"budget": 120000,
+"ownerName": "Mike T.",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Display",
+"Twitter",
+"PR"
+]
+},
+"partner": {
+"campaignId": "partner",
+"objective": "Co-host partner webinars and share pipeline",
+"audience": "Partner Audiences, Mid-Market Buyers",
+"service": "Partner Program",
+"industry": "B2B SaaS",
+"location": "National",
+"budget": 25000,
+"ownerName": "Elena R.",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Webinar",
+"Email"
+]
+},
+"aurora": {
+"campaignId": "aurora",
+"objective": "Launch Aurora Headphones across social + search",
+"audience": "Audiophile Gen-Z, Commuting Professionals, Fitness Enthusiasts",
+"service": "Aurora Headphones",
+"industry": "Consumer Hardware",
+"location": "National",
+"budget": 150000,
+"ownerName": "Sarah Jenkins",
+"leadsGenerated": 0,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Instagram",
+"TikTok",
+"YouTube",
+"Email",
+"Paid Search"
+]
+},
+"Multi-State Expansion": {
+"campaignId": "Multi-State Expansion",
+"objective": "Generate compliance-driven leads from multi-state commercial contractors",
+"audience": "Commercial contractors expanding across state lines",
+"service": "Multi-State Compliance Program",
+"industry": "Commercial Construction",
+"location": "FL, GA, NC, TX",
+"budget": 22000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 2,
+"qualifiedLeads": 1,
+"customers": 1,
+"revenue": 15000,
+"roi": -0.3181818,
+"channels": [
+"Google Ads"
+]
+},
+"Residential Contractor Growth": {
+"campaignId": "Residential Contractor Growth",
+"objective": "Grow pipeline among residential contractors via LinkedIn",
+"audience": "Residential contractor owners and GMs",
+"service": "Residential Compliance Program",
+"industry": "Residential Construction",
+"location": "TX, SC, FL",
+"budget": 14000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 1,
+"qualifiedLeads": 1,
+"customers": 1,
+"revenue": 8500,
+"roi": -0.39285713,
+"channels": [
+"LinkedIn"
+]
+},
+"Commercial Contractor Awareness": {
+"campaignId": "Commercial Contractor Awareness",
+"objective": "Build top-of-funnel awareness with commercial contractors",
+"audience": "Commercial contractor operations and compliance leads",
+"service": "Compliance Awareness Program",
+"industry": "Commercial Construction",
+"location": "CO, TX",
+"budget": 9000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 2,
+"qualifiedLeads": 1,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Google Organic",
+"LinkedIn"
+]
+},
+"Referral Program": {
+"campaignId": "Referral Program",
+"objective": "Convert warm referral introductions into qualified pipeline",
+"audience": "Referred residential contractors",
+"service": "Referral Compliance Program",
+"industry": "Residential Construction",
+"location": "SC",
+"budget": 4000,
+"ownerName": "CCA Growth Team",
+"leadsGenerated": 1,
+"qualifiedLeads": 0,
+"customers": 0,
+"revenue": 0,
+"roi": null,
+"channels": [
+"Referral"
+]
+}
+},
+"integrations": [
+{
+"id": "INTG-105",
+"providerKey": "callrail",
+"category": "communication",
+"displayName": "CallRail",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": "2026-07-15T04:52:19.721Z",
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "api_key",
+"requiredCredentials": [
+"CALLRAIL_API_KEY"
+],
+"dataAvailable": [
+"Calls",
+"Call duration",
+"Call outcome",
+"Tracking number",
+"Recording reference"
+],
+"defaultSyncFrequency": "hourly",
+"lastSync": {
+"id": "SYNC-1003",
+"status": "success",
+"startedAt": "2026-07-15T04:52:19.709Z",
+"completedAt": "2026-07-15T04:52:19.720Z",
+"recordsProcessed": 3
+},
+"dataImported": 3,
+"errorCount": 0
+},
+{
+"id": "INTG-107",
+"providerKey": "email",
+"category": "email",
+"displayName": "Email Marketing",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": null,
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "api_key",
+"requiredCredentials": [
+"EMAIL_PROVIDER_API_KEY"
+],
+"dataAvailable": [
+"Opens",
+"Clicks",
+"Bounces",
+"Unsubscribes"
+],
+"defaultSyncFrequency": "hourly",
+"lastSync": null,
+"dataImported": 0,
+"errorCount": 0
+},
+{
+"id": "INTG-100",
+"providerKey": "google_ads",
+"category": "advertising",
+"displayName": "Google Ads",
+"status": "error",
+"config": {},
+"credentialsReference": "GOOGLE_ADS_OAUTH_TOKEN",
+"lastSyncedAt": "2026-07-15T04:52:04.051Z",
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "oauth2",
+"requiredCredentials": [
+"GOOGLE_ADS_CUSTOMER_ID",
+"GOOGLE_ADS_OAUTH_TOKEN"
+],
+"dataAvailable": [
+"Campaign spend",
+"Impressions",
+"Clicks",
+"Conversions",
+"Keywords",
+"Search terms"
+],
+"defaultSyncFrequency": "daily",
+"lastSync": {
+"id": "SYNC-1001",
+"status": "success",
+"startedAt": "2026-07-15T04:52:04.048Z",
+"completedAt": "2026-07-15T04:52:04.050Z",
+"recordsProcessed": 0
+},
+"dataImported": 2,
+"errorCount": 0
+},
+{
+"id": "INTG-103",
+"providerKey": "ga4",
+"category": "analytics",
+"displayName": "Google Analytics 4",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": null,
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "oauth2",
+"requiredCredentials": [
+"GA4_PROPERTY_ID",
+"GA4_OAUTH_TOKEN"
+],
+"dataAvailable": [
+"Sessions",
+"Users",
+"Traffic source",
+"Landing pages",
+"Conversions"
+],
+"defaultSyncFrequency": "daily",
+"lastSync": null,
+"dataImported": 0,
+"errorCount": 0
+},
+{
+"id": "INTG-104",
+"providerKey": "search_console",
+"category": "analytics",
+"displayName": "Google Search Console",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": null,
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "oauth2",
+"requiredCredentials": [
+"SEARCH_CONSOLE_OAUTH_TOKEN"
+],
+"dataAvailable": [
+"Search queries",
+"Impressions",
+"Clicks",
+"Average position"
+],
+"defaultSyncFrequency": "daily",
+"lastSync": null,
+"dataImported": 0,
+"errorCount": 0
+},
+{
+"id": "INTG-102",
+"providerKey": "linkedin_ads",
+"category": "advertising",
+"displayName": "LinkedIn Ads",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": null,
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "oauth2",
+"requiredCredentials": [
+"LINKEDIN_ACCESS_TOKEN"
+],
+"dataAvailable": [
+"Campaign spend",
+"Impressions",
+"Clicks",
+"Enterprise targeting",
+"Lead gen forms"
+],
+"defaultSyncFrequency": "daily",
+"lastSync": null,
+"dataImported": 0,
+"errorCount": 0
+},
+{
+"id": "INTG-101",
+"providerKey": "meta_ads",
+"category": "advertising",
+"displayName": "Meta Ads",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": null,
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "oauth2",
+"requiredCredentials": [
+"META_ACCESS_TOKEN",
+"META_AD_ACCOUNT_ID"
+],
+"dataAvailable": [
+"Campaign spend",
+"Impressions",
+"Clicks",
+"Audience/geo",
+"Lead forms"
+],
+"defaultSyncFrequency": "daily",
+"lastSync": null,
+"dataImported": 0,
+"errorCount": 0
+},
+{
+"id": "INTG-106",
+"providerKey": "ringcentral",
+"category": "communication",
+"displayName": "RingCentral",
+"status": "available",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": null,
+"createdAt": "2026-07-15T04:51:26.419Z",
+"connectorAvailable": true,
+"authMethod": "oauth2",
+"requiredCredentials": [
+"RINGCENTRAL_OAUTH_TOKEN"
+],
+"dataAvailable": [
+"Calls",
+"SMS",
+"Response time"
+],
+"defaultSyncFrequency": "hourly",
+"lastSync": null,
+"dataImported": 0,
+"errorCount": 0
+},
+{
+"id": "INTG-108",
+"providerKey": "website",
+"category": "analytics",
+"displayName": "Website",
+"status": "connected",
+"config": {},
+"credentialsReference": null,
+"lastSyncedAt": "2026-07-15T04:52:04.101Z",
+"createdAt": "2026-07-15T04:52:04.089Z",
+"connectorAvailable": true,
+"authMethod": "webhook",
+"requiredCredentials": [],
+"dataAvailable": [
+"Page views",
+"Landing page views",
+"Form submissions",
+"Content downloads",
+"Consultation requests",
+"Demo requests"
+],
+"defaultSyncFrequency": "realtime",
+"lastSync": {
+"id": "SYNC-1002",
+"status": "success",
+"startedAt": "2026-07-15T04:52:04.091Z",
+"completedAt": "2026-07-15T04:52:04.100Z",
+"recordsProcessed": 1
+},
+"dataImported": 1,
+"errorCount": 0
+}
+],
+"externalEvents": [
+{
+"id": "EXT-1003",
+"provider": "callrail",
+"externalId": "CR-CALL-90142",
+"eventType": "unknown",
+"payload": {
+"source": "google_ads",
+"campaign": "contractor-license-search",
+"duration": 312,
+"externalId": "CR-CALL-90142",
+"occurredAt": "2026-07-10T16:05:00Z",
+"callOutcome": "qualified",
+"trackingNumber": "+1-800-555-0142",
+"callerNumberRef": "caller-90142",
+"recordingUrlRef": "callrail://recording/90142"
+},
+"processedAt": "2026-07-15T04:52:19.714Z",
+"marketingEventId": "EVT-1028",
+"createdAt": "2026-07-15T04:52:19.709Z"
+},
+{
+"id": "EXT-1004",
+"provider": "callrail",
+"externalId": "CR-CALL-90177",
+"eventType": "unknown",
+"payload": {
+"source": "google_ads",
+"campaign": "multi-state-licensing-search",
+"duration": 94,
+"externalId": "CR-CALL-90177",
+"occurredAt": "2026-07-11T10:22:00Z",
+"callOutcome": "received",
+"trackingNumber": "+1-800-555-0142",
+"callerNumberRef": "caller-90177",
+"recordingUrlRef": "callrail://recording/90177"
+},
+"processedAt": "2026-07-15T04:52:19.717Z",
+"marketingEventId": "EVT-1029",
+"createdAt": "2026-07-15T04:52:19.709Z"
+},
+{
+"id": "EXT-1005",
+"provider": "callrail",
+"externalId": "CR-CALL-90201",
+"eventType": "unknown",
+"payload": {
+"source": "google_ads",
+"campaign": "multi-state-licensing-search",
+"duration": 501,
+"externalId": "CR-CALL-90201",
+"occurredAt": "2026-07-11T13:47:00Z",
+"callOutcome": "converted",
+"trackingNumber": "+1-800-555-0198",
+"callerNumberRef": "caller-90201",
+"recordingUrlRef": "callrail://recording/90201"
+},
+"processedAt": "2026-07-15T04:52:19.720Z",
+"marketingEventId": "EVT-1030",
+"createdAt": "2026-07-15T04:52:19.709Z"
+},
+{
+"id": "EXT-1002",
+"provider": "website",
+"externalId": "WEB-1784091124091-9884",
+"eventType": "form_submission",
+"payload": {
+"url": "https://cca.com/compliance-audit",
+"page": "/compliance-audit",
+"type": "form_submission",
+"email": "newlead@contractor.example",
+"externalId": "WEB-1784091124091-9884"
+},
+"processedAt": "2026-07-15T04:52:04.099Z",
+"marketingEventId": "EVT-1027",
+"createdAt": "2026-07-15T04:52:04.091Z"
+},
+{
+"id": "EXT-1000",
+"provider": "google_ads",
+"externalId": "GADS-CAMP-77213-2026-07-09",
+"eventType": "unknown",
+"payload": {
+"date": "2026-07-09",
+"clicks": 212,
+"keyword": "multi state contractor license",
+"campaignId": "77213",
+"costMicros": 486000000,
+"externalId": "GADS-CAMP-77213-2026-07-09",
+"searchTerm": "how to get a contractor license in another state",
+"conversions": 6,
+"impressions": 4820,
+"campaignName": "Multi-State Contractor Licensing \u2014 Search"
+},
+"processedAt": "2026-07-15T04:51:49.605Z",
+"marketingEventId": "EVT-1025",
+"createdAt": "2026-07-15T04:51:49.600Z"
+},
+{
+"id": "EXT-1001",
+"provider": "google_ads",
+"externalId": "GADS-CAMP-77213-2026-07-10",
+"eventType": "unknown",
+"payload": {
+"date": "2026-07-10",
+"clicks": 244,
+"keyword": "contractor license reciprocity",
+"campaignId": "77213",
+"costMicros": 527000000,
+"externalId": "GADS-CAMP-77213-2026-07-10",
+"searchTerm": "contractor license reciprocity states",
+"conversions": 8,
+"impressions": 5110,
+"campaignName": "Multi-State Contractor Licensing \u2014 Search"
+},
+"processedAt": "2026-07-15T04:51:49.611Z",
+"marketingEventId": "EVT-1026",
+"createdAt": "2026-07-15T04:51:49.600Z"
+}
+]
+}
