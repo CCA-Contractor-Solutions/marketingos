@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { safeSession } from "@/lib/safe-storage";
 import { AppLayout } from "@/components/AppLayout";
 import { WelcomeWalkthrough } from "@/components/WelcomeWalkthrough";
 import {
@@ -101,7 +100,9 @@ export default function Welcome() {
   const videoRef = useRef<HTMLDivElement>(null);
 
   const startTour = () => {
-    safeSession.set("start-tour", "1");
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("start-tour", "1");
+    }
     setLocation("/");
   };
 

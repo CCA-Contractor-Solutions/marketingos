@@ -11,7 +11,6 @@
 // ---------------------------------------------------------------------------
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { safeLocal } from "@/lib/safe-storage";
 
 export type Role = "executive" | "marketing_director" | "marketing_team" | "analyst";
 
@@ -111,12 +110,12 @@ const RoleContext = createContext<RoleContextValue | null>(null);
 export function RoleProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<Role>(() => {
     if (typeof window === "undefined") return DEFAULT_ROLE;
-    const stored = safeLocal.get(STORAGE_KEY);
+    const stored = window.localStorage.getItem(STORAGE_KEY);
     return isRole(stored) ? stored : DEFAULT_ROLE;
   });
 
   useEffect(() => {
-    safeLocal.set(STORAGE_KEY, role);
+    window.localStorage.setItem(STORAGE_KEY, role);
   }, [role]);
 
   const setRole = useCallback((next: Role) => {
