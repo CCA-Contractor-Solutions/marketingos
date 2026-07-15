@@ -43,10 +43,15 @@ import {
   Rocket,
   PenLine,
   Gauge,
+  LineChart as LineChartIcon,
+  Users,
+  Target,
+  Lightbulb as LightbulbIcon,
 } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { DemoBadge } from "@/components/DemoBadge";
 import { Tour, TOUR_STEPS } from "@/components/Tour";
+import { RoleSwitcher } from "@/components/RoleSwitcher";
 
 export type NavKey =
   | "welcome"
@@ -56,7 +61,11 @@ export type NavKey =
   | "assistant"
   | "collaboration"
   | "analytics"
-  | "brand";
+  | "brand"
+  | "intelligence"
+  | "leads"
+  | "campaign-ops"
+  | "opportunities";
 
 const NAV: {
   key: NavKey;
@@ -80,6 +89,18 @@ const NAV: {
   // /brand route still exists in App.tsx. Restore this entry once the feature
   // ships. See docs/decisions.md (open decision: "Whether Brand Memory is in scope").
   // { key: "brand", label: "Brand Memory", href: "/brand", icon: BookMarked },
+];
+
+const GROWTH_INTEL_NAV: {
+  key: NavKey;
+  label: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+}[] = [
+  { key: "intelligence", label: "Intelligence", href: "/intelligence", icon: LineChartIcon },
+  { key: "leads", label: "Leads", href: "/leads", icon: Users },
+  { key: "campaign-ops", label: "Campaign Ops", href: "/campaign-ops", icon: Target },
+  { key: "opportunities", label: "Opportunities", href: "/opportunities", icon: LightbulbIcon },
 ];
 
 type ModuleItem = { id: string; label: string; icon: typeof LayoutDashboard };
@@ -253,6 +274,31 @@ function SidebarContent({
         <div className={SECTION_LABEL}>Workspace</div>
         <div className="flex flex-col gap-0.5">
           {NAV.map((item) => {
+            const on = item.key === active;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                onClick={onNavigate}
+                className="flex items-center gap-3 rounded-xl px-2.5 py-2 text-[13.5px] font-medium transition-all"
+                style={{
+                  color: on ? "#fff" : "rgba(255,255,255,0.6)",
+                  background: on ? "rgba(255,255,255,0.1)" : "transparent",
+                  boxShadow: on ? "inset 0 0 0 1px rgba(255,255,255,0.1)" : "none",
+                }}
+              >
+                <Icon size={18} strokeWidth={on ? 2.4 : 2} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Growth Intelligence (Phase 3) */}
+        <div className={SECTION_LABEL}>Growth Intelligence</div>
+        <div className="flex flex-col gap-0.5">
+          {GROWTH_INTEL_NAV.map((item) => {
             const on = item.key === active;
             const Icon = item.icon;
             return (
@@ -506,6 +552,7 @@ export function AppLayout({
 
           <div className="ml-auto flex items-center gap-3">
             <DemoBadge className="hidden sm:inline-flex" />
+            <RoleSwitcher />
             {actions}
 
             <button
