@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { eq } from "drizzle-orm";
 import { db, revenueAttributionTable, type RevenueAttributionRow } from "@workspace/db";
+import { bandForAverage } from "../lib/intelligence/governance";
 
 const router: IRouter = Router();
 
@@ -15,6 +16,9 @@ function toAttribution(row: RevenueAttributionRow) {
     weight: row.weight,
     attributedAmount: row.attributedAmount,
     computedAt: row.computedAt,
+    confidence: row.confidence,
+    confidenceBand: row.confidenceBand,
+    confidenceReason: row.confidenceReason,
   };
 }
 
@@ -45,10 +49,15 @@ router.get("/attribution/summary", async (_req, res) => {
       .sort((a, b) => b.revenue - a.revenue);
   }
 
+  // Phase 4.5 -- governance: average attribution confidence across all rows.
+  const avgConfidence = rows.length > 0 ? rows.reduce((sum, r) => sum + r.confidence, 0) / rows.length : 0;
+
   res.json({
     byModel: toArray(byModel, "model"),
     byChannel: toArray(byChannel, "channel"),
     byCampaign: toArray(byCampaign, "campaign"),
+    avgConfidence,
+    avgConfidenceBand: bandForAverage(avgConfidence),
   });
 });
 

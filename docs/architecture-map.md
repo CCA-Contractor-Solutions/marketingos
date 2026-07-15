@@ -80,6 +80,34 @@ External providers attach at the **Events** edge (inbound activity) and the **Ch
 
 **Implemented in Phase 4:** Website forms, Google Analytics 4, Google Ads, CallRail, RingCentral, Meta Ads, LinkedIn Ads. `search_console` and `email` remain stubs. Every connector is behind the same interface; the core spine is unchanged -- see the External Data Layer section above and [`docs/integrations.md`](./integrations.md).
 
+## Governance layer (Phase 4.5)
+
+A thin **Governance layer** wraps the Intelligence → Recommendations → Revenue
+stages rather than sitting beside them as its own spine stage: every insight
+now carries a **confidence score** and an **audit trail**, computed
+deterministically from the data already flowing through the spine -- no
+predictive/forecasting AI, no autonomous actions, no budget automation, and
+no runtime LLM calls.
+
+- **Confidence:** `lib/intelligence/confidence.ts` (`computeConfidence` +
+  `sourceReliability`) is the single source of truth for "how much should I
+  trust this insight." `routes/recommendations.ts` uses it for every
+  rule-based recommendation; `lib/intelligence/attribution.ts` uses it for
+  every `revenue_attribution` row (per-touch confidence based on volume,
+  source reliability, and time-to-convert). See
+  [`docs/data-governance.md`](./data-governance.md) for the full model.
+- **Audit trail:** the new `recommendation_audit` table (no FK, append-only)
+  records `generated` / `viewed` / `action_created` / `dismissed` /
+  `outcome_recorded` events for each recommendation, so every action taken
+  on an AI insight -- and any outcome recorded against it -- is traceable.
+- **Rollup:** `GET /governance/summary` (in `routes/intelligence-summary.ts`)
+  aggregates confidence bands and actioned/outcome rates for the
+  "Intelligence Governance" panel on the Executive Dashboard.
+
+This governance layer touches **zero new core models** beyond
+`recommendation_audit` -- `ai_recommendations` and `revenue_attribution` are
+extended in place, per the "one model per concept" invariant below.
+
 ## Invariants (do not violate)
 
 1. **One model per concept.** Leads, events, campaigns, channels, conversions, attribution each have exactly one table. Actions reuse `tasks`. Never fork these.
@@ -92,5 +120,7 @@ External providers attach at the **Events** edge (inbound activity) and the **Ch
 
 - **Data model:** `lib/db/src/schema/{marketing,intelligence}.ts`
 - **Intelligence logic:** `artifacts/api-server/src/lib/intelligence/`
+- **Governance logic:** `artifacts/api-server/src/lib/intelligence/{confidence,governance}.ts` (see [`docs/data-governance.md`](./data-governance.md))
 - **API:** `artifacts/api-server/src/routes/` (contracts in `docs/phase-3-api-contracts.md`)
 - **Front-end:** `artifacts/web/src/pages/intel/`, hooks in `src/hooks/useIntel.ts`, client in `src/lib/intel-api.ts`
+- **Governance UI:** `artifacts/web/src/components/intel/{ConfidenceBandPill,RecommendationAuditDialog,GovernancePanel}.tsx`

@@ -1,12 +1,14 @@
 // Module 4 — Opportunity Center. Route: /opportunities
 import { useMemo, useState } from "react";
-import { RefreshCw, TrendingUp, TrendingDown, FileText, Plus } from "lucide-react";
+import { RefreshCw, TrendingUp, TrendingDown, FileText, Plus, History } from "lucide-react";
 import { AppLayout, PageLoading, PageError } from "@/components/AppLayout";
 import { useRecommendations, useGenerateRecommendations } from "@/hooks/useIntel";
 import { useRole } from "@/lib/roles";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CreateActionDialog } from "@/components/intel/CreateActionDialog";
+import { RecommendationAuditDialog } from "@/components/intel/RecommendationAuditDialog";
+import { ConfidenceBandPill, dataBasisWhy } from "@/components/intel/ConfidenceBandPill";
 import type { Recommendation, RecommendationCategory } from "@/lib/intel-types";
 
 type OpportunityGroup = {
@@ -52,6 +54,8 @@ export default function Opportunities() {
 
   const [selectedRecommendation, setSelectedRecommendation] = useState<Recommendation | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [auditRecommendation, setAuditRecommendation] = useState<Recommendation | null>(null);
+  const [auditDialogOpen, setAuditDialogOpen] = useState(false);
 
   const recommendations = data ?? [];
 
@@ -110,23 +114,40 @@ export default function Opportunities() {
                           <Badge variant="outline" className="text-[10px]">{CATEGORY_LABEL[rec.category]}</Badge>
                           <span className="text-[11px] font-semibold" style={{ color: "var(--c-muted)" }}>{Math.round(rec.confidence * 100)}% confidence</span>
                         </div>
+                        <div className="mt-1.5">
+                          <ConfidenceBandPill band={rec.confidenceBand} why={dataBasisWhy(rec.dataBasis, rec.dataSources)} />
+                        </div>
                         <h4 className="mt-2 text-[14px] font-semibold leading-snug" style={{ color: "var(--c-ink)" }}>{rec.title}</h4>
                         <p className="mt-1.5 flex-1 text-[12.5px] leading-snug" style={{ color: "var(--c-ink-soft)" }}>{rec.body}</p>
-                        {capabilities.canCreateActions && (
+                        <div className="mt-3 flex items-center gap-1">
+                          {capabilities.canCreateActions && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 w-fit px-2 text-[12px]"
+                              disabled={rec.status === "applied"}
+                              onClick={() => {
+                                setSelectedRecommendation(rec);
+                                setDialogOpen(true);
+                              }}
+                            >
+                              <Plus size={13} />
+                              {rec.status === "applied" ? "Action created" : "Create action"}
+                            </Button>
+                          )}
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="mt-3 h-8 w-fit px-2 text-[12px]"
-                            disabled={rec.status === "applied"}
+                            className="h-8 w-fit px-2 text-[12px]"
                             onClick={() => {
-                              setSelectedRecommendation(rec);
-                              setDialogOpen(true);
+                              setAuditRecommendation(rec);
+                              setAuditDialogOpen(true);
                             }}
                           >
-                            <Plus size={13} />
-                            {rec.status === "applied" ? "Action created" : "Create action"}
+                            <History size={13} />
+                            Audit trail
                           </Button>
-                        )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -138,6 +159,11 @@ export default function Opportunities() {
       )}
 
       <CreateActionDialog recommendation={selectedRecommendation} open={dialogOpen} onOpenChange={setDialogOpen} />
+      <RecommendationAuditDialog
+        recommendation={auditRecommendation}
+        open={auditDialogOpen}
+        onOpenChange={setAuditDialogOpen}
+      />
     </AppLayout>
   );
 }

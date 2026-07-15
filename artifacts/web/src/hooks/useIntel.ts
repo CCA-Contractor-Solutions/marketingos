@@ -22,6 +22,9 @@ import type {
   UpsertCampaignIntelligenceRequest,
   Recommendation,
   CreateActionFromRecommendationRequest,
+  RecommendationAuditEntry,
+  RecordRecommendationOutcomeRequest,
+  GovernanceSummary,
   Integration,
   IntegrationStatus,
   ConnectIntegrationRequest,
@@ -45,6 +48,8 @@ export const intelKeys = {
   campaignIntelligenceList: ["intel", "campaign-intelligence"] as const,
   campaignIntelligence: (campaignId: string) => ["intel", "campaign-intelligence", campaignId] as const,
   recommendations: ["intel", "recommendations"] as const,
+  recommendationAudit: (id: string) => ["intel", "recommendations", id, "audit"] as const,
+  governanceSummary: ["intel", "governance", "summary"] as const,
   integrations: ["intel", "integrations"] as const,
   integrationSyncJobs: (id: string) => ["intel", "integrations", id, "sync-jobs"] as const,
   integrationErrors: (id: string) => ["intel", "integrations", id, "errors"] as const,
@@ -238,6 +243,42 @@ export function useUpdateRecommendation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: intelKeys.recommendations });
     },
+  });
+}
+
+// --- Phase 4.5: recommendation audit trail + outcome ------------------------------------
+
+export function useRecommendationAudit(
+  id: string,
+  options?: Partial<UseQueryOptions<RecommendationAuditEntry[]>>,
+) {
+  return useQuery({
+    queryKey: intelKeys.recommendationAudit(id),
+    queryFn: () => intelApi.getRecommendationAudit(id),
+    enabled: !!id,
+    ...options,
+  });
+}
+
+export function useRecordRecommendationOutcome(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: RecordRecommendationOutcomeRequest) => intelApi.recordRecommendationOutcome(id, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.recommendations });
+      queryClient.invalidateQueries({ queryKey: intelKeys.recommendationAudit(id) });
+      queryClient.invalidateQueries({ queryKey: intelKeys.governanceSummary });
+    },
+  });
+}
+
+// --- Phase 4.5: governance summary -------------------------------------------------------
+
+export function useGovernanceSummary(options?: Partial<UseQueryOptions<GovernanceSummary>>) {
+  return useQuery({
+    queryKey: intelKeys.governanceSummary,
+    queryFn: intelApi.getGovernanceSummary,
+    ...options,
   });
 }
 

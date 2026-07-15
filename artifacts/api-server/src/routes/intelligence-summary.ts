@@ -7,11 +7,19 @@ import {
   conversionsTable,
   aiRecommendationsTable,
   tasksTable,
+  revenueAttributionTable,
+  recommendationAuditTable,
   type LeadRow,
   type ConversionRow,
 } from "@workspace/db";
+import { bandForAverage } from "../lib/intelligence/governance";
 
 const router: IRouter = Router();
+
+async function nextAuditId(): Promise<string> {
+  const countRow = await db.select({ count: sql<number>`count(*)` }).from(recommendationAuditTable);
+  return `AUD-${1000 + Number(countRow[0]?.count ?? 0)}`;
+}
 
 // ---------------------------------------------------------------------------
 // GET /intelligence/overview
@@ -209,12 +217,21 @@ router.post("/actions/from-recommendation", async (req, res) => {
 
   const task = inserted[0]!;
 
-  // --- Mark the source recommendation as applied. ---
+  // --- Mark the source recommendation as applied + record that an action
+  // was taken (Phase 4.5 governance: actionTaken/actionId + audit row). ---
   const updatedRecommendation = await db
     .update(aiRecommendationsTable)
-    .set({ status: "applied" })
+    .set({ status: "applied", actionTaken: true, actionId: task.id })
     .where(eq(aiRecommendationsTable.id, body.recommendationId))
     .returning();
+
+  await db.insert(recommendationAuditTable).values({
+    id: await nextAuditId(),
+    recommendationId: body.recommendationId,
+    event: "action_created",
+    detail: { actionId: task.id, title: body.title, owner: body.owner ?? null },
+    createdAt: new Date().toISOString(),
+  });
 
   res.status(201).json({
     task: {
@@ -232,7 +249,64 @@ router.post("/actions/from-recommendation", async (req, res) => {
     recommendation: {
       id: updatedRecommendation[0]!.id,
       status: updatedRecommendation[0]!.status,
+      actionTaken: updatedRecommendation[0]!.actionTaken,
+      actionId: updatedRecommendation[0]!.actionId,
     },
+  });
+});
+
+// ---------------------------------------------------------------------------
+// GET /governance/summary (Phase 4.5 -- Data Quality & Intelligence
+// Governance)
+//
+// Quick, deterministic rollup stats powering the "Intelligence Governance"
+// panel on the Executive Dashboard: average recommendation confidence (and
+// its band breakdown), average attribution confidence, and how much of the
+// AI feed has actually been turned into action / had an outcome recorded.
+// No new tables -- reads directly from ai_recommendations +
+// revenue_attribution.
+// ---------------------------------------------------------------------------
+router.get("/governance/summary", async (_req, res) => {
+  const [recommendations, attributionRows] = await Promise.all([
+    db.select().from(aiRecommendationsTable),
+    db.select().from(revenueAttributionTable),
+  ]);
+
+  const totalRecommendations = recommendations.length;
+  const avgRecommendationConfidence =
+    totalRecommendations > 0
+      ? recommendations.reduce((sum, r) => sum + r.confidence, 0) / totalRecommendations
+      : 0;
+
+  const bandCounts = { high: 0, medium: 0, low: 0 };
+  for (const r of recommendations) {
+    const band = bandForAverage(r.confidence);
+    bandCounts[band] += 1;
+  }
+  const byBand = (Object.keys(bandCounts) as (keyof typeof bandCounts)[]).map((band) => ({
+    band,
+    count: bandCounts[band],
+    pct: totalRecommendations > 0 ? bandCounts[band] / totalRecommendations : 0,
+  }));
+
+  const actionedCount = recommendations.filter((r) => r.actionTaken).length;
+  const outcomeCount = recommendations.filter((r) => !!r.outcome).length;
+
+  const avgAttributionConfidence =
+    attributionRows.length > 0
+      ? attributionRows.reduce((sum, a) => sum + a.confidence, 0) / attributionRows.length
+      : 0;
+
+  res.json({
+    totalRecommendations,
+    avgRecommendationConfidence,
+    avgRecommendationConfidenceBand: bandForAverage(avgRecommendationConfidence),
+    recommendationsByBand: byBand,
+    pctActioned: totalRecommendations > 0 ? actionedCount / totalRecommendations : 0,
+    pctWithOutcome: totalRecommendations > 0 ? outcomeCount / totalRecommendations : 0,
+    totalAttributionRows: attributionRows.length,
+    avgAttributionConfidence,
+    avgAttributionConfidenceBand: bandForAverage(avgAttributionConfidence),
   });
 });
 

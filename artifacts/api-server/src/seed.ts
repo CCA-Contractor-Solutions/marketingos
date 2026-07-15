@@ -1412,6 +1412,9 @@ async function seedIntelligenceData(): Promise<void> {
         weight: input.weight,
         attributedAmount: input.attributedAmount,
         computedAt: now,
+        confidence: input.confidence,
+        confidenceBand: input.confidenceBand,
+        confidenceReason: input.confidenceReason,
       }));
       await db.insert(revenueAttributionTable).values(rows);
     }

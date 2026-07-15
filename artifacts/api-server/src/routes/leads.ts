@@ -338,6 +338,9 @@ router.post("/leads/:id/convert", async (req, res) => {
       weight: input.weight,
       attributedAmount: input.attributedAmount,
       computedAt: now,
+      confidence: input.confidence,
+      confidenceBand: input.confidenceBand,
+      confidenceReason: input.confidenceReason,
     }));
     await db.insert(revenueAttributionTable).values(attributionRows);
   }

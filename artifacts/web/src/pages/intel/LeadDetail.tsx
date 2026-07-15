@@ -27,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ConfidenceBandPill } from "@/components/intel/ConfidenceBandPill";
 
 const TIER_COLOR: Record<string, string> = {
   high: "var(--c-emerald)",
@@ -157,6 +158,12 @@ export default function LeadDetail() {
                     <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: "var(--c-muted)" }}>{a.model.replace("_", " ")}</div>
                     <div className="mt-1 text-[13.5px] font-semibold">{a.channel}</div>
                     <div className="mt-0.5 text-[12px]" style={{ color: "var(--c-ink-soft)" }}>{fmtMoney(a.attributedAmount)} · {(a.weight * 100).toFixed(0)}% weight</div>
+                    <div className="mt-2">
+                      <ConfidenceBandPill band={a.confidenceBand} why={a.confidenceReason} />
+                    </div>
+                    {a.confidenceReason && (
+                      <div className="mt-1 text-[11px] leading-snug" style={{ color: "var(--c-muted)" }}>{a.confidenceReason}</div>
+                    )}
                   </div>
                 ))}
               </div>
