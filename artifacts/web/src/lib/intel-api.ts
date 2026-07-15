@@ -28,6 +28,9 @@ import type {
   UpsertCampaignIntelligenceRequest,
   Recommendation,
   UpdateRecommendationRequest,
+  RecommendationAuditEntry,
+  RecordRecommendationOutcomeRequest,
+  GovernanceSummary,
   Integration,
   IntegrationStatus,
   ConnectIntegrationRequest,
@@ -66,6 +69,10 @@ type DemoDataset = {
   leadDetails: Record<string, LeadDetail>;
   leadAttribution: Record<string, RevenueAttribution[]>;
   campaignDetails: Record<string, CampaignIntelligence>;
+  // Phase 4.5 -- governance (optional: older captured datasets may not have
+  // these keys yet, so callers fall back to sensible static demo values).
+  recommendationAudit?: Record<string, RecommendationAuditEntry[]>;
+  governanceSummary?: GovernanceSummary;
 };
 
 let _demoCache: Promise<DemoDataset> | null = null;
@@ -268,9 +275,73 @@ export function updateRecommendation(
   id: string,
   body: UpdateRecommendationRequest,
 ): Promise<Recommendation> {
+  if (DEMO_MODE) {
+    return demoData().then((d) => {
+      const rec = d.recommendations.find((r) => r.id === id);
+      return demoDelay(rec ? { ...rec, status: body.status } : (d.recommendations[0] as Recommendation));
+    });
+  }
   return customFetch<Recommendation>(`${API}/recommendations/${id}`, {
     method: "PATCH",
     body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// --- Phase 4.5: recommendation audit trail + outcome ----------------------------------
+
+export function getRecommendationAudit(id: string): Promise<RecommendationAuditEntry[]> {
+  if (DEMO_MODE) return demoData().then((d) => demoDelay(d.recommendationAudit?.[id] ?? []));
+  return customFetch<RecommendationAuditEntry[]>(`${API}/recommendations/${id}/audit`, {
+    method: "GET",
+    responseType: "json",
+  });
+}
+
+export function recordRecommendationOutcome(
+  id: string,
+  body: RecordRecommendationOutcomeRequest,
+): Promise<Recommendation> {
+  if (DEMO_MODE) {
+    return demoData().then((d) => {
+      const rec = d.recommendations.find((r) => r.id === id);
+      const now = new Date().toISOString();
+      return demoDelay(
+        rec
+          ? { ...rec, outcome: body.outcome, outcomeRecordedAt: now }
+          : (d.recommendations[0] as Recommendation),
+      );
+    });
+  }
+  return customFetch<Recommendation>(`${API}/recommendations/${id}/outcome`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// --- Phase 4.5: governance summary ------------------------------------------------------
+
+const DEMO_GOVERNANCE_SUMMARY: GovernanceSummary = {
+  totalRecommendations: 6,
+  avgRecommendationConfidence: 0.74,
+  avgRecommendationConfidenceBand: "medium",
+  recommendationsByBand: [
+    { band: "high", count: 3, pct: 0.5 },
+    { band: "medium", count: 2, pct: 0.33 },
+    { band: "low", count: 1, pct: 0.17 },
+  ],
+  pctActioned: 0.33,
+  pctWithOutcome: 0.17,
+  totalAttributionRows: 42,
+  avgAttributionConfidence: 0.68,
+  avgAttributionConfidenceBand: "medium",
+};
+
+export function getGovernanceSummary(): Promise<GovernanceSummary> {
+  if (DEMO_MODE) return demoData().then((d) => demoDelay(d.governanceSummary ?? DEMO_GOVERNANCE_SUMMARY));
+  return customFetch<GovernanceSummary>(`${API}/governance/summary`, {
+    method: "GET",
     responseType: "json",
   });
 }

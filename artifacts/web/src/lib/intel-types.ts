@@ -170,9 +170,14 @@ export type AttributionSummary = {
   byModel: AttributionBucket<"model">[];
   byChannel: AttributionBucket<"channel">[];
   byCampaign: AttributionBucket<"campaign">[];
+  // Phase 4.5 -- governance: average attribution confidence across all rows.
+  avgConfidence: number;
+  avgConfidenceBand: ConfidenceBand;
 };
 
 // --- GET /attribution/lead/:id -----------------------------------------------
+export type ConfidenceBand = "high" | "medium" | "low";
+
 export type RevenueAttribution = {
   id: string;
   conversionId: string;
@@ -183,6 +188,10 @@ export type RevenueAttribution = {
   weight: number;
   attributedAmount: number;
   computedAt: string;
+  // Phase 4.5 -- governance: per-row attribution confidence.
+  confidence: number;
+  confidenceBand: ConfidenceBand;
+  confidenceReason: string;
 };
 
 // --- GET /channels/intelligence -----------------------------------------------
@@ -237,13 +246,65 @@ export type Recommendation = {
   title: string;
   body: string;
   confidence: number;
+  // Phase 4.5 -- governance additions.
+  confidenceBand: ConfidenceBand;
   dataBasis: Record<string, unknown>;
   status: RecommendationStatus;
   createdAt: string;
+  generatedReason: string;
+  dataSources: string[];
+  actionTaken: boolean;
+  actionId: string | null;
+  outcome: string | null;
+  outcomeRecordedAt: string | null;
 };
 
 export type UpdateRecommendationRequest = {
   status: RecommendationStatus;
+};
+
+// ---------------------------------------------------------------------------
+// Phase 4.5 -- Data Quality & Intelligence Governance
+// ---------------------------------------------------------------------------
+
+// --- GET /recommendations/:id/audit -------------------------------------------
+export type RecommendationAuditEvent =
+  | "generated"
+  | "viewed"
+  | "action_created"
+  | "dismissed"
+  | "outcome_recorded";
+
+export type RecommendationAuditEntry = {
+  id: string;
+  recommendationId: string;
+  event: RecommendationAuditEvent;
+  detail: Record<string, unknown>;
+  createdAt: string;
+};
+
+// --- POST /recommendations/:id/outcome -----------------------------------------
+export type RecordRecommendationOutcomeRequest = {
+  outcome: string;
+};
+
+// --- GET /governance/summary ---------------------------------------------------
+export type GovernanceBandBreakdown = {
+  band: ConfidenceBand;
+  count: number;
+  pct: number;
+};
+
+export type GovernanceSummary = {
+  totalRecommendations: number;
+  avgRecommendationConfidence: number;
+  avgRecommendationConfidenceBand: ConfidenceBand;
+  recommendationsByBand: GovernanceBandBreakdown[];
+  pctActioned: number;
+  pctWithOutcome: number;
+  totalAttributionRows: number;
+  avgAttributionConfidence: number;
+  avgAttributionConfidenceBand: ConfidenceBand;
 };
 
 // ---------------------------------------------------------------------------

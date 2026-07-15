@@ -220,6 +220,11 @@ export type ConversionRow = typeof conversionsTable.$inferSelect;
 
 export type AttributionModel = "first_touch" | "last_touch" | "linear" | "assisted";
 
+// Phase 4.5 — governance: band classification shared by both recommendation
+// confidence (lib/intelligence/confidence.ts) and attribution confidence
+// (lib/intelligence/attribution.ts).
+export type ConfidenceBand = "high" | "medium" | "low";
+
 export const revenueAttributionTable = pgTable("revenue_attribution", {
   id: text("id").primaryKey(),
   conversionId: text("conversion_id").notNull(),
@@ -230,6 +235,14 @@ export const revenueAttributionTable = pgTable("revenue_attribution", {
   weight: real("weight").notNull().default(0),
   attributedAmount: integer("attributed_amount").notNull().default(0),
   computedAt: text("computed_at").notNull().default(""),
+
+  // Phase 4.5 — Data Quality & Intelligence Governance. Per-row attribution
+  // confidence, computed in lib/intelligence/attribution.ts from touch
+  // count, first->convert elapsed time, first-party vs. view-through
+  // credit, and source reliability. See docs/data-governance.md.
+  confidence: real("confidence").notNull().default(0),
+  confidenceBand: text("confidence_band").$type<ConfidenceBand>().notNull().default("low"),
+  confidenceReason: text("confidence_reason").notNull().default(""),
 });
 
 export type RevenueAttributionRow = typeof revenueAttributionTable.$inferSelect;
@@ -250,9 +263,50 @@ export const aiRecommendationsTable = pgTable("ai_recommendations", {
   dataBasis: jsonb("data_basis").$type<Record<string, unknown>>().notNull().default({}),
   status: text("status").$type<RecommendationStatus>().notNull().default("new"),
   createdAt: text("created_at").notNull().default(""),
+
+  // Phase 4.5 — Data Quality & Intelligence Governance. Populated at
+  // generation time by lib/intelligence/confidence.ts + the rule that fired
+  // in routes/recommendations.ts, so every recommendation can show its
+  // "why" instead of being a black box.
+  generatedReason: text("generated_reason").notNull().default(""),
+  dataSources: jsonb("data_sources").$type<string[]>().notNull().default([]),
+
+  // Outcome tracking — set once a human turns the recommendation into an
+  // action (see POST /actions/from-recommendation) and, later, records what
+  // happened. Deliberately free-text/manual — no autonomous action-taking.
+  actionTaken: boolean("action_taken").notNull().default(false),
+  actionId: text("action_id"),
+  outcome: text("outcome"),
+  outcomeRecordedAt: text("outcome_recorded_at"),
 });
 
 export type AiRecommendationRow = typeof aiRecommendationsTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// recommendation_audit (Phase 4.5 — Module 7 governance extension)
+//
+// Prevents black-box AI: every meaningful lifecycle event for a
+// recommendation (generated / viewed / action_created / dismissed /
+// outcome_recorded) is written here, ordered by createdAt, so the UI can
+// render a full "what/why/when/result" audit trail per recommendation.
+// ---------------------------------------------------------------------------
+
+export type RecommendationAuditEvent =
+  | "generated"
+  | "viewed"
+  | "action_created"
+  | "dismissed"
+  | "outcome_recorded";
+
+export const recommendationAuditTable = pgTable("recommendation_audit", {
+  id: text("id").primaryKey(),
+  recommendationId: text("recommendation_id").notNull(),
+  event: text("event").$type<RecommendationAuditEvent>().notNull(),
+  detail: jsonb("detail").$type<Record<string, unknown>>().notNull().default({}),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type RecommendationAuditRow = typeof recommendationAuditTable.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // integrations (Module 8)

@@ -1,7 +1,7 @@
 // Module 1 — Executive Dashboard. Route: /intelligence
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { Sparkles, RefreshCw, Users, Target, DollarSign, TrendingUp, Percent, Plus } from "lucide-react";
+import { Sparkles, RefreshCw, Users, Target, DollarSign, TrendingUp, Percent, Plus, History } from "lucide-react";
 import { AppLayout, PageLoading, PageError } from "@/components/AppLayout";
 import {
   useIntelligenceOverview,
@@ -14,6 +14,9 @@ import { fmtMoney, fmtNumber } from "@/lib/format";
 import { campaignPerformanceScore, performanceTier } from "@/lib/intel-scoring";
 import { useRole } from "@/lib/roles";
 import { CreateActionDialog } from "@/components/intel/CreateActionDialog";
+import { RecommendationAuditDialog } from "@/components/intel/RecommendationAuditDialog";
+import { ConfidenceBandPill, dataBasisWhy } from "@/components/intel/ConfidenceBandPill";
+import { GovernancePanel } from "@/components/intel/GovernancePanel";
 import { useIntegrations } from "@/hooks/useIntel";
 import { DataSourcesStrip } from "@/components/intel/DataSourcesStrip";
 import { CustomerJourneyVisual } from "@/components/intel/CustomerJourneyVisual";
@@ -82,6 +85,8 @@ export default function IntelligenceDashboard() {
 
   const [selectedRecommendation, setSelectedRecommendation] = useState<Recommendation | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [auditRecommendation, setAuditRecommendation] = useState<Recommendation | null>(null);
+  const [auditDialogOpen, setAuditDialogOpen] = useState(false);
 
   const isLoading = overview.isLoading || channels.isLoading || campaigns.isLoading || recommendations.isLoading;
   const isError = overview.isError || channels.isError || campaigns.isError || recommendations.isError;
@@ -297,24 +302,41 @@ export default function IntelligenceDashboard() {
                               {Math.round(rec.confidence * 100)}%
                             </Badge>
                           </div>
+                          <div className="mt-1.5">
+                            <ConfidenceBandPill band={rec.confidenceBand} why={dataBasisWhy(rec.dataBasis, rec.dataSources)} />
+                          </div>
                           <p className="mt-1.5 text-[12.5px] leading-snug" style={{ color: "var(--c-ink-soft)" }}>
                             {rec.body}
                           </p>
-                          {capabilities.canCreateActions && (
+                          <div className="mt-2 flex items-center gap-1">
+                            {capabilities.canCreateActions && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-8 px-2 text-[12px]"
+                                disabled={rec.status === "applied"}
+                                onClick={() => {
+                                  setSelectedRecommendation(rec);
+                                  setDialogOpen(true);
+                                }}
+                              >
+                                <Plus size={13} />
+                                {rec.status === "applied" ? "Action created" : "Create action"}
+                              </Button>
+                            )}
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="mt-2 h-8 px-2 text-[12px]"
-                              disabled={rec.status === "applied"}
+                              className="h-8 px-2 text-[12px]"
                               onClick={() => {
-                                setSelectedRecommendation(rec);
-                                setDialogOpen(true);
+                                setAuditRecommendation(rec);
+                                setAuditDialogOpen(true);
                               }}
                             >
-                              <Plus size={13} />
-                              {rec.status === "applied" ? "Action created" : "Create action"}
+                              <History size={13} />
+                              Audit
                             </Button>
-                          )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -323,6 +345,8 @@ export default function IntelligenceDashboard() {
               </div>
             )}
           </div>
+          {/* Phase 4.5 -- Intelligence Governance panel (additive) */}
+          <GovernancePanel />
         </div>
       )}
 
@@ -330,6 +354,11 @@ export default function IntelligenceDashboard() {
         recommendation={selectedRecommendation}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+      <RecommendationAuditDialog
+        recommendation={auditRecommendation}
+        open={auditDialogOpen}
+        onOpenChange={setAuditDialogOpen}
       />
     </AppLayout>
   );
