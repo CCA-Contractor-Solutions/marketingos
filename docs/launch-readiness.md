@@ -27,11 +27,17 @@ Status legend: **Not ready** · **Gated** (internal/limited) · **Ready** (appro
 
 | Step | Status | Owner | Notes |
 |---|---|---|---|
-| Website form → Zoho CRM lead (source-tagged) | Not ready | Carmen | Zoho is system of record |
-| Lead → booking link | Not ready | Carmen | Booking stamped back on lead |
-| First cadence step (email + RingCentral SMS) | Not ready | Carmen/Rose | Opt-in/opt-out required |
-| Sales follow-up + stage/assignment in Zoho | Not ready | Rose | |
-| Outcomes read-only in MarketingOS analytics | Not ready | Carmen | Reads from Zoho |
+| Native lead capture (`POST /leads`) | ✅ Backend done | Carmen | MarketingOS owns leads natively (Phase 2) |
+| Marketing event tracking (`POST /events`) | ✅ Backend done | Carmen | Every interaction → event |
+| Lead scoring + journey (auto on event) | ✅ Backend done | Carmen | Configurable rules |
+| Multi-touch attribution + revenue | ✅ Backend done | Carmen | first/last/linear/assisted |
+| Channel + campaign intelligence rollups | ✅ Backend done | Carmen | Computed live from events/conversions |
+| AI recommendation foundation | ✅ Backend done | Carmen | Rule-based now; LLM hook stubbed |
+| Integration framework (provider-agnostic) | ✅ Backend done | Carmen | 8 stub connectors, no SDKs hardcoded |
+| Website form → `POST /leads` wiring | ⬜ Pending | Carmen | Front-end form calls the native API |
+| Lead → booking link | ⬜ Pending | Carmen | Booking stamped back on lead |
+| First cadence step (email + RingCentral SMS) | ⬜ Pending | Carmen/Rose | Via integration framework; opt-in/opt-out |
+| DB migration (`pnpm --filter @workspace/db run push`) | ⬜ Pending | Carmen | Apply new tables to Postgres on deploy |
 
 ## Build / deploy health
 

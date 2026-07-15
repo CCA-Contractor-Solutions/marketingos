@@ -27,13 +27,8 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      # NOTE: the committed pnpm-lock.yaml is currently out of sync with the
-      # workspace `overrides` on the pinned pnpm version (a pre-existing
-      # condition). Until Carmen regenerates and reviews the lockfile in a
-      # dedicated PR, CI cannot use --frozen-lockfile. Switch this back to
-      # `pnpm install --frozen-lockfile` once the lockfile is refreshed.
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       # Typecheck all product surfaces (web, mobile, api-server, walkthrough,
       # scripts) + shared libs. The internal-only mockup-sandbox is excluded

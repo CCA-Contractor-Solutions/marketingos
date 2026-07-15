@@ -58,7 +58,7 @@ This document is the canonical record of *what is real* for the MarketingOS / CC
 ## Known follow-ups (Carmen)
 
 - **Rotate the access token** in the deploy secret store (the committed value was removed from `.replit`; treat the old value as compromised).
-- **Regenerate + review `pnpm-lock.yaml`.** The committed lockfile is out of sync with the workspace `overrides` on the pinned pnpm version (pre-existing). CI temporarily uses `--no-frozen-lockfile`; refresh the lockfile in a dedicated PR, then switch CI back to `--frozen-lockfile`.
+- ~~Regenerate + review `pnpm-lock.yaml`.~~ **Resolved in Phase 2** — the lockfile was refreshed (also added `zod` to api-server) and now supports `--frozen-lockfile`; CI uses frozen install again.
 - **Enable branch protection** on `main` requiring the CI check to pass.
 - **`mockup-sandbox` typecheck** is excluded from the gate due to a duplicate `@types/react` (19.1.x from the mobile Expo toolchain vs 19.2.x elsewhere). Resolve the version conflict to re-include it (`pnpm run typecheck:all`).
 - **Fill in the deployed commit SHAs** in the table above.

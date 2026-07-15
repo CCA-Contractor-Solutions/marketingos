@@ -6,6 +6,13 @@ import tasksRouter from "./tasks";
 import threadsRouter from "./threads";
 import assistantRouter from "./assistant";
 import analyticsRouter from "./analytics";
+import eventsRouter from "./events";
+import leadsRouter from "./leads";
+import attributionRouter from "./attribution";
+import channelsRouter from "./channels";
+import campaignIntelligenceRouter from "./campaign-intelligence";
+import recommendationsRouter from "./recommendations";
+import integrationsRouter from "./integrations";
 
 const router: IRouter = Router();
 
@@ -16,5 +23,12 @@ router.use(tasksRouter);
 router.use(threadsRouter);
 router.use(assistantRouter);
 router.use(analyticsRouter);
+router.use(eventsRouter);
+router.use(leadsRouter);
+router.use(attributionRouter);
+router.use(channelsRouter);
+router.use(campaignIntelligenceRouter);
+router.use(recommendationsRouter);
+router.use(integrationsRouter);
 
 export default router;
