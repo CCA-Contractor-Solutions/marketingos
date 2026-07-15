@@ -13,6 +13,7 @@ import channelsRouter from "./channels";
 import campaignIntelligenceRouter from "./campaign-intelligence";
 import recommendationsRouter from "./recommendations";
 import integrationsRouter from "./integrations";
+import intelligenceSummaryRouter from "./intelligence-summary";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(channelsRouter);
 router.use(campaignIntelligenceRouter);
 router.use(recommendationsRouter);
 router.use(integrationsRouter);
+router.use(intelligenceSummaryRouter);
 
 export default router;

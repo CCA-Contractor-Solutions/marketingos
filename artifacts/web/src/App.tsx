@@ -13,6 +13,13 @@ import AIAssistant from "@/pages/AIAssistant";
 import Collaboration from "@/pages/Collaboration";
 import Analytics from "@/pages/Analytics";
 import BrandMemory from "@/pages/BrandMemory";
+import { RoleProvider } from "@/lib/roles";
+import IntelligenceDashboard from "@/pages/intel/IntelligenceDashboard";
+import Leads from "@/pages/intel/Leads";
+import LeadDetail from "@/pages/intel/LeadDetail";
+import CampaignOps from "@/pages/intel/CampaignOps";
+import CampaignOpsDetail from "@/pages/intel/CampaignOpsDetail";
+import Opportunities from "@/pages/intel/Opportunities";
 
 // Attach the shared app token to mutating API requests. This token is bundled
 // with the client by design and is not a per-user secret.
@@ -35,6 +42,12 @@ function Router() {
       <Route path="/collaboration" component={Collaboration} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/brand" component={BrandMemory} />
+      <Route path="/intelligence" component={IntelligenceDashboard} />
+      <Route path="/leads" component={Leads} />
+      <Route path="/leads/:id" component={LeadDetail} />
+      <Route path="/campaign-ops" component={CampaignOps} />
+      <Route path="/campaign-ops/:campaignId" component={CampaignOpsDetail} />
+      <Route path="/opportunities" component={Opportunities} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -43,12 +56,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
+      <RoleProvider>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </RoleProvider>
     </QueryClientProvider>
   );
 }
