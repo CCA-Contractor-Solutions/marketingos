@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import {
   db,
   campaignsTable,
@@ -6,13 +7,25 @@ import {
   messagesTable,
   assistantMessagesTable,
   appContentTable,
+  channelsTable,
+  leadsTable,
+  marketingEventsTable,
+  customersTable,
+  conversionsTable,
+  revenueAttributionTable,
+  campaignIntelligenceTable,
+  integrationsTable,
   type CampaignRow,
   type TaskRow,
   type ThreadRow,
   type MessageRow,
   type AssistantMessageRow,
+  type LeadRow,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
+import { computeJourney } from "./lib/intelligence/journey";
+import { scoreLead } from "./lib/intelligence/scoring";
+import { computeAttribution } from "./lib/intelligence/attribution";
 
 type CampaignSeed = typeof campaignsTable.$inferInsert;
 type TaskSeed = typeof tasksTable.$inferInsert;
@@ -735,6 +748,718 @@ const appContent: { key: string; data: unknown }[] = [
   },
 ];
 
+// ---------------------------------------------------------------------------
+// Phase 2 — CCA Growth Intelligence sample data.
+//
+// Realistic CCA-contractor lead intelligence: channels, leads with ordered
+// marketing events, conversions + attribution, campaign intelligence
+// rollups, and an integrations registry. Each section is idempotent (only
+// seeded when its own table is empty) so this can be safely re-run alongside
+// the existing seed content above.
+// ---------------------------------------------------------------------------
+
+type ChannelSeed = typeof channelsTable.$inferInsert;
+type LeadSeed = typeof leadsTable.$inferInsert;
+type EventSeed = typeof marketingEventsTable.$inferInsert;
+type CustomerSeed = typeof customersTable.$inferInsert;
+type ConversionSeed = typeof conversionsTable.$inferInsert;
+type CampaignIntelligenceSeed = typeof campaignIntelligenceTable.$inferInsert;
+type IntegrationSeed = typeof integrationsTable.$inferInsert;
+
+const intelligenceChannels: ChannelSeed[] = [
+  { id: "CH-100", name: "Google Ads", category: "paid", active: true },
+  { id: "CH-101", name: "Google Organic", category: "organic", active: true },
+  { id: "CH-102", name: "LinkedIn", category: "social", active: true },
+  { id: "CH-103", name: "Referral", category: "referral", active: true },
+];
+
+// Days-ago helper for building realistic, relative-to-seed-time ISO
+// timestamps for the lead journeys below (oldest touch first).
+function daysAgo(days: number, hour = 9): string {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  d.setHours(hour, 0, 0, 0);
+  return d.toISOString();
+}
+
+const intelligenceLeads: LeadSeed[] = [
+  {
+    id: "LEAD-1000",
+    createdAt: daysAgo(21),
+    updatedAt: daysAgo(21),
+    companyName: "ABC Construction",
+    industry: "Commercial Construction",
+    location: "Tampa, FL",
+    website: "https://abcconstruction.example.com",
+    companySize: "51-200",
+    contactName: "Marcus Webb",
+    email: "marcus.webb@abcconstruction.example.com",
+    phone: "813-555-0142",
+    contactRole: "VP of Operations",
+    qualified: true,
+    salesAccepted: true,
+    isCustomer: true,
+    status: "customer",
+  },
+  {
+    id: "LEAD-1001",
+    createdAt: daysAgo(18),
+    updatedAt: daysAgo(18),
+    companyName: "Coastal Roofing Co.",
+    industry: "Residential Construction",
+    location: "Houston, TX",
+    website: "https://coastalroofing.example.com",
+    companySize: "11-50",
+    contactName: "Denise Alvarado",
+    email: "denise@coastalroofing.example.com",
+    phone: "713-555-0198",
+    contactRole: "Owner",
+    qualified: true,
+    salesAccepted: true,
+    isCustomer: true,
+    status: "customer",
+  },
+  {
+    id: "LEAD-1002",
+    createdAt: daysAgo(14),
+    updatedAt: daysAgo(14),
+    companyName: "Summit Grading & Excavation",
+    industry: "Commercial Construction",
+    location: "Denver, CO",
+    website: "https://summitgrading.example.com",
+    companySize: "11-50",
+    contactName: "Tyler Brooks",
+    email: "tyler@summitgrading.example.com",
+    phone: "303-555-0117",
+    contactRole: "General Manager",
+    qualified: true,
+    salesAccepted: false,
+    isCustomer: false,
+    status: "qualified",
+  },
+  {
+    id: "LEAD-1003",
+    createdAt: daysAgo(10),
+    updatedAt: daysAgo(10),
+    companyName: "Palmetto Home Builders",
+    industry: "Residential Construction",
+    location: "Charleston, SC",
+    website: "https://palmettohomebuilders.example.com",
+    companySize: "1-10",
+    contactName: "Renee Cho",
+    email: "renee@palmettohomebuilders.example.com",
+    phone: "843-555-0163",
+    contactRole: "Principal",
+    qualified: false,
+    salesAccepted: false,
+    isCustomer: false,
+    status: "working",
+  },
+  {
+    id: "LEAD-1004",
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(7),
+    companyName: "Multi-State Builders Group",
+    industry: "Commercial Construction",
+    location: "Multi-State (FL, GA, NC)",
+    website: "https://multistatebuilders.example.com",
+    companySize: "201-500",
+    contactName: "Angela Fitzpatrick",
+    email: "afitzpatrick@multistatebuilders.example.com",
+    phone: "404-555-0129",
+    contactRole: "Director of Compliance",
+    qualified: false,
+    salesAccepted: false,
+    isCustomer: false,
+    status: "new",
+  },
+  {
+    id: "LEAD-1005",
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(3),
+    companyName: "Lone Star Concrete Works",
+    industry: "Commercial Construction",
+    location: "Austin, TX",
+    website: "https://lonestarconcrete.example.com",
+    companySize: "51-200",
+    contactName: "Priya Natarajan",
+    email: "priya@lonestarconcrete.example.com",
+    phone: "512-555-0184",
+    contactRole: "Safety & Compliance Manager",
+    qualified: false,
+    salesAccepted: false,
+    isCustomer: false,
+    status: "new",
+  },
+];
+
+// Ordered marketing events per lead. Each lead's journey follows a realistic
+// visit -> download -> call -> meeting arc; the two converting leads
+// (ABC Construction, Coastal Roofing Co.) continue on to a sales_conversion
+// and customer_purchase event.
+const intelligenceEvents: EventSeed[] = [
+  // --- ABC Construction (LEAD-1000): Google Search first touch, Multi-State
+  // Expansion campaign, compliance guide download -> website visit -> phone
+  // call -> consultation -> Customer, $15,000.
+  {
+    id: "EVT-1000",
+    leadId: "LEAD-1000",
+    eventType: "website_visit",
+    source: "google_search",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(21, 9),
+    metadata: { page: "/solutions/multi-state-compliance" },
+  },
+  {
+    id: "EVT-1001",
+    leadId: "LEAD-1000",
+    eventType: "content_download",
+    source: "google_search",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(20, 11),
+    metadata: { contentName: "Multi-State Compliance Guide" },
+  },
+  {
+    id: "EVT-1002",
+    leadId: "LEAD-1000",
+    eventType: "website_visit",
+    source: "direct",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(18, 10),
+    metadata: { page: "/pricing" },
+  },
+  {
+    id: "EVT-1003",
+    leadId: "LEAD-1000",
+    eventType: "website_visit",
+    source: "direct",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(15, 14),
+    metadata: { page: "/case-studies/commercial-contractors" },
+  },
+  {
+    id: "EVT-1004",
+    leadId: "LEAD-1000",
+    eventType: "phone_call",
+    source: "callrail",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(12, 13),
+    metadata: { durationSeconds: 640 },
+  },
+  {
+    id: "EVT-1005",
+    leadId: "LEAD-1000",
+    eventType: "meeting_request",
+    source: "sales_team",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(9, 15),
+    metadata: { consultation: true, meetingType: "compliance_consultation" },
+  },
+  {
+    id: "EVT-1006",
+    leadId: "LEAD-1000",
+    eventType: "sales_conversion",
+    source: "sales_team",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(5, 10),
+    metadata: { dealSize: 15000 },
+  },
+  {
+    id: "EVT-1007",
+    leadId: "LEAD-1000",
+    eventType: "customer_purchase",
+    source: "sales_team",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(5, 11),
+    metadata: { dealSize: 15000 },
+  },
+
+  // --- Coastal Roofing Co. (LEAD-1001): LinkedIn first touch, converts.
+  {
+    id: "EVT-1008",
+    leadId: "LEAD-1001",
+    eventType: "website_visit",
+    source: "linkedin",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(18, 9),
+    metadata: { page: "/solutions/residential-contractors" },
+  },
+  {
+    id: "EVT-1009",
+    leadId: "LEAD-1001",
+    eventType: "content_download",
+    source: "linkedin",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(16, 12),
+    metadata: { contentName: "Residential Permitting Checklist" },
+  },
+  {
+    id: "EVT-1010",
+    leadId: "LEAD-1001",
+    eventType: "content_download",
+    source: "linkedin",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(14, 10),
+    metadata: { contentName: "Roofing Safety Compliance Kit" },
+  },
+  {
+    id: "EVT-1011",
+    leadId: "LEAD-1001",
+    eventType: "phone_call",
+    source: "ringcentral",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(11, 14),
+    metadata: { durationSeconds: 480 },
+  },
+  {
+    id: "EVT-1012",
+    leadId: "LEAD-1001",
+    eventType: "meeting_request",
+    source: "sales_team",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(8, 15),
+    metadata: { consultation: true },
+  },
+  {
+    id: "EVT-1013",
+    leadId: "LEAD-1001",
+    eventType: "sales_conversion",
+    source: "sales_team",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(4, 10),
+    metadata: { dealSize: 8500 },
+  },
+  {
+    id: "EVT-1014",
+    leadId: "LEAD-1001",
+    eventType: "customer_purchase",
+    source: "sales_team",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(4, 11),
+    metadata: { dealSize: 8500 },
+  },
+
+  // --- Summit Grading & Excavation (LEAD-1002): Google Organic, qualified
+  // but not yet converted.
+  {
+    id: "EVT-1015",
+    leadId: "LEAD-1002",
+    eventType: "website_visit",
+    source: "google_organic",
+    campaign: "Commercial Contractor Awareness",
+    channel: "Google Organic",
+    occurredAt: daysAgo(14, 9),
+    metadata: { page: "/solutions/commercial-contractors" },
+  },
+  {
+    id: "EVT-1016",
+    leadId: "LEAD-1002",
+    eventType: "website_visit",
+    source: "google_organic",
+    campaign: "Commercial Contractor Awareness",
+    channel: "Google Organic",
+    occurredAt: daysAgo(12, 11),
+    metadata: { page: "/pricing" },
+  },
+  {
+    id: "EVT-1017",
+    leadId: "LEAD-1002",
+    eventType: "content_download",
+    source: "google_organic",
+    campaign: "Commercial Contractor Awareness",
+    channel: "Google Organic",
+    occurredAt: daysAgo(10, 13),
+    metadata: { contentName: "Excavation Compliance Guide" },
+  },
+  {
+    id: "EVT-1018",
+    leadId: "LEAD-1002",
+    eventType: "phone_call",
+    source: "callrail",
+    campaign: "Commercial Contractor Awareness",
+    channel: "Google Organic",
+    occurredAt: daysAgo(6, 14),
+    metadata: { durationSeconds: 300 },
+  },
+
+  // --- Palmetto Home Builders (LEAD-1003): Referral, early-stage.
+  {
+    id: "EVT-1019",
+    leadId: "LEAD-1003",
+    eventType: "website_visit",
+    source: "referral",
+    campaign: "Referral Program",
+    channel: "Referral",
+    occurredAt: daysAgo(10, 9),
+    metadata: { page: "/solutions/residential-contractors" },
+  },
+  {
+    id: "EVT-1020",
+    leadId: "LEAD-1003",
+    eventType: "email_open",
+    source: "email_nurture",
+    campaign: "Referral Program",
+    channel: "Referral",
+    occurredAt: daysAgo(8, 10),
+    metadata: { emailName: "Welcome Series #1" },
+  },
+  {
+    id: "EVT-1021",
+    leadId: "LEAD-1003",
+    eventType: "content_download",
+    source: "referral",
+    campaign: "Referral Program",
+    channel: "Referral",
+    occurredAt: daysAgo(6, 11),
+    metadata: { contentName: "Residential Permitting Checklist" },
+  },
+
+  // --- Multi-State Builders Group (LEAD-1004): Google Ads, new/low intent.
+  {
+    id: "EVT-1022",
+    leadId: "LEAD-1004",
+    eventType: "website_visit",
+    source: "google_search",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    occurredAt: daysAgo(7, 9),
+    metadata: { page: "/solutions/multi-state-compliance" },
+  },
+
+  // --- Lone Star Concrete Works (LEAD-1005): LinkedIn, new/low intent.
+  {
+    id: "EVT-1023",
+    leadId: "LEAD-1005",
+    eventType: "website_visit",
+    source: "linkedin",
+    campaign: "Commercial Contractor Awareness",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(3, 9),
+    metadata: { page: "/solutions/commercial-contractors" },
+  },
+  {
+    id: "EVT-1024",
+    leadId: "LEAD-1005",
+    eventType: "email_click",
+    source: "email_nurture",
+    campaign: "Commercial Contractor Awareness",
+    channel: "LinkedIn",
+    occurredAt: daysAgo(2, 10),
+    metadata: { emailName: "Compliance Tips Newsletter" },
+  },
+];
+
+const intelligenceCustomers: CustomerSeed[] = [
+  {
+    id: "CUST-1000",
+    leadId: "LEAD-1000",
+    companyName: "ABC Construction",
+    contactName: "Marcus Webb",
+    email: "marcus.webb@abcconstruction.example.com",
+    convertedAt: daysAgo(5, 11),
+    totalRevenue: 15000,
+    createdAt: daysAgo(5, 11),
+  },
+  {
+    id: "CUST-1001",
+    leadId: "LEAD-1001",
+    companyName: "Coastal Roofing Co.",
+    contactName: "Denise Alvarado",
+    email: "denise@coastalroofing.example.com",
+    convertedAt: daysAgo(4, 11),
+    totalRevenue: 8500,
+    createdAt: daysAgo(4, 11),
+  },
+];
+
+const intelligenceConversions: ConversionSeed[] = [
+  {
+    id: "CONV-1000",
+    leadId: "LEAD-1000",
+    customerId: "CUST-1000",
+    campaign: "Multi-State Expansion",
+    channel: "Google Ads",
+    amount: 15000,
+    convertedAt: daysAgo(5, 11),
+    createdAt: daysAgo(5, 11),
+  },
+  {
+    id: "CONV-1001",
+    leadId: "LEAD-1001",
+    customerId: "CUST-1001",
+    campaign: "Residential Contractor Growth",
+    channel: "LinkedIn",
+    amount: 8500,
+    convertedAt: daysAgo(4, 11),
+    createdAt: daysAgo(4, 11),
+  },
+];
+
+// campaign_intelligence rows for the existing seeded campaigns (summit,
+// nexus, partner, aurora) plus the two CCA-specific campaigns referenced by
+// the sample leads/events above.
+const intelligenceCampaigns: CampaignIntelligenceSeed[] = [
+  {
+    campaignId: "summit",
+    objective: "Drive enterprise summit registrations and SQLs",
+    audience: "Enterprise Decision Makers, Existing Customers",
+    service: "Enterprise Platform",
+    industry: "B2B SaaS",
+    location: "National",
+    budget: 45000,
+    ownerName: "Sarah J.",
+    channels: ["Email", "LinkedIn"],
+  },
+  {
+    campaignId: "nexus",
+    objective: "Launch Nexus 2.0 and drive product page visits",
+    audience: "Tech Early Adopters, Industry Analysts",
+    service: "Nexus 2.0",
+    industry: "Consumer Tech",
+    location: "National",
+    budget: 120000,
+    ownerName: "Mike T.",
+    channels: ["Display", "Twitter", "PR"],
+  },
+  {
+    campaignId: "partner",
+    objective: "Co-host partner webinars and share pipeline",
+    audience: "Partner Audiences, Mid-Market Buyers",
+    service: "Partner Program",
+    industry: "B2B SaaS",
+    location: "National",
+    budget: 25000,
+    ownerName: "Elena R.",
+    channels: ["Webinar", "Email"],
+  },
+  {
+    campaignId: "aurora",
+    objective: "Launch Aurora Headphones across social + search",
+    audience: "Audiophile Gen-Z, Commuting Professionals, Fitness Enthusiasts",
+    service: "Aurora Headphones",
+    industry: "Consumer Hardware",
+    location: "National",
+    budget: 150000,
+    ownerName: "Sarah Jenkins",
+    channels: ["Instagram", "TikTok", "YouTube", "Email", "Paid Search"],
+  },
+  {
+    campaignId: "Multi-State Expansion",
+    objective: "Generate compliance-driven leads from multi-state commercial contractors",
+    audience: "Commercial contractors expanding across state lines",
+    service: "Multi-State Compliance Program",
+    industry: "Commercial Construction",
+    location: "FL, GA, NC, TX",
+    budget: 22000,
+    ownerName: "CCA Growth Team",
+    channels: ["Google Ads"],
+  },
+  {
+    campaignId: "Residential Contractor Growth",
+    objective: "Grow pipeline among residential contractors via LinkedIn",
+    audience: "Residential contractor owners and GMs",
+    service: "Residential Compliance Program",
+    industry: "Residential Construction",
+    location: "TX, SC, FL",
+    budget: 14000,
+    ownerName: "CCA Growth Team",
+    channels: ["LinkedIn"],
+  },
+  {
+    campaignId: "Commercial Contractor Awareness",
+    objective: "Build top-of-funnel awareness with commercial contractors",
+    audience: "Commercial contractor operations and compliance leads",
+    service: "Compliance Awareness Program",
+    industry: "Commercial Construction",
+    location: "CO, TX",
+    budget: 9000,
+    ownerName: "CCA Growth Team",
+    channels: ["Google Organic", "LinkedIn"],
+  },
+  {
+    campaignId: "Referral Program",
+    objective: "Convert warm referral introductions into qualified pipeline",
+    audience: "Referred residential contractors",
+    service: "Referral Compliance Program",
+    industry: "Residential Construction",
+    location: "SC",
+    budget: 4000,
+    ownerName: "CCA Growth Team",
+    channels: ["Referral"],
+  },
+];
+
+const intelligenceIntegrations: IntegrationSeed[] = [
+  { id: "INTG-100", providerKey: "google_ads", category: "advertising", displayName: "Google Ads", status: "available", config: {} },
+  { id: "INTG-101", providerKey: "meta_ads", category: "advertising", displayName: "Meta Ads", status: "available", config: {} },
+  { id: "INTG-102", providerKey: "linkedin_ads", category: "advertising", displayName: "LinkedIn Ads", status: "available", config: {} },
+  { id: "INTG-103", providerKey: "ga4", category: "analytics", displayName: "Google Analytics 4", status: "available", config: {} },
+  { id: "INTG-104", providerKey: "search_console", category: "analytics", displayName: "Google Search Console", status: "available", config: {} },
+  { id: "INTG-105", providerKey: "callrail", category: "communication", displayName: "CallRail", status: "available", config: {} },
+  { id: "INTG-106", providerKey: "ringcentral", category: "communication", displayName: "RingCentral", status: "available", config: {} },
+  { id: "INTG-107", providerKey: "email", category: "email", displayName: "Email Marketing", status: "available", config: {} },
+];
+
+async function seedIntelligenceData(): Promise<void> {
+  const existingChannels: Pick<typeof channelsTable.$inferSelect, "id">[] = await db
+    .select({ id: channelsTable.id })
+    .from(channelsTable)
+    .limit(1);
+  if (existingChannels.length === 0) {
+    await db.insert(channelsTable).values(intelligenceChannels);
+  }
+
+  const existingIntegrations: Pick<typeof integrationsTable.$inferSelect, "id">[] = await db
+    .select({ id: integrationsTable.id })
+    .from(integrationsTable)
+    .limit(1);
+  if (existingIntegrations.length === 0) {
+    const now = new Date().toISOString();
+    await db.insert(integrationsTable).values(
+      intelligenceIntegrations.map((row) => ({ ...row, createdAt: now })),
+    );
+  }
+
+  const existingLeads: Pick<LeadRow, "id">[] = await db
+    .select({ id: leadsTable.id })
+    .from(leadsTable)
+    .limit(1);
+
+  if (existingLeads.length === 0) {
+    logger.info("Seeding CCA growth intelligence sample data");
+
+    await db.insert(leadsTable).values(intelligenceLeads);
+    await db.insert(marketingEventsTable).values(intelligenceEvents);
+    await db.insert(customersTable).values(intelligenceCustomers);
+    const insertedConversions = await db
+      .insert(conversionsTable)
+      .values(intelligenceConversions)
+      .returning();
+
+    // Run journey + scoring compute on every seeded lead so the denormalized
+    // cache and score fields are populated immediately (matching what the
+    // /events and /leads routes would produce at runtime).
+    for (const lead of intelligenceLeads) {
+      const events = intelligenceEvents.filter((e) => e.leadId === lead.id);
+      const journey = computeJourney(events as (typeof marketingEventsTable.$inferSelect)[]);
+      const fullLead = { ...lead } as LeadRow;
+      const scoreResult = scoreLead(fullLead, events as (typeof marketingEventsTable.$inferSelect)[]);
+
+      const isCustomer = intelligenceCustomers.some((c) => c.leadId === lead.id);
+      const revenueGenerated = intelligenceConversions
+        .filter((c) => c.leadId === lead.id)
+        .reduce((sum, c) => sum + (c.amount ?? 0), 0);
+
+      await db
+        .update(leadsTable)
+        .set({
+          firstTouchChannel: journey.firstTouchChannel,
+          firstTouchCampaign: journey.firstTouchCampaign,
+          firstTouchAt: journey.firstTouchAt,
+          lastTouchChannel: journey.lastTouchChannel,
+          lastTouchCampaign: journey.lastTouchCampaign,
+          lastTouchAt: journey.lastTouchAt,
+          campaigns: journey.campaigns,
+          pagesVisited: journey.pagesVisited,
+          contentConsumed: journey.contentConsumed,
+          callCount: journey.callCount,
+          emailCount: journey.emailCount,
+          score: scoreResult.score,
+          scoreTier: scoreResult.tier,
+          scoreReason: scoreResult.reason,
+          recommendedAction: scoreResult.recommendedAction,
+          isCustomer,
+          customerId: isCustomer
+            ? intelligenceCustomers.find((c) => c.leadId === lead.id)?.id ?? null
+            : null,
+          revenueGenerated,
+        })
+        .where(eq(leadsTable.id, lead.id));
+    }
+
+    // Compute + persist revenue attribution rows for each seeded conversion.
+    let attributionOffset = 0;
+    for (const conversion of insertedConversions) {
+      const events = intelligenceEvents.filter(
+        (e) => e.leadId === conversion.leadId,
+      ) as (typeof marketingEventsTable.$inferSelect)[];
+      const attributionInputs = computeAttribution(conversion, events);
+      if (attributionInputs.length === 0) continue;
+
+      const now = new Date().toISOString();
+      const rows = attributionInputs.map((input) => ({
+        id: `ATTR-${1000 + attributionOffset++}`,
+        conversionId: conversion.id,
+        leadId: conversion.leadId,
+        model: input.model,
+        channel: input.channel,
+        campaign: input.campaign,
+        weight: input.weight,
+        attributedAmount: input.attributedAmount,
+        computedAt: now,
+      }));
+      await db.insert(revenueAttributionTable).values(rows);
+    }
+  }
+
+  const existingCampaignIntelligence: Pick<CampaignIntelligenceSeed, "campaignId">[] = await db
+    .select({ campaignId: campaignIntelligenceTable.campaignId })
+    .from(campaignIntelligenceTable)
+    .limit(1);
+
+  if (existingCampaignIntelligence.length === 0) {
+    const [allLeads, allConversions] = await Promise.all([
+      db.select().from(leadsTable),
+      db.select().from(conversionsTable),
+    ]);
+
+    const rows = intelligenceCampaigns.map((campaign) => {
+      const campaignLeads = allLeads.filter(
+        (lead) =>
+          lead.firstTouchCampaign === campaign.campaignId ||
+          lead.lastTouchCampaign === campaign.campaignId ||
+          (lead.campaigns ?? []).includes(campaign.campaignId),
+      );
+      const leadsGenerated = campaignLeads.length;
+      const qualifiedLeads = campaignLeads.filter((l) => l.qualified).length;
+      const customers = campaignLeads.filter((l) => l.isCustomer).length;
+      const campaignLeadIds = new Set(campaignLeads.map((l) => l.id));
+      const revenue = allConversions
+        .filter((c) => c.campaign === campaign.campaignId || campaignLeadIds.has(c.leadId))
+        .reduce((sum, c) => sum + c.amount, 0);
+      const roi = revenue > 0 && campaign.budget && campaign.budget > 0
+        ? (revenue - campaign.budget) / campaign.budget
+        : null;
+
+      return {
+        ...campaign,
+        leadsGenerated,
+        qualifiedLeads,
+        customers,
+        revenue,
+        roi,
+      };
+    });
+
+    await db.insert(campaignIntelligenceTable).values(rows);
+  }
+}
+
 export async function seedDatabase(): Promise<void> {
   const existing: Pick<CampaignRow, "id">[] = await db
     .select({ id: campaignsTable.id })
@@ -742,18 +1467,23 @@ export async function seedDatabase(): Promise<void> {
     .limit(1);
 
   if (existing.length > 0) {
-    logger.info("Seed skipped: data already present");
-    return;
+    logger.info("Seed skipped: core marketing data already present");
+  } else {
+    logger.info("Seeding database with MarketingOS marketing data");
+
+    await db.insert(campaignsTable).values(campaigns);
+    await db.insert(tasksTable).values(tasks);
+    await db.insert(threadsTable).values(threads);
+    await db.insert(messagesTable).values(messages);
+    await db.insert(assistantMessagesTable).values(assistantMessages);
+    await db.insert(appContentTable).values(appContent);
   }
 
-  logger.info("Seeding database with MarketingOS marketing data");
-
-  await db.insert(campaignsTable).values(campaigns);
-  await db.insert(tasksTable).values(tasks);
-  await db.insert(threadsTable).values(threads);
-  await db.insert(messagesTable).values(messages);
-  await db.insert(assistantMessagesTable).values(assistantMessages);
-  await db.insert(appContentTable).values(appContent);
+  // Phase 2 intelligence data is guarded by its own independent, per-section
+  // emptiness checks (see seedIntelligenceData), so it always runs and stays
+  // idempotent regardless of whether the core marketing data above was just
+  // seeded or already existed.
+  await seedIntelligenceData();
 
   logger.info("Seed complete");
 }
