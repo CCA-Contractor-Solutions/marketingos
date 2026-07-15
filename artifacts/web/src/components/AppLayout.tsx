@@ -75,7 +75,11 @@ const NAV: {
     icon: MessagesSquare,
   },
   { key: "analytics", label: "Analytics", href: "/analytics", icon: BarChart3 },
-  { key: "brand", label: "Brand Memory", href: "/brand", icon: BookMarked },
+  // Brand Memory is not built yet (the page is a "Coming soon" placeholder), so
+  // it is intentionally omitted from the sidebar to avoid a dead control. The
+  // /brand route still exists in App.tsx. Restore this entry once the feature
+  // ships. See docs/decisions.md (open decision: "Whether Brand Memory is in scope").
+  // { key: "brand", label: "Brand Memory", href: "/brand", icon: BookMarked },
 ];
 
 type ModuleItem = { id: string; label: string; icon: typeof LayoutDashboard };
@@ -265,17 +269,6 @@ function SidebarContent({
               >
                 <Icon size={18} strokeWidth={on ? 2.4 : 2} />
                 <span>{item.label}</span>
-                {item.key === "brand" && (
-                  <span
-                    className="ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide"
-                    style={{
-                      background: "rgba(255,255,255,0.12)",
-                      color: "rgba(255,255,255,0.7)",
-                    }}
-                  >
-                    Soon
-                  </span>
-                )}
               </Link>
             );
           })}
