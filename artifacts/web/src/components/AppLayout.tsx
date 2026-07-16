@@ -48,6 +48,9 @@ import {
   Target,
   Lightbulb as LightbulbIcon,
   Plug,
+  TrendingUp as PredictionsIcon,
+  PiggyBank,
+  Sunrise,
 } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { DemoBadge } from "@/components/DemoBadge";
@@ -67,7 +70,10 @@ export type NavKey =
   | "leads"
   | "campaign-ops"
   | "opportunities"
-  | "integrations";
+  | "integrations"
+  | "predictions"
+  | "budget"
+  | "briefing";
 
 const NAV: {
   key: NavKey;
@@ -103,6 +109,9 @@ const GROWTH_INTEL_NAV: {
   { key: "leads", label: "Leads", href: "/leads", icon: Users },
   { key: "campaign-ops", label: "Campaign Ops", href: "/campaign-ops", icon: Target },
   { key: "opportunities", label: "Opportunities", href: "/opportunities", icon: LightbulbIcon },
+  { key: "predictions", label: "Predictions", href: "/predictions", icon: PredictionsIcon },
+  { key: "budget", label: "Budget", href: "/budget", icon: PiggyBank },
+  { key: "briefing", label: "Growth Briefing", href: "/briefing", icon: Sunrise },
   { key: "integrations", label: "Integrations", href: "/integrations", icon: Plug },
 ];
 

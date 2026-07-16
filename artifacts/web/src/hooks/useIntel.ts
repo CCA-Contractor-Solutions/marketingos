@@ -31,6 +31,13 @@ import type {
   SyncJob,
   IntegrationError,
   ExternalEvent,
+  LeadPrediction,
+  RecomputePredictionsRequest,
+  BudgetRecommendation,
+  MarketOpportunity,
+  ContentOpportunity,
+  GrowthBriefing,
+  GrowthRecommendationStatus,
 } from "@/lib/intel-types";
 import type { ListLeadsParams, ListExternalEventsParams } from "@/lib/intel-api";
 
@@ -54,6 +61,12 @@ export const intelKeys = {
   integrationSyncJobs: (id: string) => ["intel", "integrations", id, "sync-jobs"] as const,
   integrationErrors: (id: string) => ["intel", "integrations", id, "errors"] as const,
   externalEvents: (params: ListExternalEventsParams) => ["intel", "external-events", params] as const,
+  // Phase 5 -- predictive growth engine.
+  leadPredictions: (leadId?: string) => ["intel", "predictions", "leads", leadId ?? "all"] as const,
+  budgetRecommendations: ["intel", "budget", "recommendations"] as const,
+  marketOpportunities: ["intel", "market", "opportunities"] as const,
+  contentOpportunities: ["intel", "content", "opportunities"] as const,
+  growthBriefing: ["intel", "growth", "briefing"] as const,
 };
 
 // --- Intelligence summary -------------------------------------------------------
@@ -352,5 +365,160 @@ export function useExternalEvents(
     queryKey: intelKeys.externalEvents(params),
     queryFn: () => intelApi.listExternalEvents(params),
     ...options,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Phase 5 -- Predictive Growth Engine.
+//
+// RECOMMENDATION-ONLY, matching the API layer: mutations below only ever
+// PATCH a `status` field to record a human decision, or POST a `/generate`
+// / `/recompute` call that (re)computes predictions/recommendations for
+// review. None of these hooks change spend, post content, or execute
+// anything on an external platform.
+// ---------------------------------------------------------------------------
+
+// --- Predictive Lead Intelligence (Module 1) -----------------------------------
+
+export function useLeadPredictions(leadId?: string, options?: Partial<UseQueryOptions<LeadPrediction[]>>) {
+  return useQuery({
+    queryKey: intelKeys.leadPredictions(leadId),
+    queryFn: () => intelApi.listLeadPredictions(leadId),
+    ...options,
+  });
+}
+
+export function useLeadPrediction(
+  leadId: string,
+  options?: Partial<UseQueryOptions<LeadPrediction | null>>,
+) {
+  return useQuery({
+    queryKey: intelKeys.leadPredictions(leadId),
+    queryFn: () => intelApi.getLeadPrediction(leadId),
+    enabled: !!leadId,
+    ...options,
+  });
+}
+
+export function useRecomputePredictions() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: RecomputePredictionsRequest = {}) => intelApi.recomputePredictions(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intel", "predictions"] });
+    },
+  });
+}
+
+// --- Budget Intelligence (Module 2) ---------------------------------------------
+
+export function useBudgetRecommendations(options?: Partial<UseQueryOptions<BudgetRecommendation[]>>) {
+  return useQuery({
+    queryKey: intelKeys.budgetRecommendations,
+    queryFn: intelApi.listBudgetRecommendations,
+    ...options,
+  });
+}
+
+export function useGenerateBudgetRecommendations() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: intelApi.generateBudgetRecommendations,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.budgetRecommendations });
+    },
+  });
+}
+
+export function useUpdateBudgetRecommendation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: GrowthRecommendationStatus }) =>
+      intelApi.updateBudgetRecommendation(id, { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.budgetRecommendations });
+    },
+  });
+}
+
+// --- Market Opportunities (Module 3) --------------------------------------------
+
+export function useMarketOpportunities(options?: Partial<UseQueryOptions<MarketOpportunity[]>>) {
+  return useQuery({
+    queryKey: intelKeys.marketOpportunities,
+    queryFn: intelApi.listMarketOpportunities,
+    ...options,
+  });
+}
+
+export function useGenerateMarketOpportunities() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: intelApi.generateMarketOpportunities,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.marketOpportunities });
+    },
+  });
+}
+
+export function useUpdateMarketOpportunity() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: GrowthRecommendationStatus }) =>
+      intelApi.updateMarketOpportunity(id, { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.marketOpportunities });
+    },
+  });
+}
+
+// --- Content Opportunities (Module 4) -------------------------------------------
+
+export function useContentOpportunities(options?: Partial<UseQueryOptions<ContentOpportunity[]>>) {
+  return useQuery({
+    queryKey: intelKeys.contentOpportunities,
+    queryFn: intelApi.listContentOpportunities,
+    ...options,
+  });
+}
+
+export function useGenerateContentOpportunities() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: intelApi.generateContentOpportunities,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.contentOpportunities });
+    },
+  });
+}
+
+export function useUpdateContentOpportunity() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: GrowthRecommendationStatus }) =>
+      intelApi.updateContentOpportunity(id, { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.contentOpportunities });
+    },
+  });
+}
+
+// --- Executive Growth Briefing (Module 5, "Good Morning, Rose") -----------------
+
+export function useGrowthBriefing(options?: Partial<UseQueryOptions<GrowthBriefing | null>>) {
+  return useQuery({
+    queryKey: intelKeys.growthBriefing,
+    queryFn: intelApi.getGrowthBriefing,
+    ...options,
+  });
+}
+
+export function useGenerateGrowthBriefing() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: intelApi.generateGrowthBriefing,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intelKeys.growthBriefing });
+    },
   });
 }
