@@ -406,3 +406,152 @@ export const marketingAssetsTable = pgTable("marketing_assets", {
 });
 
 export type MarketingAssetRow = typeof marketingAssetsTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Phase 5 — Predictive Growth Engine.
+//
+// RECOMMENDATION-ONLY. Every table below stores a *prediction* or a
+// *recommendation*, never an action. None of these rows ever cause spend,
+// posting, scheduling, or any external write — see
+// docs/phase-5-backend-notes.md and the guardrail comments in
+// lib/intelligence/prediction/*.ts and routes/predictions.ts + routes/growth.ts.
+//
+// Conventions match the rest of this file: string PKs with a per-model
+// prefix, text ISO timestamps (never a real `timestamp` column), jsonb with
+// `$type<...>()` for structured payloads, no FKs (joins are done in
+// application code, matching every other table above), and a `$inferSelect`
+// type exported alongside each table.
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// lead_predictions (Phase 5 — Module 1: Predictive Lead Intelligence)
+//
+// Latest prediction per lead. Recomputed on demand via
+// `POST /predictions/recompute` (lib/intelligence/prediction/leadConversion.ts).
+// One logical "current" row per lead — callers upsert-by-delete-then-insert
+// (see routes/predictions.ts) rather than modeling history here; the
+// recommendation_audit-style trail is unnecessary because there is no
+// human decision attached to a prediction itself (only to the recommendations
+// derived from it).
+// ---------------------------------------------------------------------------
+
+export type PredictionFactor = { label: string; effect: "+" | "-" | "neutral"; detail: string };
+
+export const leadPredictionsTable = pgTable("lead_predictions", {
+  id: text("id").primaryKey(),
+  leadId: text("lead_id").notNull(),
+  conversionProbability: real("conversion_probability").notNull().default(0),
+  expectedRevenue: integer("expected_revenue").notNull().default(0),
+  bestFollowUpAt: text("best_follow_up_at"),
+  bestFollowUpReason: text("best_follow_up_reason").notNull().default(""),
+  confidence: real("confidence").notNull().default(0),
+  confidenceBand: text("confidence_band").$type<ConfidenceBand>().notNull().default("low"),
+  // Explainability — the ordered list of factors that drove the
+  // probability, e.g. { label: "phone_call", effect: "+", detail: "..." }.
+  factors: jsonb("factors").$type<PredictionFactor[]>().notNull().default([]),
+  modelVersion: text("model_version").notNull().default("v1"),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type LeadPredictionRow = typeof leadPredictionsTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// budget_recommendations (Phase 5 — Module 2: Budget Intelligence)
+//
+// RECOMMENDATION ONLY. `status` records a human decision (new -> reviewed ->
+// applied/dismissed). "applied" means "a human decided to act on this" — it
+// NEVER changes spend on any channel, campaign, or ad platform, and there is
+// deliberately no integration write path wired to it. See
+// lib/intelligence/prediction/budgetIntelligence.ts.
+// ---------------------------------------------------------------------------
+
+export type GrowthRecommendationStatus = "new" | "reviewed" | "applied" | "dismissed";
+
+export const budgetRecommendationsTable = pgTable("budget_recommendations", {
+  id: text("id").primaryKey(),
+  fromChannel: text("from_channel").notNull().default(""),
+  toChannel: text("to_channel").notNull().default(""),
+  shiftPct: real("shift_pct").notNull().default(0),
+  shiftAmount: integer("shift_amount").notNull().default(0),
+  // Linear PROJECTIONS from current per-dollar efficiency — clearly not a
+  // guarantee. See budgetIntelligence.ts for the exact formula.
+  projectedQualifiedDelta: integer("projected_qualified_delta").notNull().default(0),
+  projectedRevenueDelta: integer("projected_revenue_delta").notNull().default(0),
+  rationale: text("rationale").notNull().default(""),
+  confidence: real("confidence").notNull().default(0),
+  confidenceBand: text("confidence_band").$type<ConfidenceBand>().notNull().default("low"),
+  // Human decision only — never auto-applied. See guardrail comment above.
+  status: text("status").$type<GrowthRecommendationStatus>().notNull().default("new"),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type BudgetRecommendationRow = typeof budgetRecommendationsTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// market_opportunities (Phase 5 — Module 3: Market Opportunity Detection)
+// ---------------------------------------------------------------------------
+
+export type MarketOpportunityKind = "geography" | "industry" | "trend" | "segment";
+
+export const marketOpportunitiesTable = pgTable("market_opportunities", {
+  id: text("id").primaryKey(),
+  kind: text("kind").$type<MarketOpportunityKind>().notNull().default("segment"),
+  title: text("title").notNull().default(""),
+  insight: text("insight").notNull().default(""),
+  signalStrength: real("signal_strength").notNull().default(0),
+  confidence: real("confidence").notNull().default(0),
+  confidenceBand: text("confidence_band").$type<ConfidenceBand>().notNull().default("low"),
+  // Explainability — the raw counts/rates the signal was derived from.
+  dataBasis: jsonb("data_basis").$type<Record<string, unknown>>().notNull().default({}),
+  status: text("status").$type<GrowthRecommendationStatus>().notNull().default("new"),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type MarketOpportunityRow = typeof marketOpportunitiesTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// content_opportunities (Phase 5 — Module 4: Content Intelligence)
+// ---------------------------------------------------------------------------
+
+export const contentOpportunitiesTable = pgTable("content_opportunities", {
+  id: text("id").primaryKey(),
+  topic: text("topic").notNull().default(""),
+  rationale: text("rationale").notNull().default(""),
+  // Explainability — the analogous high-performing content/engagement data
+  // this opportunity was derived from.
+  basedOn: jsonb("based_on").$type<Record<string, unknown>>().notNull().default({}),
+  projectedImpact: text("projected_impact").notNull().default(""),
+  confidence: real("confidence").notNull().default(0),
+  confidenceBand: text("confidence_band").$type<ConfidenceBand>().notNull().default("low"),
+  status: text("status").$type<GrowthRecommendationStatus>().notNull().default("new"),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type ContentOpportunityRow = typeof contentOpportunitiesTable.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// growth_briefings (Phase 5 — Module 5: Executive Growth Briefing,
+// "Good Morning Rose")
+//
+// Templated (NOT LLM-generated) natural-language digest assembled from the
+// other Phase 5 tables + Phase 2-4.5 intelligence. See
+// lib/intelligence/prediction/briefing.ts.
+// ---------------------------------------------------------------------------
+
+export type BriefingWin = { label: string; detail: string };
+export type BriefingRisk = { label: string; detail: string; severity: "low" | "medium" | "high" };
+export type BriefingOpportunity = { label: string; detail: string; sourceId: string | null };
+export type BriefingAction = { label: string; detail: string; sourceId: string | null };
+
+export const growthBriefingsTable = pgTable("growth_briefings", {
+  id: text("id").primaryKey(),
+  periodLabel: text("period_label").notNull().default(""),
+  wins: jsonb("wins").$type<BriefingWin[]>().notNull().default([]),
+  risks: jsonb("risks").$type<BriefingRisk[]>().notNull().default([]),
+  opportunities: jsonb("opportunities").$type<BriefingOpportunity[]>().notNull().default([]),
+  recommendedActions: jsonb("recommended_actions").$type<BriefingAction[]>().notNull().default([]),
+  summary: text("summary").notNull().default(""),
+  createdAt: text("created_at").notNull().default(""),
+});
+
+export type GrowthBriefingRow = typeof growthBriefingsTable.$inferSelect;

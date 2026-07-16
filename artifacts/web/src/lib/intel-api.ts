@@ -40,6 +40,16 @@ import type {
   IntegrationError,
   ExternalEvent,
   IngestWebsiteRequest,
+  LeadPrediction,
+  PredictionFactor,
+  RecomputePredictionsRequest,
+  RecomputePredictionsResponse,
+  BudgetRecommendation,
+  MarketOpportunity,
+  ContentOpportunity,
+  GrowthBriefing,
+  UpdateGrowthStatusRequest,
+  ConfidenceBand,
 } from "./intel-types";
 
 // All backend endpoints are mounted under /api (matching the generated Orval
@@ -73,6 +83,14 @@ type DemoDataset = {
   // these keys yet, so callers fall back to sensible static demo values).
   recommendationAudit?: Record<string, RecommendationAuditEntry[]>;
   governanceSummary?: GovernanceSummary;
+  // Phase 5 -- predictive growth engine (optional: older captured datasets
+  // may not have these keys yet, so every fn below falls back to a
+  // sensible static/derived demo value instead of throwing).
+  leadPredictions?: LeadPrediction[];
+  budgetRecommendations?: BudgetRecommendation[];
+  marketOpportunities?: MarketOpportunity[];
+  contentOpportunities?: ContentOpportunity[];
+  growthBriefing?: GrowthBriefing;
 };
 
 let _demoCache: Promise<DemoDataset> | null = null;
@@ -739,6 +757,356 @@ export function ingestWebsiteEvent(body: IngestWebsiteRequest): Promise<SyncInte
   return customFetch<SyncIntegrationResponse>(`${API}/ingest/website`, {
     method: "POST",
     body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Phase 5 — Predictive Growth Engine.
+//
+// GUARDRAIL (repeated here, matching the backend): every mutation below is a
+// RECOMMENDATION-ONLY write. Budget/market/content PATCH calls only ever
+// record a human decision (status: new -> reviewed -> applied/dismissed).
+// "applied" means "a person decided to act on this and we recorded that" —
+// it never changes spend, posts content, or triggers anything on an
+// external platform. There is no code path here that writes to an ad
+// platform, CMS, or CRM. See docs/phase-5-spec.md ("Guardrails").
+//
+// Every fn has a DEMO_MODE branch: reads are served from optional Phase 5
+// keys on the demo dataset when present, and derived from `d.leads` /
+// small static fallbacks otherwise, so the demo build always compiles and
+// renders real-looking (but inert) predictive data with no backend.
+// ---------------------------------------------------------------------------
+
+function demoConfidenceBand(score: number): ConfidenceBand {
+  if (score >= 0.7) return "high";
+  if (score >= 0.4) return "medium";
+  return "low";
+}
+
+// Deterministically derives a plausible LeadPrediction from a LeadSummary
+// when no captured `leadPredictions` demo data exists yet. Not random --
+// same lead always produces the same demo prediction.
+function derivePredictionForLead(lead: LeadSummary): LeadPrediction {
+  const tierBase: Record<string, number> = { high: 0.72, medium: 0.46, low: 0.22, unscored: 0.12 };
+  const base = tierBase[lead.scoreTier] ?? 0.2;
+  const customerBoost = lead.isCustomer ? 0.2 : 0;
+  const conversionProbability = Math.max(0.01, Math.min(0.99, base + customerBoost));
+  const expectedDealSize = 8500;
+  const expectedRevenue = Math.round(conversionProbability * expectedDealSize);
+  const sampleSize = lead.scoreTier === "high" ? 22 : lead.scoreTier === "medium" ? 14 : 6;
+  const confidence = Math.max(0.15, Math.min(0.92, sampleSize / 30 + (lead.scoreTier === "unscored" ? -0.1 : 0)));
+  const factors: PredictionFactor[] = [
+    {
+      label: `${lead.scoreTier} tier prior`,
+      effect: lead.scoreTier === "high" ? "+" : lead.scoreTier === "low" ? "-" : "neutral",
+      detail: `Leads in the ${lead.scoreTier} score tier convert at roughly this base rate historically.`,
+    },
+    {
+      label: `${lead.industry || "industry"} cohort rate`,
+      effect: "neutral",
+      detail: `Calibrated against past conversions for ${lead.industry || "this industry"} leads from ${lead.firstTouchChannel ?? "this channel"}.`,
+    },
+  ];
+  if (lead.isCustomer) {
+    factors.push({ label: "already a customer", effect: "+", detail: "This lead has already converted." });
+  }
+  const bestFollowUpAt = lead.isCustomer ? null : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+  const bestFollowUpReason = lead.isCustomer
+    ? "No follow-up needed — already converted."
+    : lead.scoreTier === "high"
+      ? "High intent — follow up within 24h to strike while warm."
+      : "Establish or continue contact within 24h.";
+  return {
+    id: `PRED-DEMO-${lead.id}`,
+    leadId: lead.id,
+    conversionProbability,
+    expectedRevenue,
+    bestFollowUpAt,
+    bestFollowUpReason,
+    confidence,
+    confidenceBand: demoConfidenceBand(confidence),
+    factors,
+    modelVersion: "v1-demo",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+async function demoLeadPredictions(): Promise<LeadPrediction[]> {
+  const d = await demoData();
+  if (d.leadPredictions && d.leadPredictions.length > 0) return d.leadPredictions;
+  return [...d.leads]
+    .map(derivePredictionForLead)
+    .sort((a, b) => b.conversionProbability - a.conversionProbability);
+}
+
+export function listLeadPredictions(leadId?: string): Promise<LeadPrediction[]> {
+  if (DEMO_MODE) {
+    return demoLeadPredictions().then((preds) => demoDelay(leadId ? preds.filter((p) => p.leadId === leadId) : preds));
+  }
+  const qs = leadId ? `?leadId=${encodeURIComponent(leadId)}` : "";
+  return customFetch<LeadPrediction[]>(`${API}/predictions/leads${qs}`, {
+    method: "GET",
+    responseType: "json",
+  });
+}
+
+export function getLeadPrediction(leadId: string): Promise<LeadPrediction | null> {
+  if (DEMO_MODE) {
+    return demoLeadPredictions().then((preds) => demoDelay(preds.find((p) => p.leadId === leadId) ?? null));
+  }
+  return customFetch<LeadPrediction>(`${API}/predictions/leads/${leadId}`, {
+    method: "GET",
+    responseType: "json",
+  }).catch(() => null);
+}
+
+export function recomputePredictions(
+  body: RecomputePredictionsRequest = {},
+): Promise<RecomputePredictionsResponse> {
+  if (DEMO_MODE) {
+    return demoLeadPredictions().then((preds) => {
+      const filtered = body.leadIds && body.leadIds.length > 0 ? preds.filter((p) => body.leadIds!.includes(p.leadId)) : preds;
+      return demoDelay({ recomputed: filtered.length, predictions: filtered });
+    });
+  }
+  return customFetch<RecomputePredictionsResponse>(`${API}/predictions/recompute`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// --- Budget Intelligence (Module 2) -------------------------------------------
+// RECOMMENDATION ONLY. "MarketingOS recommends; you decide and execute.
+// Nothing changes ad spend automatically." Applying a recommendation here
+// only records a human decision -- see guardrail comment above.
+
+const DEMO_BUDGET_RECOMMENDATIONS: BudgetRecommendation[] = [
+  {
+    id: "BUD-DEMO-1000",
+    fromChannel: "Display Ads",
+    toChannel: "Organic Search",
+    shiftPct: 0.15,
+    shiftAmount: 900,
+    projectedQualifiedDelta: 6,
+    projectedRevenueDelta: 5200,
+    rationale:
+      "Display Ads is currently the lowest-ROI spending channel while Organic Search is the highest. Projection: shifting 15% of Display Ads spend and holding today's per-dollar qualified/revenue rates for both channels constant at the margin — not a guarantee.",
+    confidence: 0.58,
+    confidenceBand: "medium",
+    status: "new",
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+async function demoBudgetRecommendations(): Promise<BudgetRecommendation[]> {
+  const d = await demoData();
+  return d.budgetRecommendations ?? DEMO_BUDGET_RECOMMENDATIONS;
+}
+
+export function listBudgetRecommendations(): Promise<BudgetRecommendation[]> {
+  if (DEMO_MODE) return demoBudgetRecommendations().then(demoDelay);
+  return customFetch<BudgetRecommendation[]>(`${API}/budget/recommendations`, {
+    method: "GET",
+    responseType: "json",
+  });
+}
+
+export function generateBudgetRecommendations(): Promise<BudgetRecommendation[]> {
+  if (DEMO_MODE) return demoBudgetRecommendations().then(demoDelay);
+  return customFetch<BudgetRecommendation[]>(`${API}/budget/recommendations/generate`, {
+    method: "POST",
+    responseType: "json",
+  });
+}
+
+export function updateBudgetRecommendation(
+  id: string,
+  body: UpdateGrowthStatusRequest,
+): Promise<BudgetRecommendation> {
+  if (DEMO_MODE) {
+    return demoBudgetRecommendations().then((recs) => {
+      const rec = recs.find((r) => r.id === id);
+      return demoDelay(rec ? { ...rec, status: body.status } : (recs[0] as BudgetRecommendation));
+    });
+  }
+  return customFetch<BudgetRecommendation>(`${API}/budget/recommendations/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// --- Market Opportunities (Module 3) ------------------------------------------
+
+const DEMO_MARKET_OPPORTUNITIES: MarketOpportunity[] = [
+  {
+    id: "MOP-DEMO-1000",
+    kind: "segment",
+    title: "Commercial contractors in FL show rising compliance demand",
+    insight:
+      "Commercial-industry leads located in FL convert at roughly 1.8x the overall average, and volume is up over the last 30 days.",
+    signalStrength: 0.45,
+    confidence: 0.52,
+    confidenceBand: "medium",
+    dataBasis: { industry: "Commercial", location: "FL", lift: 1.8, sampleSize: 9 },
+    status: "new",
+    createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "MOP-DEMO-1001",
+    kind: "trend",
+    title: "Search interest in multi-state licensing is trending",
+    insight: "Event volume from organic search sources referencing multi-state licensing is up over the prior 30 days.",
+    signalStrength: 0.38,
+    confidence: 0.4,
+    confidenceBand: "low",
+    dataBasis: { source: "organic_search", priorWindowEvents: 4, recentWindowEvents: 9 },
+    status: "new",
+    createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+async function demoMarketOpportunities(): Promise<MarketOpportunity[]> {
+  const d = await demoData();
+  return d.marketOpportunities ?? DEMO_MARKET_OPPORTUNITIES;
+}
+
+export function listMarketOpportunities(): Promise<MarketOpportunity[]> {
+  if (DEMO_MODE) return demoMarketOpportunities().then(demoDelay);
+  return customFetch<MarketOpportunity[]>(`${API}/market/opportunities`, {
+    method: "GET",
+    responseType: "json",
+  });
+}
+
+export function generateMarketOpportunities(): Promise<MarketOpportunity[]> {
+  if (DEMO_MODE) return demoMarketOpportunities().then(demoDelay);
+  return customFetch<MarketOpportunity[]>(`${API}/market/opportunities/generate`, {
+    method: "POST",
+    responseType: "json",
+  });
+}
+
+export function updateMarketOpportunity(
+  id: string,
+  body: UpdateGrowthStatusRequest,
+): Promise<MarketOpportunity> {
+  if (DEMO_MODE) {
+    return demoMarketOpportunities().then((opps) => {
+      const opp = opps.find((o) => o.id === id);
+      return demoDelay(opp ? { ...opp, status: body.status } : (opps[0] as MarketOpportunity));
+    });
+  }
+  return customFetch<MarketOpportunity>(`${API}/market/opportunities/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// --- Content Opportunities (Module 4) -----------------------------------------
+
+const DEMO_CONTENT_OPPORTUNITIES: ContentOpportunity[] = [
+  {
+    id: "COP-DEMO-1000",
+    topic: "Create an electrical contractor licensing guide",
+    rationale:
+      "Modeled on the HVAC licensing guide, which drove roughly 4x the average content-download engagement. Electrical-industry leads show similar demand with no analogous content yet.",
+    basedOn: { analogousAsset: "HVAC Licensing Guide", multiplier: 4 },
+    projectedImpact: "Projected ~4x engagement vs. an average asset, based on the analogous HVAC guide.",
+    confidence: 0.5,
+    confidenceBand: "medium",
+    status: "new",
+    createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+async function demoContentOpportunities(): Promise<ContentOpportunity[]> {
+  const d = await demoData();
+  return d.contentOpportunities ?? DEMO_CONTENT_OPPORTUNITIES;
+}
+
+export function listContentOpportunities(): Promise<ContentOpportunity[]> {
+  if (DEMO_MODE) return demoContentOpportunities().then(demoDelay);
+  return customFetch<ContentOpportunity[]>(`${API}/content/opportunities`, {
+    method: "GET",
+    responseType: "json",
+  });
+}
+
+export function generateContentOpportunities(): Promise<ContentOpportunity[]> {
+  if (DEMO_MODE) return demoContentOpportunities().then(demoDelay);
+  return customFetch<ContentOpportunity[]>(`${API}/content/opportunities/generate`, {
+    method: "POST",
+    responseType: "json",
+  });
+}
+
+export function updateContentOpportunity(
+  id: string,
+  body: UpdateGrowthStatusRequest,
+): Promise<ContentOpportunity> {
+  if (DEMO_MODE) {
+    return demoContentOpportunities().then((opps) => {
+      const opp = opps.find((o) => o.id === id);
+      return demoDelay(opp ? { ...opp, status: body.status } : (opps[0] as ContentOpportunity));
+    });
+  }
+  return customFetch<ContentOpportunity>(`${API}/content/opportunities/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    responseType: "json",
+  });
+}
+
+// --- Executive Growth Briefing (Module 5, "Good Morning, Rose") ---------------
+
+function demoGrowthBriefing(): GrowthBriefing {
+  const label = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return {
+    id: "BRIEF-DEMO-1000",
+    periodLabel: `Daily · ${label}`,
+    wins: [
+      { label: "New customer", detail: "ABC Construction converted this week, generating $8,500 in revenue." },
+      { label: "Likely to close soon", detail: "2 leads currently show high-confidence conversion probability ≥ 60%." },
+    ],
+    risks: [
+      { label: "Display Ads running at a loss", detail: "ROI is negative this period — spending more than it returns.", severity: "medium" },
+      { label: "A high-value lead is going cold", detail: "No follow-up in 9+ days on a previously warm lead.", severity: "medium" },
+    ],
+    opportunities: [
+      { label: "Commercial contractors in FL", detail: "Conversion lift ~1.8x the overall average.", sourceId: "MOP-DEMO-1000" },
+      { label: "Electrical contractor licensing guide", detail: "Projected ~4x engagement vs. an average asset.", sourceId: "COP-DEMO-1000" },
+    ],
+    recommendedActions: [
+      { label: "Review budget shift: Display Ads → Organic Search", detail: "Projected +6 qualified, +$5,200 revenue.", sourceId: "BUD-DEMO-1000" },
+      { label: "Follow up with top likely-to-convert leads", detail: "Top 3 leads by conversion probability need outreach.", sourceId: null },
+      { label: "Draft the electrical contractor licensing guide", detail: "Modeled on the high-performing HVAC guide.", sourceId: "COP-DEMO-1000" },
+    ],
+    summary:
+      "Good morning. One new customer closed this week and two leads look likely to convert soon. Watch Display Ads (negative ROI) and one high-value lead going cold. Top opportunities: commercial contractors in FL and an electrical licensing content gap. Recommended next steps: review the Display → Organic Search budget shift, follow up with your top likely-to-convert leads, and draft the electrical licensing guide.",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+export function getGrowthBriefing(): Promise<GrowthBriefing | null> {
+  if (DEMO_MODE) {
+    return demoData().then((d) => demoDelay(d.growthBriefing ?? demoGrowthBriefing()));
+  }
+  return customFetch<GrowthBriefing>(`${API}/growth/briefing`, {
+    method: "GET",
+    responseType: "json",
+  }).catch(() => null);
+}
+
+export function generateGrowthBriefing(): Promise<GrowthBriefing> {
+  if (DEMO_MODE) {
+    return demoData().then((d) => demoDelay(d.growthBriefing ?? demoGrowthBriefing()));
+  }
+  return customFetch<GrowthBriefing>(`${API}/growth/briefing/generate`, {
+    method: "POST",
     responseType: "json",
   });
 }

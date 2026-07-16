@@ -412,3 +412,113 @@ export type IngestWebsiteRequest = {
   externalId?: string;
   occurredAt?: string;
 };
+
+// ---------------------------------------------------------------------------
+// Phase 5 — Predictive Growth Engine.
+//
+// RECOMMENDATION-ONLY: every type here backs a UI surface that presents a
+// prediction or a recommendation, never an autonomous action. `status` on
+// budget/market/content rows only ever records a HUMAN decision — "applied"
+// means "a person decided to act on this and we recorded that", never that
+// MarketingOS changed spend, posted content, or executed anything itself.
+// See docs/phase-5-backend-notes.md for the exact backend contract these
+// types mirror.
+// ---------------------------------------------------------------------------
+
+export type GrowthRecommendationStatus = "new" | "reviewed" | "applied" | "dismissed";
+export type MarketOpportunityKind = "geography" | "industry" | "trend" | "segment";
+
+export type PredictionFactor = {
+  label: string;
+  effect: "+" | "-" | "neutral";
+  detail: string;
+};
+
+// --- GET /predictions/leads / GET /predictions/leads/:id ---------------------
+export type LeadPrediction = {
+  id: string;
+  leadId: string;
+  conversionProbability: number;
+  expectedRevenue: number;
+  bestFollowUpAt: string | null;
+  bestFollowUpReason: string;
+  confidence: number;
+  confidenceBand: ConfidenceBand;
+  factors: PredictionFactor[];
+  modelVersion: string;
+  createdAt: string;
+};
+
+// --- POST /predictions/recompute ----------------------------------------------
+export type RecomputePredictionsRequest = {
+  leadIds?: string[];
+};
+
+export type RecomputePredictionsResponse = {
+  recomputed: number;
+  predictions: LeadPrediction[];
+};
+
+// --- GET /budget/recommendations / POST .../generate / PATCH .../:id ---------
+export type BudgetRecommendation = {
+  id: string;
+  fromChannel: string;
+  toChannel: string;
+  shiftPct: number;
+  shiftAmount: number;
+  projectedQualifiedDelta: number;
+  projectedRevenueDelta: number;
+  rationale: string;
+  confidence: number;
+  confidenceBand: ConfidenceBand;
+  status: GrowthRecommendationStatus;
+  createdAt: string;
+};
+
+export type UpdateGrowthStatusRequest = {
+  status: GrowthRecommendationStatus;
+};
+
+// --- GET /market/opportunities / POST .../generate / PATCH .../:id -----------
+export type MarketOpportunity = {
+  id: string;
+  kind: MarketOpportunityKind;
+  title: string;
+  insight: string;
+  signalStrength: number;
+  confidence: number;
+  confidenceBand: ConfidenceBand;
+  dataBasis: Record<string, unknown>;
+  status: GrowthRecommendationStatus;
+  createdAt: string;
+};
+
+// --- GET /content/opportunities / POST .../generate / PATCH .../:id ----------
+export type ContentOpportunity = {
+  id: string;
+  topic: string;
+  rationale: string;
+  basedOn: Record<string, unknown>;
+  projectedImpact: string;
+  confidence: number;
+  confidenceBand: ConfidenceBand;
+  status: GrowthRecommendationStatus;
+  createdAt: string;
+};
+
+// --- GET /growth/briefing / POST /growth/briefing/generate --------------------
+export type BriefingWin = { label: string; detail: string };
+export type BriefingRisk = { label: string; detail: string; severity: "low" | "medium" | "high" };
+export type BriefingOpportunity = { label: string; detail: string; sourceId: string | null };
+export type BriefingAction = { label: string; detail: string; sourceId: string | null };
+
+export type GrowthBriefing = {
+  id: string;
+  periodLabel: string;
+  wins: BriefingWin[];
+  risks: BriefingRisk[];
+  opportunities: BriefingOpportunity[];
+  recommendedActions: BriefingAction[];
+  summary: string;
+  createdAt: string;
+};

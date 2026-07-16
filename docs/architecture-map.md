@@ -108,6 +108,39 @@ This governance layer touches **zero new core models** beyond
 `recommendation_audit` -- `ai_recommendations` and `revenue_attribution` are
 extended in place, per the "one model per concept" invariant below.
 
+## Predictive layer (Phase 5)
+
+A **Predictive layer** sits between Intelligence and Recommendations, extending
+the spine's tense from past/present to future:
+
+```
+Intelligence (what happened / why)
+        ↓
+Prediction (what is likely to happen)      ← Phase 5, recommendation-only
+        ↓
+Recommendation (what to do)
+        ↓
+Action (a HUMAN decides & executes)
+        ↓
+Revenue
+```
+
+Deterministic, explainable models in `lib/intelligence/prediction/`
+(`leadConversion`, `budgetIntelligence`, `marketOpportunity`,
+`contentIntelligence`, `briefing`) read the intelligence already flowing through
+the spine and produce: per-lead conversion probability + expected revenue +
+best follow-up timing; budget reallocation *recommendations*; market and content
+opportunities; and the "Good Morning, Rose" executive growth briefing. New
+models: `lead_predictions`, `budget_recommendations`, `market_opportunities`,
+`content_opportunities`, `growth_briefings`. Routes in `routes/predictions.ts`
+and `routes/growth.ts`; UI at `/predictions`, `/budget`, `/briefing`, and on
+Lead Detail / Opportunity Center. See [`docs/predictive-intelligence.md`](./predictive-intelligence.md).
+
+**Predictive invariant:** everything here is a **recommendation**. No prediction
+or "apply" ever changes ad spend, posts content, schedules outreach, or writes
+to any external platform. Every predictive output carries a confidence band
+(Phase 4.5) and an explainability factor list. No runtime LLM calls.
+
 ## Invariants (do not violate)
 
 1. **One model per concept.** Leads, events, campaigns, channels, conversions, attribution each have exactly one table. Actions reuse `tasks`. Never fork these.
